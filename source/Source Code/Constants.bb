@@ -206,7 +206,7 @@ Const MusicPath2$ = SFXPath$+"Radio\UserTracks\"
 
 Const GameVersionNumber$ = "1.3.11"
 Const ModVersionNumber$ = "5.5.4.1"
-Const RemasteredVersionNumber$ = "1.3.98.051"
+Const RemasteredVersionNumber$ = "1.5"
 
 ;[OPTIONS]
 

@@ -428,10 +428,10 @@ Function UpdateMainMenu()
 					EndIf
 				EndIf
 								
-				;If DrawButton(x, y + height + 20 * MenuScale, 160 * MenuScale, 70 * MenuScale, "Load map", False) Then
-				;	ms\MainMenuTab = 4
-				;	LoadSavedMaps()
-				;EndIf
+				If DrawButton(x, y + height + 20 * MenuScale, 160 * MenuScale, 70 * MenuScale, "Load map", False) Then
+					ms\MainMenuTab = 4
+					LoadSavedMaps()
+				EndIf
 				
 				AASetFont fo\Font[1]
 				
@@ -1384,7 +1384,7 @@ Function UpdateLauncher()
 		EndIf
 		
 		If DrawButton(LauncherWidth - 20, LauncherHeight - 100, 110, 30, "BUG REPORT", False, False, False) Then
-		    ExecFile("https://discord.gg/Y5PTN7a2mC")
+		    ExecFile("https://discord.gg/ZV9FPvsZnE")
 		EndIf
 		
 		If DrawButton(LauncherWidth - 20, LauncherHeight - 65, 110, 30, "DISCORD", False, False, False) Then

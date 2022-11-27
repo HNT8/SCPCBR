@@ -3783,6 +3783,13 @@ Function MainLoop()
 End Function
 
 Function Kill(blood%=False, fire%=False)
+		If UsedConsole<>True Then
+			;SetSteamAchievement("s"+achvname)
+			;StoreSteamStats()
+			;BS_UserStats_SetAchievement(BS_UserStats(), "s"+achvname)
+			;BS_UserStats_StoreStats(BS_UserStats())
+			
+		EndIf
 	If chs\GodMode Then Return
 	
 	If BreathCHN <> 0 Then
@@ -11262,9 +11269,16 @@ End Function
 Function Use914(item.Items, setting$, x#, y#, z#)
 	
 	RefinedItems = RefinedItems+1
-	If UsedConsole<>True Then
-		scpSteam_UploadScore("914items", 1)
-	EndIf
+		If UsedConsole<>True Then
+			;SetSteamAchievement("s"+achvname)
+			;StoreSteamStats()
+			;BS_UserStats_SetAchievement(BS_UserStats(), "s"+achvname)
+			;BS_UserStats_StoreStats(BS_UserStats())
+			scpSDK_UploadLeaderboard_RefinedItems()
+		EndIf
+	;If UsedConsole<>True Then
+	;	scpSteam_UploadScore("914items", 1)
+	;EndIf
 	
 	Local it2.Items
 	Select item\itemtemplate\name

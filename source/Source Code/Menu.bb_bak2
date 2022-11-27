@@ -120,7 +120,7 @@ Function UpdateMainMenu()
 	EndIf
 	
 	If ms\MainMenuTab = 0 Then
-		If DrawButton(GraphicWidth - 5, GraphicHeight - 5, 300, 30, "RESET STATS AND ACHIEVEMENTS", False, False, False) Then
+		If DrawButton(GraphicWidth - 10 - 330, GraphicHeight - 10 - 30, 330, 30, "RESET STATS AND ACHIEVEMENTS", False, False, False) Then
 		    scpSteam_ResetStats(True);
 		EndIf
 		For i% = 0 To 3
@@ -1384,7 +1384,7 @@ Function UpdateLauncher()
 		EndIf
 		
 		If DrawButton(LauncherWidth - 20, LauncherHeight - 100, 110, 30, "BUG REPORT", False, False, False) Then
-		    ExecFile("https://discord.gg/Y5PTN7a2mC")
+		    ExecFile("https://discord.gg/ZV9FPvsZnE")
 		EndIf
 		
 		If DrawButton(LauncherWidth - 20, LauncherHeight - 65, 110, 30, "DISCORD", False, False, False) Then

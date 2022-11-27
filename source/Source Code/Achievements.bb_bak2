@@ -32,8 +32,9 @@ Function GiveAchievement(achvname%, showMessage%=True)
 		If UsedConsole<>True Then
 			;SetSteamAchievement("s"+achvname)
 			;StoreSteamStats()
-			BS_UserStats_SetAchievement(BS_UserStats(), "s"+achvname)
-			BS_UserStats_StoreStats(BS_UserStats())
+			;BS_UserStats_SetAchievement(BS_UserStats(), "s"+achvname)
+			;BS_UserStats_StoreStats(BS_UserStats())
+			scpSteam_SetAchievement("s"+achvname)
 		EndIf
 		If AchvMSGenabled And showMessage Then
 			Local loc2% = GetINISectionLocation("Data\achievementstrings.ini", "s"+achvname)

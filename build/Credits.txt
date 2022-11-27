@@ -263,6 +263,8 @@
 		
 		
 		Jabka
+		ADMClef
+		Mleczyk76
 
 *Some Materials Taken From:
 
@@ -442,7 +444,6 @@ by "Skara Brae"
 	- another huge thanks to the Ultimate Edition Team and those who assisted
 	  them for the amazing starting point for us.
 
-	Love you cuties.
 	- Remastered Team
 
 
