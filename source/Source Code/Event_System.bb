@@ -210,6 +210,7 @@ Function InitEvents()
 	CreateEvent("room2tunnel", "room2tunnel", 0)
 	
 	CreateEvent("room2ccont", "room2ccont", 0)
+	CreateEvent("room2Ccont", "room2ccont", 0)
 	
 	CreateEvent("gateaentrance", "gateaentrance", 0)
 	CreateEvent("gatea", "gatea", 0)	
@@ -3240,6 +3241,50 @@ Function UpdateEvents()
 					
 				EndIf
 				;[End Block]
+			Case "room2Ccont"
+				;[Block]
+				If PlayerRoom = e\room Then
+				    ;;optimize
+					;If EntityY(Collider) > 700.0 * RoomScale Then
+					;    For r.Rooms = Each Rooms
+					;        HideEntity r\obj
+					;    Next
+					;    ShowEntity e\room\obj
+					;EndIf
+					EntityPick(Camera, 1.5)
+					
+					If PickedEntity() = e\room\Objects[3]
+						If e\EventState = 0
+							e\EventState = Max(e\EventState,1)
+							PlaySound_Strict HorrorSFX(7)
+							PlaySound_Strict LeverSFX
+						EndIf 
+					EndIf
+					
+					;Primary Lighting
+					UpdateLever(e\room\Objects[1])
+					
+					;Secondary Lighting
+					Local prevstate3 = e\EventState2
+					e\EventState2 = UpdateLever(e\room\Objects[3])
+					If (prevstate3 <> e\EventState2) And e\EventState>0 Then PlaySound2(LightSFX, Camera, e\room\Objects[3])
+					If e\EventState2
+						SecondaryLightOn = CurveValue(1.0, SecondaryLightOn, 10.0)
+					Else
+						SecondaryLightOn = CurveValue(0.0, SecondaryLightOn, 10.0)
+					EndIf
+					
+					;Remote Door Control
+					RemoteDoorOn = UpdateLever(e\room\Objects[5])
+					
+					If e\EventState > 0 And e\EventState < 200 Then
+						e\EventState = e\EventState + fs\FPSfactor[0]
+						RotateEntity(e\room\Objects[3], CurveValue(-85, EntityPitch(e\room\Objects[3]), 5), EntityYaw(e\room\Objects[3]), 0)
+					EndIf 
+					
+				EndIf
+				;[End Block]
+
 			Case "room2closets"
 				;[Block]
 				If e\EventState = 0 Then

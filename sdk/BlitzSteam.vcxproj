@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{ff119758-d934-4e81-97fa-0b8f4ea95562}</ProjectGuid>
+    <RootNamespace>BlitzSteam</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>SCPSDK</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <CompileAsManaged>false</CompileAsManaged>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>steam_api.lib;discord_rpc.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <CompileAsManaged>false</CompileAsManaged>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>steam_api.lib;discord_rpc.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <CompileAsManaged>false</CompileAsManaged>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>steam_api.lib;discord_rpc.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <CompileAsManaged>false</CompileAsManaged>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>steam_api.lib;discord_rpc.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Library Include="discord_rpc.lib" />
+    <Library Include="SteamAPI\lib\win32\sdkencryptedappticket.lib" />
+    <Library Include="steam_api.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application\Globals.hpp" />
+    <ClInclude Include="Application\Utilities\ImGui\imconfig.h" />
+    <ClInclude Include="Application\Utilities\ImGui\imgui.h" />
+    <ClInclude Include="Application\Utilities\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="Application\Utilities\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Application\Utilities\ImGui\imgui_internal.h" />
+    <ClInclude Include="Application\Utilities\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Application\Utilities\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Application\Utilities\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Application\Utilities\UI.h" />
+    <ClInclude Include="Application\Utilities\Window\Window.hpp" />
+    <ClInclude Include="Discord.h" />
+    <ClInclude Include="DiscordAPI\discord_register.h" />
+    <ClInclude Include="DiscordAPI\discord_rpc.h" />
+    <ClInclude Include="Network.h" />
+    <ClInclude Include="SteamAPI\isteamapplist.h" />
+    <ClInclude Include="SteamAPI\isteamapps.h" />
+    <ClInclude Include="SteamAPI\isteamappticket.h" />
+    <ClInclude Include="SteamAPI\isteamclient.h" />
+    <ClInclude Include="SteamAPI\isteamcontroller.h" />
+    <ClInclude Include="SteamAPI\isteamdualsense.h" />
+    <ClInclude Include="SteamAPI\isteamfriends.h" />
+    <ClInclude Include="SteamAPI\isteamgamecoordinator.h" />
+    <ClInclude Include="SteamAPI\isteamgameserver.h" />
+    <ClInclude Include="SteamAPI\isteamgameserverstats.h" />
+    <ClInclude Include="SteamAPI\isteamhtmlsurface.h" />
+    <ClInclude Include="SteamAPI\isteamhttp.h" />
+    <ClInclude Include="SteamAPI\isteaminput.h" />
+    <ClInclude Include="SteamAPI\isteaminventory.h" />
+    <ClInclude Include="SteamAPI\isteammatchmaking.h" />
+    <ClInclude Include="SteamAPI\isteammusic.h" />
+    <ClInclude Include="SteamAPI\isteammusicremote.h" />
+    <ClInclude Include="SteamAPI\isteamnetworking.h" />
+    <ClInclude Include="SteamAPI\isteamnetworkingmessages.h" />
+    <ClInclude Include="SteamAPI\isteamnetworkingsockets.h" />
+    <ClInclude Include="SteamAPI\isteamnetworkingutils.h" />
+    <ClInclude Include="SteamAPI\isteamparentalsettings.h" />
+    <ClInclude Include="SteamAPI\isteamps3overlayrenderer.h" />
+    <ClInclude Include="SteamAPI\isteamremoteplay.h" />
+    <ClInclude Include="SteamAPI\isteamremotestorage.h" />
+    <ClInclude Include="SteamAPI\isteamscreenshots.h" />
+    <ClInclude Include="SteamAPI\isteamugc.h" />
+    <ClInclude Include="SteamAPI\isteamuser.h" />
+    <ClInclude Include="SteamAPI\isteamuserstats.h" />
+    <ClInclude Include="SteamAPI\isteamutils.h" />
+    <ClInclude Include="SteamAPI\isteamvideo.h" />
+    <ClInclude Include="SteamAPI\matchmakingtypes.h" />
+    <ClInclude Include="SteamAPI\steamclientpublic.h" />
+    <ClInclude Include="SteamAPI\steamencryptedappticket.h" />
+    <ClInclude Include="SteamAPI\steamhttpenums.h" />
+    <ClInclude Include="SteamAPI\steamnetworkingfakeip.h" />
+    <ClInclude Include="SteamAPI\steamnetworkingtypes.h" />
+    <ClInclude Include="SteamAPI\steamps3params.h" />
+    <ClInclude Include="SteamAPI\steamtypes.h" />
+    <ClInclude Include="SteamAPI\steamuniverse.h" />
+    <ClInclude Include="SteamAPI\steam_api.h" />
+    <ClInclude Include="SteamAPI\steam_api_common.h" />
+    <ClInclude Include="SteamAPI\steam_api_flat.h" />
+    <ClInclude Include="SteamAPI\steam_api_internal.h" />
+    <ClInclude Include="SteamAPI\steam_gameserver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+    <None Include="discord-rpc.dll" />
+    <None Include="SteamAPI\lib\win32\sdkencryptedappticket.dll" />
+    <None Include="SteamAPI\steam_api.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application\UI.cpp" />
+    <ClCompile Include="Application\Utilities\ImGui\imgui.cpp" />
+    <ClCompile Include="Application\Utilities\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Application\Utilities\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Application\Utilities\ImGui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="Application\Utilities\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Application\Utilities\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Application\Utilities\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Application\Utilities\Window\Window.cpp" />
+    <ClCompile Include="Discord.cpp" />
+    <ClCompile Include="API.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

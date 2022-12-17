@@ -12,6 +12,7 @@ Init3DMenu()
 ;BS_UserStats_SetAchievement(BS_UserStats(), "s59")
 ;BS_UserStats_StoreStats(BS_UserStats())
 scpSteam_SetAchievement("s59")
+scpSDK_DeveloperMenu()
 
 ResizeImage(QuickLoadIcon, ImageWidth(QuickLoadIcon) * MenuScale, ImageHeight(QuickLoadIcon) * MenuScale)
 
