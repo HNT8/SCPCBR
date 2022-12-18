@@ -1,2 +1,0 @@
-D:\BlitzSteam\Release\SCPSDK.dll
-X:\SCPCBR\sdk\Release\SCPSDK.dll

@@ -3,5 +3,14 @@
 /source/*.Backup
 /source/*_original.exe
 /source/developer
+/source/dev/*.exe.config
+
 /steam/
+
 /sdk/.vs/
+
+/prepblitz/bin
+/prepblitz/obj
+
+*.pdb
+*.exp

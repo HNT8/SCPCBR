@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prepblitz", "prepblitz.csproj", "{6020DD42-0E5E-4E8F-9C67-D83602A63999}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6020DD42-0E5E-4E8F-9C67-D83602A63999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6020DD42-0E5E-4E8F-9C67-D83602A63999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6020DD42-0E5E-4E8F-9C67-D83602A63999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6020DD42-0E5E-4E8F-9C67-D83602A63999}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72CB1323-85E9-4C0D-BF27-F62E0A181CCB}
+	EndGlobalSection
+EndGlobal
