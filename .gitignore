@@ -1,5 +1,7 @@
 /source/*.bb_bak1
 /source/*.bb_bak2
+/source/Source Code/*.bb_bak1
+/source/Source Code/*.bb_bak2
 /source/*.Backup
 /source/*_original.exe
 /source/developer

@@ -425,7 +425,7 @@ Function UpdateMainMenu()
 				
 				If UnlockThaumiel = 0 Then				
 					If MouseOn(x + 20 * MenuScale, y + (180+30*THAUMIEL) * MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(x+width,y + 210*MenuScale,400*MenuScale,150*MenuScale,"thaumiel")
+						DrawOptionsTooltip(x+width,y + 210*MenuScale,400*MenuScale,150*MenuScale,"Apollyon")
 					EndIf
 				EndIf
 								
@@ -2310,8 +2310,8 @@ Function DrawOptionsTooltip(x%,y%,width%,height%,option$,value#=0,ingame%=False)
 		;{~--<MOD>--~}
 		
 		    ;[Block]
-		Case "thaumiel" ;WIP
-			txt = "This difficulty is unlocked at the End of the mod. It is advisable to play consciously. This mode will be nerfed and upgraded in the future versions."
+		Case "Apollyon" ;WIP
+			txt = "This difficulty is unlocked after completing the game in one of the first 3 difficulties. It is advisable to play consciously. This mode will be nerfed and upgraded in the future versions."
 		Case "consoleversion"
 		    txt = "This function changes your console to Old Version or New Version."
 		Case "fov"

@@ -69,9 +69,8 @@ difficulties(KETER)\b = 0
 
 difficulties(THAUMIEL) = New Difficulty
 difficulties(THAUMIEL)\menu = False
-difficulties(THAUMIEL)\name = "Thaumiel"
-difficulties(THAUMIEL)\description = "Thaumiel-class SCPs are anomalies that the Foundation uses to contain or counteract other SCPs or anomalous phenomena. Even the mere existence of Thaumiel-class objects "
-difficulties(THAUMIEL)\description = difficulties(THAUMIEL)\description +"is classified at the highest levels of the Foundation. Take your precautions."
+difficulties(THAUMIEL)\name = "Apollyon"
+difficulties(THAUMIEL)\description = "Apollyon-class objects are considered impossible to contain and/or are expected to breach containment very often. They are usually associated with world-ending threats or K-Class Scenarios. The SCPs are extremely aggressive, and you only have one life. Take your precautions."
 difficulties(THAUMIEL)\permaDeath = True
 difficulties(THAUMIEL)\aggressiveNPCs = True
 difficulties(THAUMIEL)\saveType = SAVEONQUIT
