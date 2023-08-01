@@ -9,19 +9,19 @@ Dim AchievementStrings$(MAXACHIEVEMENTS)
 Dim AchievementDescs$(MAXACHIEVEMENTS)
 Dim AchvIMG%(MAXACHIEVEMENTS)
 For i = 0 To MAXACHIEVEMENTS-1
-	Local loc2% = GetINISectionLocation("Data\achievementstrings.ini", "s"+Str(i))
-	AchievementStrings(i) = GetINIString2("Data\achievementstrings.ini", loc2, "string1")
-	AchievementDescs(i) = GetINIString2("Data\achievementstrings.ini", loc2, "AchvDesc")
+	Local loc2% = GetINISectionLocation(scpModding_ProcessFilePath$("Data\achievementstrings.ini"), "s"+Str(i))
+	AchievementStrings(i) = scpLang_GetPhrase$(GetINIString2(scpModding_ProcessFilePath$("Data\achievementstrings.ini"), loc2, "string1"))
+	AchievementDescs(i) = scpLang_GetPhrase$(GetINIString2(scpModding_ProcessFilePath$("Data\achievementstrings.ini"), loc2, "AchvDesc"))
 	
-	Local image$ = GetINIString2("Data\achievementstrings.ini", loc2, "image") 
+	Local image$ = GetINIString2(scpModding_ProcessFilePath$("Data\achievementstrings.ini"), loc2, "image") 
 	
-	AchvIMG(i) = LoadImage_Strict("GFX\menu\achievements\"+image+".png")
+	AchvIMG(i) = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\achievements\"+image+".png"))
 	AchvIMG(i) = ResizeImage2(AchvIMG(i),ImageWidth(AchvIMG(i))*GraphicHeight/768.0,ImageHeight(AchvIMG(i))*GraphicHeight/768.0)
 	
 	BufferDirty ImageBuffer(AchvIMG(i))
 Next
 
-Global AchvLocked = LoadImage_Strict("GFX\menu\achievements\AchvLocked.png")
+Global AchvLocked = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\achievements\AchvLocked.png"))
 AchvLocked = ResizeImage2(AchvLocked,ImageWidth(AchvLocked)*GraphicHeight/768.0,ImageHeight(AchvLocked)*GraphicHeight/768.0)
 
 BufferDirty ImageBuffer(AchvLocked)
@@ -37,8 +37,8 @@ Function GiveAchievement(achvname%, showMessage%=True)
 			scpSteam_SetAchievement("s"+achvname)
 		EndIf
 		If AchvMSGenabled And showMessage Then
-			Local loc2% = GetINISectionLocation("Data\achievementstrings.ini", "s"+achvname)
-			Local AchievementName$ = GetINIString2("Data\achievementstrings.ini", loc2, "string1")
+			Local loc2% = GetINISectionLocation(scpModding_ProcessFilePath$("Data\achievementstrings.ini"), "s"+achvname)
+			Local AchievementName$ = GetINIString2(scpModding_ProcessFilePath$("Data\achievementstrings.ini"), loc2, "string1")
 			;Msg = "Achievement Unlocked - "+AchievementName
 			;MsgTimer=70*7
 			CreateAchievementMsg(achvname,AchievementName)
@@ -65,9 +65,9 @@ Function AchievementTooltip(achvno%)
     Color 150,150,150
     Rect(ScaledMouseX()+(20*MenuScale),ScaledMouseY()+(20*MenuScale),width,height,False)
     AASetFont fo\Font[2]
-    AAText(ScaledMouseX()+(20*MenuScale)+(width/2),ScaledMouseY()+(35*MenuScale), AchievementStrings(achvno), True, True)
+    AAText(ScaledMouseX()+(20*MenuScale)+(width/2),ScaledMouseY()+(35*MenuScale), scpLang_GetPhrase$(AchievementStrings(achvno)), True, True)
     AASetFont fo\Font[0]
-    AAText(ScaledMouseX()+(20*MenuScale)+(width/2),ScaledMouseY()+(55*MenuScale), AchievementDescs(achvno), True, True)
+    AAText(ScaledMouseX()+(20*MenuScale)+(width/2),ScaledMouseY()+(55*MenuScale), scpLang_GetPhrase$(AchievementDescs(achvno)), True, True)
 End Function
 
 Function DrawAchvIMG(x%, y%, achvno%)
@@ -184,7 +184,7 @@ Function RenderAchievementMsg()
 			Rect(x+10*scale,y+10*scale,64*scale,64*scale,False)
 			Color 255,255,255
 			AASetFont fo\Font[0]
-			RowText("Achievement Unlocked -    "+amsg\txt,x+84*scale,y+10*scale,width-94*scale,y-20*scale)
+			RowText(scpLang_GetPhrase$("achievements.achunlocked") + " -    "+amsg\txt,x+84*scale,y+10*scale,width-94*scale,y-20*scale)
 		EndIf
 	Next
 End Function

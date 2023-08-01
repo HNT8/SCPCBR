@@ -1,0 +1,1 @@
+Game.ImplementMap("@custommap\\map.cbmap2")

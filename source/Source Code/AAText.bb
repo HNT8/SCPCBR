@@ -218,14 +218,16 @@ End Function
 Function AALoadFont%(file$="Tahoma", height=13, bold=0, italic=0, underline=0, AATextScaleFactor%=2)
 	Local newFont.AAFont = New AAFont
 	
-	newFont\lowResFont = LoadFont(file,height,bold,italic,underline)
-	
+	;newFont\lowResFont = LoadFont(file,height,bold,italic,underline)
+	newFont\lowResFont = LoadFont(file,height)	
+
 	SetFont newFont\lowResFont
 	newFont\mW = FontWidth()
 	newFont\mH = FontHeight()
 	
 	If AATextEnable And AATextScaleFactor>1 Then
-		Local hResFont% = LoadFont(file,height*AATextScaleFactor,bold,italic,underline)
+		;Local hResFont% = LoadFont(file,height*AATextScaleFactor,bold,italic,underline)
+		Local hResFont% = LoadFont(file,height*AATextScaleFactor)
 		Local tImage% = CreateTexture(1024,1024,3)
 		Local tX% = 0 : Local tY% = 1
 		

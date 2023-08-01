@@ -74,7 +74,7 @@ Function LoadWorld(file$, rt.RoomTemplates)
 					ts\x = x
 					ts\y = y
 					ts\z = z
-					ts\imgpath = KeyValue(node,"imgpath","")
+					ts\imgpath = scpModding_ProcessFilePath$(KeyValue(node,"imgpath",""))
 					ts\roomtemplate = rt
 				EndIf
 				;[End Block]	
@@ -549,7 +549,7 @@ Function LoadRMesh(file$, rt.RoomTemplates)
 			Case "model"
 				file = ReadString(f)
 				If file <> ""
-					Local model = CreatePropObj(MapPath$+"Props\" + file);LoadMesh(MapPath$+"Props\" + file)
+					Local model = CreatePropObj(scpModding_ProcessFilePath$("GFX\map\"+"Props\" + file));LoadMesh("GFX\map\"+"Props\" + file)
 					
 					temp1 = ReadFloat(f) : temp2 = ReadFloat(f) : temp3 = ReadFloat(f)
 					PositionEntity model, temp1, temp2, temp3
@@ -907,26 +907,26 @@ Function PlaceForest(fr.Forest, x#, y#, z#, r.Rooms)
 	
 	;load assets
 	
-	Local hmap[ROOM4], mask[ROOM4]
-	Local GroundTexture = LoadTexture_Strict(MapPath$+"forest\forestfloor.jpg")
+	Local hmap[ROOM4 + 1], mask[ROOM4 + 1]
+	Local GroundTexture = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forestfloor.jpg"))
 	;TextureBlend GroundTexture, FE_ALPHACURRENT
-	Local PathTexture = LoadTexture_Strict(MapPath$+"forest\forestpath.jpg")
+	Local PathTexture = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forestpath.jpg"))
 	;TextureBlend PathTexture, FE_ALPHACURRENT
 	
-	hmap[ROOM1] = LoadImage_Strict(MapPath$+"forest\forest1h.png")
-	mask[ROOM1] = LoadTexture_Strict(MapPath$+"forest\forest1h_mask.png",1+2)
+	hmap[ROOM1] = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest1h.png"))
+	mask[ROOM1] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest1h_mask.png"),1+2)
 	
-	hmap[ROOM2] = LoadImage_Strict(MapPath$+"forest\forest2h.png")
-	mask[ROOM2] = LoadTexture_Strict(MapPath$+"forest\forest2h_mask.png",1+2)
+	hmap[ROOM2] = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest2h.png"))
+	mask[ROOM2] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest2h_mask.png"),1+2)
 	
-	hmap[ROOM2C] = LoadImage_Strict(MapPath$+"forest\forest2Ch.png")
-	mask[ROOM2C] = LoadTexture_Strict(MapPath$+"forest\forest2Ch_mask.png",1+2)
+	hmap[ROOM2C] = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest2Ch.png"))
+	mask[ROOM2C] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest2Ch_mask.png"),1+2)
 	
-	hmap[ROOM3] = LoadImage_Strict(MapPath$+"forest\forest3h.png")
-	mask[ROOM3] = LoadTexture_Strict(MapPath$+"forest\forest3h_mask.png",1+2)
+	hmap[ROOM3] = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest3h.png"))
+	mask[ROOM3] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest3h_mask.png"),1+2)
 	
-	hmap[ROOM4] = LoadImage_Strict(MapPath$+"forest\forest4h.png")
-	mask[ROOM4] = LoadTexture_Strict(MapPath$+"forest\forest4h_mask.png",1+2)
+	hmap[ROOM4] = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest4h.png"))
+	mask[ROOM4] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest4h_mask.png"),1+2)
 	
 	For i = ROOM1 To ROOM4
 		;TextureBlend mask[i], FE_ALPHAMODULATE
@@ -935,14 +935,14 @@ Function PlaceForest(fr.Forest, x#, y#, z#, r.Rooms)
 	Next
 	
 	;detail meshes
-	;fr\DetailMesh[0] = LoadMesh_strict(MapPath$+"forest\detail\860_1_tree1.b3d")
-	;fr\DetailMesh[1] = LoadMesh_strict(MapPath$+"forest\detail\860_1_tree1_leaves.b3d")
-	fr\DetailMesh[1] = LoadMesh_Strict(MapPath$+"forest\detail\treetest4.b3d");1.b3d)
+	;fr\DetailMesh[0] = LoadMesh_strict("GFX\map\"+"forest\detail\860_1_tree1.b3d")
+	;fr\DetailMesh[1] = LoadMesh_strict("GFX\map\"+"forest\detail\860_1_tree1_leaves.b3d")
+	fr\DetailMesh[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\detail\treetest4.b3d"));1.b3d)
 	;EntityParent fr\DetailMesh[1],fr\DetailMesh[0]
-	fr\DetailMesh[2] = LoadMesh_Strict(MapPath$+"forest\detail\rock.b3d")
-	fr\DetailMesh[3] = LoadMesh_Strict(MapPath$+"forest\detail\rock2.b3d")
-	fr\DetailMesh[4] = LoadMesh_Strict(MapPath$+"forest\detail\treetest5.b3d")
-	fr\DetailMesh[5] = LoadRMesh(MapPath$+"forest\wall_opt.rmesh", Null)
+	fr\DetailMesh[2] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\detail\rock.b3d"))
+	fr\DetailMesh[3] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\detail\rock2.b3d"))
+	fr\DetailMesh[4] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\detail\treetest5.b3d"))
+	fr\DetailMesh[5] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"forest\wall_opt.rmesh"), Null)
 	
 	For i% = ROOM1 To ROOM4
 		HideEntity fr\TileMesh[i]
@@ -1161,23 +1161,23 @@ Function PlaceForest_MapCreator(fr.Forest, x#, y#, z#, r.Rooms)
 	;load assets
 	
 	Local hmap[ROOM4], mask[ROOM4]
-	Local GroundTexture = LoadTexture_Strict(MapPath$+"forest\forestfloor.jpg")
-	Local PathTexture = LoadTexture_Strict(MapPath$+"forest\forestpath.jpg")
+	Local GroundTexture = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forestfloor.jpg"))
+	Local PathTexture = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forestpath.jpg"))
 	
-	hmap[ROOM1]=LoadImage_Strict(MapPath$+"forest\forest1h.png")
-	mask[ROOM1]=LoadTexture_Strict(MapPath$+"forest\forest1h_mask.png",1+2)
+	hmap[ROOM1]=LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest1h.png"))
+	mask[ROOM1]=LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest1h_mask.png"),1+2)
 	
-	hmap[ROOM2]=LoadImage_Strict(MapPath$+"forest\forest2h.png")
-	mask[ROOM2]=LoadTexture_Strict(MapPath$+"forest\forest2h_mask.png",1+2)
+	hmap[ROOM2]=LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest2h.png"))
+	mask[ROOM2]=LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest2h_mask.png"),1+2)
 	
-	hmap[ROOM2C]=LoadImage_Strict(MapPath$+"forest\forest2Ch.png")
-	mask[ROOM2C]=LoadTexture_Strict(MapPath$+"forest\forest2Ch_mask.png",1+2)
+	hmap[ROOM2C]=LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest2Ch.png"))
+	mask[ROOM2C]=LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest2Ch_mask.png"),1+2)
 	
-	hmap[ROOM3]=LoadImage_Strict(MapPath$+"forest\forest3h.png")
-	mask[ROOM3]=LoadTexture_Strict(MapPath$+"forest\forest3h_mask.png",1+2)
+	hmap[ROOM3]=LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest3h.png"))
+	mask[ROOM3]=LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest3h_mask.png"),1+2)
 	
-	hmap[ROOM4]=LoadImage_Strict(MapPath$+"forest\forest4h.png")
-	mask[ROOM4]=LoadTexture_Strict(MapPath$+"forest\forest4h_mask.png",1+2)
+	hmap[ROOM4]=LoadImage_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest4h.png"))
+	mask[ROOM4]=LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\forest4h_mask.png"),1+2)
 	
 	For i = ROOM1 To ROOM4
 		;TextureBlend mask[i], FE_ALPHAMODULATE
@@ -1186,11 +1186,11 @@ Function PlaceForest_MapCreator(fr.Forest, x#, y#, z#, r.Rooms)
 	Next
 	
 	;detail meshes
-	fr\DetailMesh[1]=LoadMesh_Strict(MapPath$+"forest\detail\treetest4.b3d");1.b3d)
-	fr\DetailMesh[2]=LoadMesh_Strict(MapPath$+"forest\detail\rock.b3d")
-	fr\DetailMesh[3]=LoadMesh_Strict(MapPath$+"forest\detail\rock2.b3d")
-	fr\DetailMesh[4]=LoadMesh_Strict(MapPath$+"forest\detail\treetest5.b3d")
-	fr\DetailMesh[5]=LoadRMesh(MapPath$+"forest\wall_opt.rmesh", Null)
+	fr\DetailMesh[1]=LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\detail\treetest4.b3d"));1.b3d)
+	fr\DetailMesh[2]=LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\detail\rock.b3d"))
+	fr\DetailMesh[3]=LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\detail\rock2.b3d"))
+	fr\DetailMesh[4]=LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\detail\treetest5.b3d"))
+	fr\DetailMesh[5]=LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"forest\wall_opt.rmesh"), Null)
 	
 	For i%=ROOM1 To ROOM4
 		HideEntity fr\TileMesh[i]
@@ -1524,7 +1524,7 @@ Function LoadRoomMeshes()
 End Function
 
 
-LoadRoomTemplates("Data\rooms.ini")
+LoadRoomTemplates(scpModding_ProcessFilePath$("Data\rooms.ini"))
 
 Global RoomScale# = 8.0 / 2048.0
 Dim MapTemp%(MapWidth+1, MapHeight+1)
@@ -2108,12 +2108,12 @@ Function FillRoom(r.Rooms)
 			PositionEntity(r\Objects[9], r\x + 2624.0 * RoomScale, r\y + 992.0 * RoomScale, r\z + 6157.0 * RoomScale)	
 			EntityParent(r\Objects[9], r\obj)
 			
-			If r\Objects[13] = 0 Then r\Objects[13] = LoadMesh_Strict(MapPath$+"gateawall1.b3d", r\obj)
+			If r\Objects[13] = 0 Then r\Objects[13] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"gateawall1.b3d"), r\obj)
 			PositionEntity(r\Objects[13], r\x - 4308.0 * RoomScale, r\y - 1045.0 * RoomScale, r\z + 544.0 * RoomScale, True)
 			EntityColor(r\Objects[13], 25, 25, 25)
 			EntityType(r\Objects[13], HIT_MAP)
 			
-			If r\Objects[14] = 0 Then r\Objects[14] = LoadMesh_Strict(MapPath$+"gateawall2.b3d", r\obj)
+			If r\Objects[14] = 0 Then r\Objects[14] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"gateawall2.b3d"), r\obj)
 			PositionEntity(r\Objects[14], r\x - 3820.0 * RoomScale, r\y - 1045.0 * RoomScale, r\z + 544.0 * RoomScale, True)	
 			EntityColor(r\Objects[14], 25, 25, 25)
 			EntityType(r\Objects[14], HIT_MAP)
@@ -2122,7 +2122,7 @@ Function FillRoom(r.Rooms)
 			PositionEntity(r\Objects[15], r\x - 3568.0 * RoomScale, r\y - 1089.0 * RoomScale, r\z + 4944.0 * RoomScale)
 			EntityParent(r\Objects[15], r\obj)
 			
-			If r\Objects[16] = 0 Then r\Objects[16] = LoadMesh_Strict(MapPath$+"gatea_hitbox1.b3d", r\obj)
+			If r\Objects[16] = 0 Then r\Objects[16] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"gatea_hitbox1.b3d"), r\obj)
 			EntityPickMode(r\Objects[16], 2)
 			EntityType(r\Objects[16], HIT_MAP)
 			EntityAlpha(r\Objects[16], 0.0)
@@ -2285,7 +2285,7 @@ Function FillRoom(r.Rooms)
 			it\state = 80.0
 			EntityParent(it\collider, r\obj)
 			
-			If r\Objects[3] = 0 Then r\Objects[3] = LoadMesh_Strict(MapPath$+"room372_hb.b3d", r\obj)
+			If r\Objects[3] = 0 Then r\Objects[3] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room372_hb.b3d"), r\obj)
 			EntityPickMode(r\Objects[3], 2)
 			EntityType(r\Objects[3], HIT_MAP)
 			EntityAlpha(r\Objects[3], 0.0)
@@ -2342,7 +2342,7 @@ Function FillRoom(r.Rooms)
 			EntityParent(r\Objects[4], r\obj)
 
 			;objects 
-			If r\Objects[0] = 0 Then r\Objects[0] = LoadAnimMesh_Strict(MapPath$+"079.b3d")
+			If r\Objects[0] = 0 Then r\Objects[0] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"079.b3d"))
 			ScaleEntity(r\Objects[0], 1.3, 1.3, 1.3)
 			PositionEntity (r\Objects[0], r\x + 166.0 * RoomScale, r\y - 10800.0 * RoomScale, r\z + 1606.0 * RoomScale)
 			EntityParent(r\Objects[0], r\obj)
@@ -2482,7 +2482,7 @@ Function FillRoom(r.Rooms)
 			r\Objects[1] = CreatePivot()
 			PositionEntity(r\Objects[1], r\x - 669.0 * RoomScale, r\y + 0.5, r\z - 16.0 * RoomScale)
 			
-			Local Glasstex = LoadTexture_Strict(MapPath$+"glass.png", 1 + 2)
+			Local Glasstex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"glass.png"), 1 + 2)
 			r\Objects[2] = CreateSprite()
 			EntityTexture(r\Objects[2], Glasstex)
 			SpriteViewMode(r\Objects[2], 2)
@@ -2868,7 +2868,7 @@ Function FillRoom(r.Rooms)
 			EntityParent(r\Objects[0], r\obj)
 
 			;the lid of the container
-			r\Objects[1] = LoadMesh_Strict(MapPath$+"room008_2.b3d")
+			r\Objects[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room008_2.b3d"))
 			ScaleEntity r\Objects[1], RoomScale, RoomScale, RoomScale
 			PositionEntity(r\Objects[1], r\x + 292 * RoomScale, r\y - 4954.0 * RoomScale, r\z + 576.0 * RoomScale)
 			RotateEntity(r\Objects[1], 89, 0, 0, True)
@@ -2876,7 +2876,7 @@ Function FillRoom(r.Rooms)
 			
 			r\Levers[0] = r\Objects[1]
 			
-			Glasstex = LoadTexture_Strict(MapPath$+"glass.png", 1 + 2)
+			Glasstex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"glass.png"), 1 + 2)
 			r\Objects[2] = CreateSprite()
 			EntityTexture(r\Objects[2], Glasstex)
 			SpriteViewMode(r\Objects[2], 2)
@@ -3179,7 +3179,7 @@ Function FillRoom(r.Rooms)
 			PositionEntity(r\Objects[16], r\x - 432.0 * RoomScale, r\y - 5550.0 * RoomScale, r\z + 2976.0 * RoomScale)
 			EntityParent(r\Objects[16], r\obj)	
 			
-			If r\Objects[20] = 0 Then r\Objects[20] = LoadMesh_Strict(MapPath$+"room3storage_hb.b3d", r\obj)
+			If r\Objects[20] = 0 Then r\Objects[20] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room3storage_hb.b3d"), r\obj)
 			EntityPickMode(r\Objects[20], 2)
 			EntityType(r\Objects[20], HIT_MAP)
 			EntityAlpha(r\Objects[20], 0.0)
@@ -3422,7 +3422,7 @@ Function FillRoom(r.Rooms)
 					EndIf
 				EndIf
 			Next
-			If r\Objects[0] = 0 Then r\Objects[0] = LoadRMesh(MapPath$+"fan_opt.rmesh", Null)
+			If r\Objects[0] = 0 Then r\Objects[0] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"fan_opt.rmesh"), Null)
 			ScaleEntity(r\Objects[0], RoomScale, RoomScale, RoomScale)
 			PositionEntity(r\Objects[0], r\x - 248.0 * RoomScale, r\y + 528.0 * RoomScale, r\z, 0)
 			EntityParent(r\Objects[0], r\obj)
@@ -3453,7 +3453,7 @@ Function FillRoom(r.Rooms)
 			EntityPickMode(r\Objects[1], 1, False)
 			EntityRadius(r\Objects[1], 0.1)
 			
-			r\Objects[2] = LoadRMesh(MapPath$+"room012_2_opt.rmesh", Null)
+			r\Objects[2] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"room012_2_opt.rmesh"), Null)
 			ScaleEntity r\Objects[2], RoomScale, RoomScale, RoomScale
 			PositionEntity(r\Objects[2], r\x - 360 * RoomScale, r\y - 130 * RoomScale, r\z + 456.0 * RoomScale, 0)
 			EntityParent(r\Objects[2], r\obj)
@@ -3466,8 +3466,8 @@ Function FillRoom(r.Rooms)
 			HideEntity(r\Objects[3])
 			EntityParent(r\Objects[3], r\obj)
 			
-			If r\Objects[4] = 0 Then r\Objects[4] = LoadMesh_Strict(MapPath$+"room012_3.b3d")
-			tex = LoadTexture_Strict(MapPath$+"scp-012_0.png")
+			If r\Objects[4] = 0 Then r\Objects[4] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room012_3.b3d"))
+			tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"scp-012_0.png"))
 			EntityTexture r\Objects[4],tex, 0,1
 			ScaleEntity r\Objects[4], RoomScale, RoomScale, RoomScale
 			PositionEntity(r\Objects[4], r\x - 360.0 * RoomScale, r\y - 130.0 * RoomScale, r\z + 456.0 * RoomScale, 0)
@@ -3634,7 +3634,7 @@ Function FillRoom(r.Rooms)
 			
 			r\Objects[3] = CopyEntity(o\NPCModelID[30])
 			ScaleEntity(r\Objects[3], 0.07, 0.07, 0.07)
-			tex = LoadTexture_Strict(NPCsPath$+"duck(2).png")
+			tex = LoadTexture_Strict("GFX\npcs\"+"duck(2).png")
 			EntityTexture r\Objects[3], tex
 			PositionEntity (r\Objects[3], r\x + 928.0 * RoomScale, r\y - 640.0 * RoomScale, r\z + 704.0 * RoomScale)
 			
@@ -3870,7 +3870,7 @@ Function FillRoom(r.Rooms)
 			d\locked = True : d\MTFClose = False
 			FreeEntity(d\buttons[1]) : d\buttons[1] = 0
 			
-			r\Objects[0] = LoadRMesh(MapPath$+"IntroDesk_opt.rmesh", Null)
+			r\Objects[0] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"IntroDesk_opt.rmesh"), Null)
 			ScaleEntity r\Objects[0], RoomScale, RoomScale, RoomScale
 			PositionEntity r\Objects[0], r\x + 272.0 * RoomScale, r\y, r\z + 400.0 * RoomScale
 			EntityParent(r\Objects[0], r\obj)
@@ -3878,7 +3878,7 @@ Function FillRoom(r.Rooms)
 			de.Decals = CreateDecal(0, r\x + 272.0 * RoomScale, r\y + 0.005, r\z + 262.0 * RoomScale, 90, Rand(360), 0)
 			EntityParent(de\obj, r\obj)
 			
-			r\Objects[1] = LoadRMesh(MapPath$+"IntroDrawer_opt.rmesh", Null)
+			r\Objects[1] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"IntroDrawer_opt.rmesh"), Null)
 			ScaleEntity r\Objects[1], RoomScale, RoomScale, RoomScale
 			PositionEntity r\Objects[1], r\x + 448.0 * RoomScale, r\y, r\z + 192.0 * RoomScale
 			EntityParent(r\Objects[1], r\obj)
@@ -4255,7 +4255,7 @@ Function FillRoom(r.Rooms)
 					EndIf
 				EndIf
 			Next
-			If r\Objects[7] = 0 Then r\Objects[7] = LoadMesh_Strict(MapPath$+"room2tesla_caution.b3d", r\obj)
+			If r\Objects[7] = 0 Then r\Objects[7] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room2tesla_caution.b3d"), r\obj)
 			;[End Block]
 		Case "room2doors"
 			;[Block]
@@ -4302,10 +4302,10 @@ Function FillRoom(r.Rooms)
 			PositionEntity(r\RoomDoors[3]\buttons[0], EntityX(r\RoomDoors[3]\buttons[0], True) - 0.061, EntityY(r\RoomDoors[3]\buttons[0], True), EntityZ(r\RoomDoors[3]\buttons[0], True), True)
 			PositionEntity(r\RoomDoors[3]\buttons[1], EntityX(r\RoomDoors[3]\buttons[1], True) + 0.061, EntityY(r\RoomDoors[3]\buttons[1], True), EntityZ(r\RoomDoors[3]\buttons[1], True), True)
 			
-			If r\Objects[0] = 0 Then r\Objects[0] = LoadMesh_Strict(MapPath$+"914key.x", r\obj)
+			If r\Objects[0] = 0 Then r\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"914key.x"), r\obj)
 			PositionEntity(r\Objects[0], r\x - 416.0 * RoomScale, r\y + 190.0 * RoomScale, r\z + 374.0 * RoomScale, True)
 			
-			If r\Objects[1] = 0 Then r\Objects[1] = LoadMesh_Strict(MapPath$+"914knob.x", r\obj)
+			If r\Objects[1] = 0 Then r\Objects[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"914knob.x"), r\obj)
 			PositionEntity(r\Objects[1], r\x - 416.0 * RoomScale, r\y + 230.0 * RoomScale, r\z + 374.0 * RoomScale, True)
 			
 			For i% = 0 To 1
@@ -4428,7 +4428,7 @@ Function FillRoom(r.Rooms)
 			FreeEntity(d\buttons[1]) : d\buttons[1] = 0
 			d\locked = True : d\DisableWaypoint = True
 			
-            tex = LoadTexture_Strict(MapPath$+"Door02.jpg")			
+            tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"Door02.jpg"))			
 		    For ztemp = 0 To 1
 				d.Doors = CreateDoor(r\zone, r\x - 5760 * RoomScale, 0, r\z + (320+896*ztemp) * RoomScale, 0, r, False)
 				d\locked = True
@@ -4483,11 +4483,11 @@ Function FillRoom(r.Rooms)
 			TurnEntity(sc\ScrObj, 0, 90, 0)
 			EntityParent(sc\ScrObj, r\obj)
 			
-			If r\Objects[9] = 0 Then r\Objects[9] = LoadMesh_Strict(MapPath$+"173_2.b3d", r\obj)
+			If r\Objects[9] = 0 Then r\Objects[9] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"173_2.b3d"), r\obj)
 			EntityType(r\Objects[9], HIT_MAP)
 			EntityPickMode(r\Objects[9], 2)
 			
-			If r\Objects[10] = 0 Then r\Objects[10] = LoadMesh_Strict(MapPath$+"intro_labels.b3d", r\obj)
+			If r\Objects[10] = 0 Then r\Objects[10] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"intro_labels.b3d"), r\obj)
 			PositionEntity(r\Objects[10], EntityX(r\Objects[10], True), EntityY(r\Objects[10], True) - 10.0 * RoomScale, EntityZ(r\Objects[10], True), True)
 			
 			;Vehicle's spawnpoint
@@ -4587,7 +4587,7 @@ Function FillRoom(r.Rooms)
 			FreeEntity(d\buttons[0]) : d\buttons[0] = 0
 																	
 			;chamber		
-			If r\Objects[6] = 0 Then r\Objects[6] = LoadMesh_Strict(MapPath$+"room1062.b3d")
+			If r\Objects[6] = 0 Then r\Objects[6] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room1062.b3d"))
 			ScaleEntity (r\Objects[6], RoomScale, RoomScale, RoomScale)
 			EntityType r\Objects[6], HIT_MAP
 			EntityPickMode r\Objects[6], 3
@@ -4889,7 +4889,7 @@ Function FillRoom(r.Rooms)
 			ScaleEntity(r\Objects[13], 46.0 * RoomScale, 45.0 * RoomScale, 46.0 * RoomScale)
 			EntityParent(r\Objects[13], r\obj)	
 			
-			If r\Objects[14] = 0 Then r\Objects[14] = LoadMesh_Strict(MapPath$+"room1123_hb.b3d", r\obj)
+			If r\Objects[14] = 0 Then r\Objects[14] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room1123_hb.b3d"), r\obj)
 			EntityPickMode(r\Objects[14], 2)
 			EntityType(r\Objects[14], HIT_MAP)
 			EntityAlpha(r\Objects[14], 0.0)
@@ -4897,14 +4897,14 @@ Function FillRoom(r.Rooms)
 			;[End Block]
 		Case "pocketdimension"
 			;[Block]
-			Local hallway = LoadMesh_Strict(MapPath$+"pocketdimension2.b3d") ;the tunnels in the first room
-			r\Objects[8] = LoadMesh_Strict(MapPath$+"pocketdimension3.b3d") ;the room with the throne, moving pillars etc 
-			r\Objects[9] = LoadMesh_Strict(MapPath$+"pocketdimension4.b3d") ;the flying pillar
+			Local hallway = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"pocketdimension2.b3d")) ;the tunnels in the first room
+			r\Objects[8] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"pocketdimension3.b3d")) ;the room with the throne, moving pillars etc 
+			r\Objects[9] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"pocketdimension4.b3d")) ;the flying pillar
 			r\Objects[10] = CopyEntity(r\Objects[9])
 			
-			r\Objects[11] = LoadMesh_Strict(MapPath$+"pocketdimension5.b3d") ;the pillar room
+			r\Objects[11] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"pocketdimension5.b3d")) ;the pillar room
 			
-			terrain = LoadMesh_Strict(MapPath$+"pocketdimensionterrain.b3d")
+			terrain = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"pocketdimensionterrain.b3d"))
 			ScaleEntity terrain, RoomScale, RoomScale, RoomScale, True
 			PositionEntity terrain, r\x, r\y + 2944.0, r\z, True
 		
@@ -4993,7 +4993,7 @@ Function FillRoom(r.Rooms)
 				
 			Next
 			
-			Local OldManEyes% = LoadTexture_Strict(NPCsPath$+"scp_106_eyes.png")
+			Local OldManEyes% = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_106_eyes.png"))
 			r\Objects[17] = CreateSprite()
 			ScaleSprite(r\Objects[17], 0.03, 0.03)
 			EntityTexture(r\Objects[17], OldManEyes)
@@ -5001,8 +5001,8 @@ Function FillRoom(r.Rooms)
 			EntityFX(r\Objects[17], 1 + 8)
 			SpriteViewMode(r\Objects[17], 2)
 			
-			r\Objects[18] = LoadTexture_Strict(NPCsPath$+"pd_plane.png", 1 + 2)
-			r\Objects[19] = LoadTexture_Strict(NPCsPath$+"pd_plane_eye.png", 1 + 2)		
+			r\Objects[18] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"pd_plane.png"), 1 + 2)
+			r\Objects[19] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"pd_plane_eye.png"), 1 + 2)		
 			
 			r\Objects[20] = CreateSprite()
 			ScaleSprite(r\Objects[20], 8.0, 8.0)
@@ -5096,7 +5096,7 @@ Function FillRoom(r.Rooms)
 					EndIf
 				EndIf
 			Next
-			If r\Objects[3] = 0 Then r\Objects[3] = LoadMesh_Strict(MapPath$+"room2gw_pipes.b3d", r\obj)
+			If r\Objects[3] = 0 Then r\Objects[3] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room2gw_pipes.b3d"), r\obj)
 	        EntityPickMode(r\Objects[3], 2)
 			If r\RoomTemplate\Name = "room2gw"
 				r\Objects[0] = CreatePivot()
@@ -5204,7 +5204,7 @@ Function FillRoom(r.Rooms)
 			PositionEntity(d\buttons[1], r\x + 892.0 * RoomScale, EntityY(d\buttons[1],True), r\z + 253.0 * RoomScale, True)
 			FreeEntity d\obj2 : d\obj2 = 0
 			
-			If r\Objects[0] = 0 r\Objects[0] = LoadMesh_Strict(MapPath$+"room3offices_hb.b3d", r\obj)
+			If r\Objects[0] = 0 r\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room3offices_hb.b3d"), r\obj)
 			EntityPickMode(r\Objects[0], 2)
 			EntityType(r\Objects[0], HIT_MAP)
 			EntityAlpha(r\Objects[0], 0.0)
@@ -5224,9 +5224,9 @@ Function FillRoom(r.Rooms)
 			Local scale# = RoomScale * 4.5 * 0.4
 			Local screen%
 			
-			r\Textures[0] = LoadAnimTexture(GFXPath$+"SL_monitors_checkpoint.png", 1, 512, 512, 0, 4)
-			r\Textures[1] = LoadAnimTexture(GFXPath$+"Sl_monitors.png", 1, 256, 256, 0, 8)
-			r\Textures[2] = LoadAnimTexture(GFXPath$+"Sl_monitors2.png", 1, 512, 512, 0, 3)
+			r\Textures[0] = LoadAnimTexture(scpModding_ProcessFilePath$("GFX\"+"SL_monitors_checkpoint.png"), 1, 512, 512, 0, 4)
+			r\Textures[1] = LoadAnimTexture(scpModding_ProcessFilePath$("GFX\"+"Sl_monitors.png"), 1, 256, 256, 0, 8)
+			r\Textures[2] = LoadAnimTexture(scpModding_ProcessFilePath$("GFX\"+"Sl_monitors2.png"), 1, 512, 512, 0, 3)
 			
 			;Monitor Objects
 			For i = 0 To 14
@@ -5379,7 +5379,7 @@ Function FillRoom(r.Rooms)
 					Exit
 				EndIf
 			Next
-			If r\Objects[0] = 0 Then r\Objects[0] = LoadMesh_Strict(MapPath$+"room3z2_hb.b3d", r\obj)
+			If r\Objects[0] = 0 Then r\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room3z2_hb.b3d"), r\obj)
 			EntityPickMode(r\Objects[0], 2)
 			EntityType(r\Objects[0], HIT_MAP)
 			EntityAlpha(r\Objects[0], 0.0)
@@ -5424,7 +5424,7 @@ Function FillRoom(r.Rooms)
 			;[End Block]
 		Case "medibay" ;(Upgraded by Ultimate Edition)
 			;[Block]
-			If r\Objects[0] = 0 Then r\Objects[0] = LoadMesh_Strict(MapPath$+"medibay_props.b3d", r\obj)
+			If r\Objects[0] = 0 Then r\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"medibay_props.b3d"), r\obj)
 			EntityType(r\Objects[0], HIT_MAP)
 			EntityPickMode(r\Objects[0], 2)
 			
@@ -5456,7 +5456,7 @@ Function FillRoom(r.Rooms)
 			EntityParent(r\Objects[3], r\obj)
 			
 			If r\Objects[4] = 0 Then r\Objects[4] = CopyEntity(o\NPCModelID[30])
-			tex = LoadTexture_Strict(NPCsPath$+"duck(4).png")
+			tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"duck(4).png"))
 			EntityTexture r\Objects[4], tex
 			FreeTexture tex
 			ScaleEntity(r\Objects[4], 0.07, 0.07, 0.07)
@@ -5487,7 +5487,7 @@ Function FillRoom(r.Rooms)
 			r\Levers[0] = CreatePivot()
 			PositionEntity r\Levers[0], r\x + 205.0 * RoomScale, r\y + 200.0 * RoomScale, r\z + 2287.0 * RoomScale
 			
-			r\Levers[1] = LoadMesh_Strict(MapPath$+"dimension1499\1499object0_cull.b3d")
+			r\Levers[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"dimension1499\1499object0_cull.b3d"))
 			EntityType r\Levers[1], HIT_MAP
 			EntityAlpha r\Levers[1], 0
 
@@ -5525,7 +5525,7 @@ Function FillRoom(r.Rooms)
 	        ;[End Block]
 		Case "medibay2" ;Box of Horrors. (Upgraded by Ultimate Edition).
 			;[Block]
-			If r\Objects[0] = 0 Then r\Objects[0] = LoadMesh_Strict(MapPath$+"medibay_props.b3d", r\obj)
+			If r\Objects[0] = 0 Then r\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"medibay_props.b3d"), r\obj)
 			EntityType(r\Objects[0], HIT_MAP)
 			EntityPickMode(r\Objects[0], 2)
 
@@ -6251,7 +6251,7 @@ Function FillRoom(r.Rooms)
         Case "room2bio" ;Ultimate Edition room.
             ;[Block]				
 			;Loading the terrain
-			If r\Objects[1] = 0 Then r\Objects[1] = LoadMesh_Strict(MapPath$ + "room2bio_terrain.b3d")
+			If r\Objects[1] = 0 Then r\Objects[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\" + "room2bio_terrain.b3d"))
 			ScaleEntity(r\Objects[1], RoomScale, RoomScale, RoomScale)
 			RotateEntity(r\Objects[1], 0, r\angle, 0)
 			PositionEntity(r\Objects[1], r\x, r\y - 1.0 * RoomScale, r\z)	
@@ -6269,14 +6269,14 @@ Function FillRoom(r.Rooms)
             it = CreateItem("Incident O5-14", "paper", r\x + 400.0 * RoomScale, r\y + 230.0 * RoomScale, r\z + 960.0 * RoomScale)
 			EntityParent(it\collider, r\obj) : RotateEntity(it\collider, 0, 90, 0)
 			
-			If r\Objects[0] = 0 r\Objects[0] = LoadMesh_Strict(MapPath$ + "room2offices5_hb.b3d", r\obj)
+			If r\Objects[0] = 0 r\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\" + "room2offices5_hb.b3d"), r\obj)
 			EntityPickMode(r\Objects[0], 2)
 			EntityType(r\Objects[0], HIT_MAP)
 			EntityAlpha(r\Objects[0], 0.0)
 			;[End Block]
 		Case "room3offices2" ;Ultimate Edition room.
 		    ;[Block]
-		    If r\Objects[0] = 0 r\Objects[0] = LoadMesh_Strict(MapPath$ + "room3offices2_hb.b3d", r\obj)
+		    If r\Objects[0] = 0 r\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\" + "room3offices2_hb.b3d"), r\obj)
 			EntityPickMode(r\Objects[0], 2)
 			EntityType(r\Objects[0], HIT_MAP)
 			EntityAlpha(r\Objects[0], 0.0)
@@ -6289,7 +6289,7 @@ Function FillRoom(r.Rooms)
 					Exit
 				EndIf
 			Next
-            If r\Objects[0] = 0 r\Objects[0] = LoadMesh_Strict(MapPath$+"room2Coffices_hb.b3d", r\obj)
+            If r\Objects[0] = 0 r\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"room2Coffices_hb.b3d"), r\obj)
 			EntityPickMode(r\Objects[0], 2)
 			EntityType(r\Objects[0], HIT_MAP)
 			EntityAlpha(r\Objects[0], 0.0)
@@ -7039,7 +7039,7 @@ Function UpdateScreens()
 					DrawHandIcon=True
 					If MouseUp1 Then 
 						SelectedScreen=s
-						s\img = LoadImage_Strict("GFX\screens\"+s\imgpath)
+						s\img = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\screens\"+s\imgpath))
 						s\img = ResizeImage2(s\img, ImageWidth(s\img) * MenuScale, ImageHeight(s\img) * MenuScale)
 						MaskImage s\img, 255,0,255
 						PlaySound_Strict ButtonSFX
@@ -7154,8 +7154,8 @@ End Function
 Function UpdateSecurityCams()
 	Local sc.SecurityCams
 	Local fs.FPS_Settings = First FPS_Settings
-	Local DefaultTexture% = LoadTexture_Strict("GFX\map\CameraTexture1.png")
-	Local RedTexture% = LoadTexture_Strict("GFX\map\CameraTexture2.png")
+	Local DefaultTexture% = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\CameraTexture1.png"))
+	Local RedTexture% = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\CameraTexture2.png"))
 	;coffineffect = 0, not affected by 895
 	;coffineffect = 1, constantly affected by 895
 	;coffineffect = 2, 079 can broadcast 895 feed on this screen
@@ -7260,8 +7260,7 @@ Function UpdateSecurityCams()
 					EndIf
 					
 					If Sanity < (-1000) Then 
-						DeathMSG = Chr(34)+"What we know is that he died of cardiac arrest. My guess is that it was caused by SCP-895, although it has never been observed affecting video equipment from this far before. "
-						DeathMSG = DeathMSG + "Further testing is needed to determine whether SCP-895's "+Chr(34)+"Red Zone"+Chr(34)+" is increasing."+Chr(34)
+						DeathMSG = Chr(34)+scpLang_GetPhrase("ingame.scp895")+Chr(34)
 						
 						If VomitTimer < -10 Then
 							Kill()
@@ -7384,10 +7383,10 @@ Function UpdateSecurityCams()
 							EntityTexture(sc\ScrOverlay, at\OverlayTextureID[16])
 						Else
 							If sc\soundCHN = 0 Then
-								sc\soundCHN = PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\079\Broadcast"+Rand(1,3)+".ogg"))
+								sc\soundCHN = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\079\Broadcast"+Rand(1,3)+".ogg")))
 								If sc\CoffinEffect=2 Then sc\CoffinEffect=3 : sc\PlayerState = 0
 							ElseIf (Not ChannelPlaying(sc\soundCHN))
-								sc\soundCHN = PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\079\Broadcast"+Rand(1,3)+".ogg"))
+								sc\soundCHN = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\079\Broadcast"+Rand(1,3)+".ogg")))
 								If sc\CoffinEffect=2 Then sc\CoffinEffect=3 : sc\PlayerState = 0
 							EndIf
 							EntityTexture(sc\ScrOverlay, at\OtherTextureID[3])
@@ -7476,7 +7475,7 @@ Function UpdateLever(obj, locked=False)
 						If GrabbedEntity = obj Then
 							DrawHandIcon = True 
 							;TurnEntity(obj, , 0, 0)
-							RotateEntity(GrabbedEntity, Max(Min(EntityPitch(obj)+Max(Min(mouse_y_speed_1 * 8,30.0),-30), 80), -80), EntityYaw(obj), 0)
+							RotateEntity(GrabbedEntity, Max(Min(EntityPitch(obj)+Max(Min(mouse_y_leverTurn * 8,30.0),-30), 80), -80), EntityYaw(obj), 0)
 							
 							DrawArrowIcon(0) = True
 							DrawArrowIcon(2) = True
@@ -9052,7 +9051,7 @@ Function SetChunkDataValues()
 	
 	For i = 0 To 63
 		For j = 0 To 63
-			CHUNKDATA(i,j)=Rand(0,GetINIInt("Data\1499chunks.INI","general","count"))
+			CHUNKDATA(i,j)=Rand(0,GetINIInt(scpModding_ProcessFilePath$("Data\1499chunks.INI"),"general","count"))
 		Next
 	Next
 	
@@ -9068,7 +9067,7 @@ Type ChunkPart
 End Type
 
 Function CreateChunkParts(r.Rooms)
-	Local File$ = "Data\1499chunks.INI"
+	Local File$ = scpModding_ProcessFilePath$("Data\1499chunks.INI")
 	Local ChunkAmount% = GetINIInt(File$,"general","count")
 	Local i%,StrTemp$,j%
 	Local chp.ChunkPart,chp2.ChunkPart
@@ -9133,7 +9132,7 @@ Function CreateChunk.Chunk(obj%,x#,y#,z#,isSpawnChunk%=False)
 	ch\IsSpawnChunk = isSpawnChunk
 		
 	If obj% > -1
-		ch\Amount% = GetINIInt("Data\1499chunks.INI","chunk"+obj,"count")
+		ch\Amount% = GetINIInt(scpModding_ProcessFilePath$("Data\1499chunks.INI"),"chunk"+obj,"count")
 		For chp = Each ChunkPart
 			If chp\ID = obj%
 				For i = 0 To ch\Amount
@@ -9161,7 +9160,7 @@ Function UpdateChunks(r.Rooms,ChunkPartAmount%,spawnNPCs%=True)
 	x# = -ChunkMaxDistance#+(ChunkX*40)
 	z# = -ChunkMaxDistance#+(ChunkZ*40)
 	
-	Local CurrChunkData% = 0, MaxChunks% = GetINIInt("Data\1499chunks.INI","general","count")
+	Local CurrChunkData% = 0, MaxChunks% = GetINIInt(scpModding_ProcessFilePath$("Data\1499chunks.INI"),"general","count")
 	
 	Repeat
 		Local chunkfound% = False

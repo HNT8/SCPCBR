@@ -328,7 +328,7 @@ Global MouseSensitivity# = GetINIFloat(OptionFile, "controls", "mouse sensitivit
 
 Global InvertMouse% = GetINIInt(OptionFile, "controls", "invert mouse y")
 
-Global MouseSmooth# = GetINIFloat(OptionFile, "controls", "mouse smoothing", 1.0)
+Global MouseSmooth# = GetINIFloat(OptionFile, "controls", "mouse smoothing")
 
 Global KEY_RIGHT = GetINIInt(OptionFile, "controls", "Right key")
 Global KEY_LEFT = GetINIInt(OptionFile, "controls", "Left key")
@@ -419,7 +419,7 @@ Function SaveOptionsINI()
 	PutINIValue(OptionFile, "advanced", "antialiased text", AATextEnable)
 	PutINIValue(OptionFile, "graphics", "particle amount", ParticleAmount)
 	PutINIValue(OptionFile, "graphics", "enable vram", SaveTexturesInVRam)
-	PutINIValue(OptionFile, "controls", "mouse smoothing", MouseSmooth)
+	PutINIValue(OptionFile, "controls", "mouse smoothing", mouse_smooth)
 	
 	;{~--<MOD>--~}
 	

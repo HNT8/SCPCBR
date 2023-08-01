@@ -11,7 +11,7 @@ Const HIT_DEAD% = 6
 
 ;[?]
 
-Const INFINITY# = (999.0) ^ (99999.0)
+;Const Infinity# = (999.0) ^ (99999.0)
 Const NAN# = (-1.0) ^ (0.5)
 
 Const ClrR = 50
@@ -22,18 +22,18 @@ Const ClrB = 50
 
 ;[FILES]
 
-Const GFXPath$ = "GFX\"
+GFXPath$ = scpModding_ProcessFilePath$("GFX\")
 
 ;[SOUNDS]
 
-Const SFXPath$ = "SFX\"
+SFXPath$ = scpModding_ProcessFilePath$("SFX\")
 
 ;[FONTS]
 
 Const MaxFontAmount% = 5
 Const MaxCreditsFontAmount% = 2
 
-Const FontPath$ = GFXPath$+"font\"
+FontPath$ = scpModding_ProcessFilePath$("GFX\"+"font\")
 
 ;{~--<END>--~}
 
@@ -91,7 +91,7 @@ Const gridsz% = 19 ;Same size as the main map itself (better for the map creator
 
 ;{~--<MOD>--~}
 
-Const MapPath$ = GFXPath$+"map\"
+MapPath$ = scpModding_ProcessFilePath$("GFX\"+"map\")
 
 ;[3D MENU]
 
@@ -137,7 +137,7 @@ Const AchvDuck% = 53, AchvGears% = 54, AchvMTF% = 55, AchvO5% = 56, AchvKeyCard6
 
 Const MaxNPCModelIDAmount = 40
 
-Const NPCsPath$ = GFXPath$+"npcs\"
+NPCsPath$ = scpModding_ProcessFilePath$("GFX\"+"npcs\")
 
 ;{~--<END>--~}
 
@@ -199,14 +199,14 @@ Const C_SWP_SHOWWINDOW = $0040
 
 ;[MUSIC]
 
-Const MusicPath$ = SFXPath$+"Music\"
-Const MusicPath2$ = SFXPath$+"Radio\UserTracks\"
+MusicPath$ = scpModding_ProcessFilePath$("SFX\"+"Music\")
+MusicPath2$ = scpModding_ProcessFilePath$("SFX\"+"Radio\UserTracks\")
 
 ;[VERSIONS]
 
 Const GameVersionNumber$ = "1.3.11"
 Const ModVersionNumber$ = "5.5.4.1"
-Const RemasteredVersionNumber$ = "1.5.1"
+Const RemasteredVersionNumber$ = "1.6"
 
 ;[OPTIONS]
 
@@ -220,7 +220,7 @@ Const SavePath$ = "Saves\"
 
 ;[ITEMS]
 
-Const ItemsPath$ = GFXPath$+"items\"
+ItemsPath$ = scpModding_ProcessFilePath$("GFX\"+"items\")
 
 ;{~--<END>--~}
 

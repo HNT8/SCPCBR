@@ -5,7 +5,7 @@ Function sky_CreateSky(filename$,parent%=0)
 	sky = CreateMesh(parent)
 	For face = 1 To 6
 		Read direction$
-		Local fname$ = filename$ + direction$ + ".png"
+		Local fname$ = scpModding_ProcessFilePath$(filename$ + direction$ + ".png")
 		If FileType(fname$)=1
 			Local b = LoadBrush_Strict(fname$,%110001)
 			s = CreateSurface(sky,b)

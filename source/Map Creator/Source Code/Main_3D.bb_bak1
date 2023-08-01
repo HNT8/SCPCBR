@@ -1823,7 +1823,7 @@ Function MilliSecs2()
 End Function
 
 Function WrapAngle#(angle#)
-	;If angle = INFINITY Then Return 0.0
+	;If angle = Infinity Then Return 0.0
 	While angle < 0
 		angle = angle + 360
 	Wend 

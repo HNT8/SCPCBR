@@ -344,7 +344,7 @@ Function QuickLoadEvents()
 					e\EventStr = "load1"
 				ElseIf e\EventStr = "load1"
 					QuickLoadPercent = 20
-					e\room\NPC[0]\Sound=LoadSound_Strict(SFXPath$+"Room\Storeroom\Escape1.ogg")
+					e\room\NPC[0]\Sound=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Storeroom\Escape1.ogg"))
 					e\EventStr = "load2"
 				ElseIf e\EventStr = "load2"
 					QuickLoadPercent = 35
@@ -360,7 +360,7 @@ Function QuickLoadEvents()
 					e\EventStr = "load4"
 				ElseIf e\EventStr = "load4"
 					QuickLoadPercent = 80
-					e\room\NPC[1]\Sound=LoadSound_Strict(SFXPath$+"Room\Storeroom\Escape2.ogg")
+					e\room\NPC[1]\Sound=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Storeroom\Escape2.ogg"))
 					e\EventStr = "load5"
 				ElseIf e\EventStr = "load5"
 					QuickLoadPercent = 100
@@ -483,7 +483,7 @@ Function QuickLoadEvents()
 				ScaleSprite ForestNPC,0.75*(140.0/410.0),0.75
 				SpriteViewMode ForestNPC,4
 				EntityFX ForestNPC,1+8
-				at\OtherTextureID[2] = LoadAnimTexture(NPCsPath$+"AgentIJ.AIJ",1+2,140,410,0,4)
+				at\OtherTextureID[2] = LoadAnimTexture("GFX\npcs\"+"AgentIJ.AIJ",1+2,140,410,0,4)
 				ForestNPCData[0] = 0
 				EntityTexture ForestNPC, at\OtherTextureID[2], ForestNPCData[0]
 				ForestNPCData[1]=0
@@ -523,17 +523,17 @@ Function QuickLoadEvents()
 			If e\EventState = 0.0
 				If e\EventStr = "load0"
 					QuickLoadPercent = 10
-					e\room\Objects[0] = LoadMesh_Strict(MapPath$+"dimension1499\1499plane.b3d")
+					e\room\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"dimension1499\1499plane.b3d"))
 					HideEntity e\room\Objects[0]
 					e\EventStr = "load1"
 				ElseIf e\EventStr = "load1"
 					QuickLoadPercent = 30
-				    I_1499\Sky = sky_CreateSky(MapPath$+"sky\1499sky")
+				    I_1499\Sky = sky_CreateSky(scpModding_ProcessFilePath$("GFX\map\"+"sky\1499sky"))
 					e\EventStr = 1
 				Else
 					If Int(e\EventStr)<16
 						QuickLoadPercent = QuickLoadPercent + 2
-						e\room\Objects[Int(e\EventStr)] = LoadMesh_Strict(MapPath$+"dimension1499\1499object"+(Int(e\EventStr))+".b3d")
+						e\room\Objects[Int(e\EventStr)] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"dimension1499\1499object"+(Int(e\EventStr))+".b3d"))
 						HideEntity e\room\Objects[Int(e\EventStr)]
 						e\EventStr = Int(e\EventStr)+1
 					ElseIf Int(e\EventStr)=16
@@ -639,7 +639,7 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 						ResetEntity Curr096\Collider
 						Curr096\State = 6
 						SetNPCFrame(Curr096,0)
-						e\Sound = LoadSound_Strict(SFXPath$+"SCP\096\ElevatorSlam.ogg")
+						e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\096\ElevatorSlam.ogg"))
 						EventState = EventState + fs\FPSfactor[0] * 1.4
 					EndIf
 				EndIf
@@ -707,7 +707,7 @@ Function UpdateEvents()
 						If e\room\RoomDoors[4]\openstate > 50 Or EntityDistance(Collider, e\room\RoomDoors[4]\frameobj) < 0.5 Then
 							e\room\RoomDoors[4]\openstate = Min(e\room\RoomDoors[4]\openstate, 50)
 							e\room\RoomDoors[4]\open = False
-							PlaySound2(LoadTempSound(SFXPath$+"Door\DoorError.ogg"), Camera, e\room\RoomDoors[4]\frameobj)
+							PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\DoorError.ogg")), Camera, e\room\RoomDoors[4]\frameobj)
 						EndIf							
 					EndIf
 				Else
@@ -748,10 +748,10 @@ Function UpdateEvents()
 						CameraFogRange(Camera, CameraFogNear, CameraFogFar)
 						CameraFogMode(Camera, 1)
 						If SelectedDifficulty\saveType = SAVEANYWHERE Then
-							Msg = "Press " + KeyName(KEY_SAVE) + " to save."
+							Msg = scpLang_GetPhrase$("events.press") + " " + KeyName(KEY_SAVE) + " " + scpLang_GetPhrase$("events.room173save")
 							MsgTimer = 70 * 4
 						ElseIf SelectedDifficulty\saveType = SAVEONSCREENS Then
-							Msg = "Saving is only permitted on clickable monitors scattered throughout the facility."
+							Msg = scpLang_GetPhrase$("events.room173monitor")
 							MsgTimer = 70 * 8
 						EndIf
 						
@@ -836,7 +836,7 @@ Function UpdateEvents()
 							ShowEntity Curr173\obj
 							If e\EventState > 900 And e\room\RoomDoors[5]\open Then
 								If e\EventState - fs\FPSfactor[0] <= 900 Then 
-									e\room\NPC[1]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\WhatThe.ogg")
+									e\room\NPC[1]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\WhatThe.ogg"))
 									e\room\NPC[1]\SoundCHN = PlaySound2(e\room\NPC[1]\Sound, Camera, e\room\NPC[1]\Collider)
 								EndIf
 								e\room\NPC[1]\State = 3
@@ -894,7 +894,7 @@ Function UpdateEvents()
                                                 PositionEntity Curr173\Collider, 0, 0, 0
                                             EndIf
 											ResetEntity Curr173\Collider
-											Msg = "Hold " + KeyName(KEY_SPRINT) + " to run."
+											Msg = scpLang_GetPhrase$("events.hold") + " " + KeyName(KEY_SPRINT) + " " + scpLang_GetPhrase$("events.room173run")
 											MsgTimer = 70 * 8
 										EndIf
 									EndIf
@@ -954,7 +954,7 @@ Function UpdateEvents()
 								e\Sound2 = 0
 							EndIf
 							
-							e\Sound2 = LoadSound_Strict(SFXPath$+"Alarm\Alarm2_" + Int(e\EventState3) + ".ogg")
+							e\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Alarm\Alarm2_" + Int(e\EventState3) + ".ogg"))
 							e\SoundCHN2 = PlaySound_Strict(e\Sound2)
 						Else
 							If Int(e\EventState3) = 8 Then CameraShake = 1.0
@@ -964,11 +964,11 @@ Function UpdateEvents()
 					If ((e\EventState Mod 600 > 300) And ((e\EventState + fs\FPSfactor[0]) Mod 600 < 300)) Then
 						i = Floor((e\EventState - 5000) / 600) + 1
 						
-						If i = 0 Then PlaySound_Strict(LoadTempSound(SFXPath$+"Room\Intro\PA\Scripted\Scripted6.ogg"))
+						If i = 0 Then PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\PA\Scripted\Scripted6.ogg")))
 						
 						If (i > 0 And i < 27) Then
 							If Not CommotionState(i) Then ;Prevents the same commotion file from playing more then once.
-								PlaySound_Strict(LoadTempSound(SFXPath$+"Room\Intro\Commotion\Commotion" + i + ".ogg"))
+								PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Commotion\Commotion" + i + ".ogg")))
 								CommotionState(i) = True
 							EndIf
 						EndIf
@@ -1017,7 +1017,7 @@ Function UpdateEvents()
 								CurrMusicVolume = MusicVolume
 								
 								StopStream_Strict(MusicCHN)
-								MusicCHN = StreamSound_Strict(MusicPath + Music(13) + ".ogg",CurrMusicVolume,Mode)
+								MusicCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\Music\" + Music(13) + ".ogg"),CurrMusicVolume,Mode)
 								NowPlaying = ShouldPlay
 								
 								PlaySound_Strict(IntroSFX(11))
@@ -1026,7 +1026,7 @@ Function UpdateEvents()
 								EntityAlpha(at\OverlayID[14], 0.5)
 								
 								CreateConsoleMsg("")
-								CreateConsoleMsg("WARNING! Using the console commands or teleporting away from the intro scene may cause bugs or crashing.", 255, 0, 0)
+								CreateConsoleMsg(scpLang_GetPhrase$("events.room173introconsole"), 255, 0, 0)
 								CreateConsoleMsg("")
 							EndIf
 							
@@ -1079,7 +1079,7 @@ Function UpdateEvents()
 									ShowEntity Collider
 									DropSpeed = 0
 									e\EventState3 = 15
-									Msg = "Pick up the paper on the desk."
+									Msg = scpLang_GetPhrase$("events.room173intropaper")
 									MsgTimer = 70 * 7
 								EndIf
 								
@@ -1088,7 +1088,7 @@ Function UpdateEvents()
 								
 							ElseIf e\EventState3 < 40
 								If Inventory(0) <> Null Then
-									Msg = "Press " + KeyName(KEY_INV) + " to open the inventory."
+									Msg = scpLang_GetPhrase$("events.press") + " " + KeyName(KEY_INV) + " " + scpLang_GetPhrase$("events.room173introinventory")
 									MsgTimer = 70 * 7
 									e\EventState3 = 40
 									Exit
@@ -1102,7 +1102,7 @@ Function UpdateEvents()
 						ElseIf e\EventState3 >= 150.0 And e\EventState3 < 700
 							If e\room\NPC[3]\State = 7 Then
 								If e\room\NPC[3]\Sound2 = 0
-									e\room\NPC[3]\Sound2 = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\BeforeDoorOpen.ogg")
+									e\room\NPC[3]\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\BeforeDoorOpen.ogg"))
 									e\room\NPC[3]\SoundCHN2 = PlaySound2(e\room\NPC[3]\Sound2, Camera, e\room\NPC[3]\Collider)
 								EndIf
 								
@@ -1110,7 +1110,7 @@ Function UpdateEvents()
 								
 								If (Not ChannelPlaying(e\room\NPC[3]\SoundCHN2))
 									
-									e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\ExitCell.ogg")
+									e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\ExitCell.ogg"))
 									e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 
 									e\room\NPC[3]\State = 9
@@ -1133,7 +1133,7 @@ Function UpdateEvents()
 											If ChannelPlaying(e\room\NPC[3]\SoundCHN) Then StopChannel e\room\NPC[3]\SoundCHN
 										EndIf
 										FreeSound_Strict e\room\NPC[3]\Sound
-										e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\Escort" + Rand(1, 2) + ".ogg")
+										e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\Escort" + Rand(1, 2) + ".ogg"))
 										e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 										e\room\NPC[3]\PathStatus = FindPath(e\room\NPC[3], PlayerRoom\x - 320.0 * RoomScale, 0.3, PlayerRoom\z - 704.0 * RoomScale)
 										e\room\NPC[4]\PathStatus = FindPath(e\room\NPC[4], PlayerRoom\x - 320.0 * RoomScale, 0.3, PlayerRoom\z - 704.0 * RoomScale)
@@ -1148,11 +1148,11 @@ Function UpdateEvents()
 									e\room\NPC[3]\State = 9
 									If e\EventState3 - (fs\FPSfactor[0] / 4) < 350 And e\EventState3 >= 350 Then
 										FreeSound_Strict e\room\NPC[3]\Sound
-										e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\ExitCellRefuse" + Rand(1, 2) + ".ogg")
+										e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\ExitCellRefuse" + Rand(1, 2) + ".ogg"))
 										e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 									ElseIf e\EventState3 - (fs\FPSfactor[0] / 4) < 550 And e\EventState3 >= 550 
 										FreeSound_Strict e\room\NPC[3]\Sound
-										e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\CellGas" + Rand(1, 2) + ".ogg")
+										e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\CellGas" + Rand(1, 2) + ".ogg"))
 										e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 									ElseIf e\EventState3 > 630
 										PositionEntity Collider, EntityX(Collider), EntityY(Collider), Min(EntityZ(Collider), EntityZ(e\room\obj,True) + 490.0 * RoomScale)
@@ -1244,7 +1244,7 @@ Function UpdateEvents()
 										If Distance(EntityX(Collider), EntityZ(Collider), EntityX(e\room\obj,True) - 3328.0 * RoomScale, EntityZ(e\room\obj, True) - 1232.0 * RoomScale) < 5.0 Then
 											e\room\NPC[6]\State = 1
 											If e\EventStr = "done" Then 
-												PlaySound_Strict LoadTempSound(SFXPath$+"Room\Intro\PA\Scripted\Announcement" + Rand(1, 7) + ".ogg")
+												PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\PA\Scripted\Announcement" + Rand(1, 7) + ".ogg"))
 											EndIf
 										EndIf
 									EndIf
@@ -1286,18 +1286,18 @@ Function UpdateEvents()
 							
 							If e\EventStr <> "" And e\EventStr <> "done" Then
 								If e\SoundCHN = 0 Then 
-									e\SoundCHN = PlaySound_Strict(LoadTempSound(SFXPath$+"Room\Intro\PA\On.ogg"))
+									e\SoundCHN = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\PA\On.ogg")))
 								EndIf
 								If ChannelPlaying(e\SoundCHN)=False Then
 									strtemp = Left(e\EventStr, Instr(e\EventStr, "|", 1) - 1)
-									e\SoundCHN = PlaySound_Strict (LoadTempSound(SFXPath$+"Room\Intro\PA\"+strtemp))
+									e\SoundCHN = PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\PA\"+strtemp)))
 									e\EventStr = Right(e\EventStr, Len(e\EventStr) - Len(strtemp) - 1)
 									If e\EventStr = "" Then 
 										FreeSound_Strict e\room\NPC[3]\Sound
 										temp = Rand(1, 5)
-										e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Conversation" + temp + "a.ogg")
+										e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Conversation" + temp + "a.ogg"))
 										e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
-										e\room\NPC[4]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Conversation" + temp + "b.ogg")
+										e\room\NPC[4]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Conversation" + temp + "b.ogg"))
 										e\room\NPC[4]\SoundCHN = PlaySound2(e\room\NPC[4]\Sound, Camera, e\room\NPC[4]\Collider)
 										e\EventStr = "done"
 									EndIf
@@ -1317,19 +1317,19 @@ Function UpdateEvents()
 									
 									If e\room\NPC[3]\State2 < 2 Then
 										FreeSound_Strict e\room\NPC[3]\Sound
-										e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\EscortRefuse" + Rand(1, 2) + ".ogg")
+										e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\EscortRefuse" + Rand(1, 2) + ".ogg"))
 										e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 										e\room\NPC[3]\State3 = 50
 										e\room\NPC[3]\State2 = 3
 									ElseIf e\room\NPC[3]\State2 = 3
 										FreeSound_Strict e\room\NPC[3]\Sound
-										e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\EscortPissedOff" + Rand(1, 2) + ".ogg")
+										e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\EscortPissedOff" + Rand(1, 2) + ".ogg"))
 										e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 										e\room\NPC[3]\State3 = 50
 										e\room\NPC[3]\State2 = 4
 									ElseIf e\room\NPC[3]\State2 = 4
 										FreeSound_Strict e\room\NPC[3]\Sound
-										e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\EscortKill" + Rand(1, 2) + ".ogg")
+										e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\EscortKill" + Rand(1, 2) + ".ogg"))
 										e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 										e\room\NPC[3]\State3 = 50 + 70 * 2.5
 										e\room\NPC[3]\State2 = 5
@@ -1382,7 +1382,7 @@ Function UpdateEvents()
 										e\room\NPC[3]\PathStatus = 2
 										If e\room\NPC[3]\State2=0 Then
 											FreeSound_Strict e\room\NPC[3]\Sound
-											e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\EscortRun.ogg")
+											e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\EscortRun.ogg"))
 											e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 											PlaySound2(e\Sound, Camera, e\room\NPC[3]\Collider)
 											e\room\NPC[3]\State2 = 1
@@ -1440,7 +1440,7 @@ Function UpdateEvents()
 								EndIf
 								
 								FreeSound_Strict e\room\NPC[3]\Sound
-								e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\EscortDone" + Rand(1, 5) + ".ogg")
+								e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\EscortDone" + Rand(1, 5) + ".ogg"))
 								e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 								
 								PositionEntity e\room\NPC[6]\Collider, EntityX(e\room\obj,True)-1190.0 * RoomScale, 450.0 * RoomScale, EntityZ(e\room\obj, True) + 456.0 * RoomScale, True
@@ -1462,7 +1462,7 @@ Function UpdateEvents()
 							If (Not ChannelPlaying(e\room\NPC[3]\SoundCHN)) And e\room\NPC[3]\Frame < 358.0 Then
 								e\room\NPC[3]\State = 8
 								FreeSound_Strict e\room\NPC[3]\Sound
-								e\room\NPC[3]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Ulgrin\OhAndByTheWay.ogg")
+								e\room\NPC[3]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\OhAndByTheWay.ogg"))
 								e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound, Camera, e\room\NPC[3]\Collider)
 								SetNPCFrame(e\room\NPC[3], 358)
 							ElseIf e\room\NPC[3]\Frame >= 358.0 Then
@@ -1549,17 +1549,17 @@ Function UpdateEvents()
 						;[Block]
 						If e\EventState = 0 Then
 							If PlayerRoom = e\room Then
-								IntroSFX(0) = LoadSound_Strict(SFXPath$+"Room\Intro\Scientist\Franklin\EnterChamber.ogg")
-								IntroSFX(1) = LoadSound_Strict(SFXPath$+"Room\Intro\Scientist\Franklin\Approach173.ogg")
-								IntroSFX(2) = LoadSound_Strict(SFXPath$+"Room\Intro\Scientist\Franklin\Problem.ogg")
+								IntroSFX(0) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Scientist\Franklin\EnterChamber.ogg"))
+								IntroSFX(1) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Scientist\Franklin\Approach173.ogg"))
+								IntroSFX(2) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Scientist\Franklin\Problem.ogg"))
 								For i = 4 To 6
-									IntroSFX(i) = LoadSound_Strict(SFXPath$+"Room\Intro\Scientist\Franklin\Refuse" + (i - 3) + ".ogg")
+									IntroSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Scientist\Franklin\Refuse" + (i - 3) + ".ogg"))
 								Next
-								IntroSFX(16) = LoadSound_Strict(SFXPath$+"Room\Intro\Horror.ogg")
-								IntroSFX(17) = LoadSound_Strict(SFXPath$+"Room\Intro\See173.ogg")
-								IntroSFX(18) = LoadSound_Strict(SFXPath$+"Room\Intro\173Chamber.ogg")
+								IntroSFX(16) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Horror.ogg"))
+								IntroSFX(17) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\See173.ogg"))
+								IntroSFX(18) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\173Chamber.ogg"))
 							    For i = 19 To 20
-							        IntroSFX(i) = LoadSound_Strict(SFXPath$+"Room\Intro\Ew" + (i - 18) + ".ogg")
+							        IntroSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Ew" + (i - 18) + ".ogg"))
 							    Next
 								
 								Curr173\Idle = True
@@ -1571,15 +1571,15 @@ Function UpdateEvents()
 								RotateEntity e\room\NPC[4]\Collider, 0, e\room\angle + 135, 0
 								e\room\NPC[4]\State = 7
 								e\room\NPC[5] = CreateNPC(NPCtypeGuard, e\room\x - 8288.0 * RoomScale, 0.3, e\room\z + 1096.0 * RoomScale)
-								e\room\NPC[5]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Music" + Rand(1, 5) + ".ogg")
+								e\room\NPC[5]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Music" + Rand(1, 5) + ".ogg"))
 								RotateEntity e\room\NPC[5]\Collider, 0, e\room\angle + 180, 0, True
 								e\room\NPC[5]\UseHeadPhones = True
 								e\room\NPC[5]\State = 7
-								e\room\NPC[5]\Sound2 = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\PlayerEscape.ogg")
+								e\room\NPC[5]\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\PlayerEscape.ogg"))
 								e\room\NPC[6] = CreateNPC(NPCtypeD, e\room\x - 3712.0 * RoomScale, -0.3, e\room\z - 2208.0 * RoomScale)
 								ChangeNPCTextureID(e\room\NPC[6], 3)
 								e\room\NPC[7] = CreateNPC(NPCtypeD, e\room\x - 3712.0 * RoomScale, -0.3, e\room\z - 2208.0 * RoomScale)
-								e\room\NPC[7]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Scientist\Conversation.ogg")
+								e\room\NPC[7]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Scientist\Conversation.ogg"))
 								ChangeNPCTextureID(e\room\NPC[7], 2)
 								pvt = CreatePivot()
 								RotateEntity pvt, 90, 0, 0
@@ -1635,7 +1635,7 @@ Function UpdateEvents()
 							If IntroSFX(17) <> 0 Then
 								If EntityVisible(Curr173\Collider, Collider) Then
 									If EntityInView(Curr173\obj, Camera) Then
-										Msg = "Press " + KeyName(KEY_BLINK) + " to blink."
+										Msg = scpLang_GetPhrase$("events.press") + " " + KeyName(KEY_BLINK) + " " + scpLang_GetPhrase$("events.room173introblink")
 										MsgTimer = 70 * 4
 										PlaySound_Strict IntroSFX(17)
 										IntroSFX(17) = 0
@@ -1720,12 +1720,12 @@ Function UpdateEvents()
 								e\SoundCHN = PlaySound_Strict(IntroSFX(2))
 							ElseIf e\EventState >= 11145 And e\EventState - fs\FPSfactor[0] < 11145;"I don't like this"
 								e\SoundCHN = PlaySound_Strict(IntroSFX(10))
-								e\room\NPC[1]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\ClassD\DontLikeThis.ogg")
+								e\room\NPC[1]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\ClassD\DontLikeThis.ogg"))
 								PlaySound2(e\room\NPC[1]\Sound, Camera, e\room\NPC[2]\Collider)
 							ElseIf e\EventState >= 11561 And e\EventState - fs\FPSfactor[0] < 11561 ;lights go out
 								e\EventState = 14000
 								PlaySound_Strict IntroSFX(16)
-								e\room\NPC[2]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\ClassD\Breen.ogg")
+								e\room\NPC[2]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\ClassD\Breen.ogg"))
 								PlaySound2(e\room\NPC[2]\Sound, Camera, e\room\NPC[1]\Collider)
 							End If
 							
@@ -1733,7 +1733,7 @@ Function UpdateEvents()
 							If e\EventState => 10440 And e\EventState - fs\FPSfactor[0] < 11561
 								If EntityX(Collider) < EntityX(e\room\RoomDoors[1]\frameobj, True)
 									If e\room\NPC[0]\State <> 12
-										e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Balcony\Alert" + Rand(1, 2) + ".ogg")
+										e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Balcony\Alert" + Rand(1, 2) + ".ogg"))
 										e\room\NPC[0]\SoundCHN = PlaySound2(e\room\NPC[0]\Sound,Camera,e\room\NPC[0]\Collider, 20)
 										e\room\NPC[0]\State = 12
 										e\room\NPC[0]\State2 = 1
@@ -1823,14 +1823,14 @@ Function UpdateEvents()
 										e\room\NPC[0]\Sound = 0
 									EndIf
 									e\room\NPC[0]\Angle = 180
-									e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Balcony\WTF" + Rand(1, 2) + ".ogg")
+									e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Balcony\WTF" + Rand(1, 2) + ".ogg"))
 									e\room\NPC[0]\SoundCHN = PlaySound2(e\room\NPC[0]\Sound,Camera,e\room\NPC[0]\Collider, 20)
 									e\room\NPC[0]\State2 = 0
 								Else
 									Animate2(e\room\NPC[1]\obj, AnimTime(e\room\NPC[1]\obj), 630, 676, 0.5, False)
 									If AnimTime(e\room\NPC[1]\obj) >= 675 Then SetNPCFrame(e\room\NPC[1], 676)
 									If e\room\NPC[2]\Sound=0 Then 
-										e\room\NPC[2]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\ClassD\Gasp.ogg")
+										e\room\NPC[2]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\ClassD\Gasp.ogg"))
 										PlaySound2 (e\room\NPC[2]\Sound, Camera, e\room\NPC[2]\Collider, 8.0)	
 									EndIf									
 								EndIf
@@ -1883,7 +1883,7 @@ Function UpdateEvents()
 											FreeSound_Strict(e\room\NPC[0]\Sound)
 											e\room\NPC[0]\Sound = 0
 										EndIf
-										e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"Room\Intro\Guard\Balcony\OhSh.ogg")
+										e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Balcony\OhSh.ogg"))
 										e\room\NPC[0]\SoundCHN = PlaySound2(e\room\NPC[0]\Sound, Camera ,e\room\NPC[0]\Collider, 20)
 									EndIf
 									If e\EventState > 20105 Then
@@ -1992,7 +1992,7 @@ Function UpdateEvents()
 				Else
 					If KillTimer < 0 Then
 						If e\room\NPC[3]\State = 1 Then 
-							LoadEventSound(e, SFXPath$+"Room\Intro\Guard\Ulgrin\EscortTerminated.ogg")
+							LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Guard\Ulgrin\EscortTerminated.ogg"))
 							PlaySound_Strict e\Sound
 						EndIf
 					EndIf
@@ -2047,9 +2047,9 @@ Function UpdateEvents()
 					If e\EventState2 = 0 Then
 						If EntityZ(Collider) < e\room\z Then
 							If PlayerZone = 1 Then
-								PlaySound_Strict(LoadTempSound(SFXPath$+"Ambient\ToZone2.ogg"))
+								PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ambient\ToZone2.ogg")))
 							Else
-								PlaySound_Strict(LoadTempSound(SFXPath$+"Ambient\ToZone3.ogg"))
+								PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ambient\ToZone3.ogg")))
 							EndIf
 							e\EventState2 = 1
 						EndIf
@@ -2129,7 +2129,7 @@ Function UpdateEvents()
 				EndIf
 				
 				If e\room\RoomDoors[0]\open <> e\EventState Then
-					If e\Sound = 0 Then LoadEventSound(e,SFXPath$+"Door\DoorCheckpoint.ogg")
+					If e\Sound = 0 Then LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Door\DoorCheckpoint.ogg"))
 					e\SoundCHN = PlaySound2(e\Sound, Camera, e\room\RoomDoors[0]\obj)
 					e\SoundCHN2 = PlaySound2(e\Sound, Camera, e\room\RoomDoors[1]\obj)
 				EndIf
@@ -2194,7 +2194,7 @@ Function UpdateEvents()
 							e\room\NPC[0]\State = 8
 							SetNPCFrame(e\room\NPC[0], 270)
 							e\room\NPC[0]\GravityMult = 0.0
-							e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"Room\895Chamber\GuardIdle" + Rand(1, 3) + ".ogg")
+							e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\895Chamber\GuardIdle" + Rand(1, 3) + ".ogg"))
 							e\room\NPC[0]\SoundCHN = PlaySound2(e\room\NPC[0]\Sound, Camera, e\room\NPC[0]\Collider)
 							e\room\NPC[0]\IsDead = True
 							e\room\NPC[0]\FallingPickDistance = 0.0
@@ -2206,7 +2206,7 @@ Function UpdateEvents()
 									StopChannel e\room\NPC[0]\SoundCHN
 								EndIf
 								FreeSound_Strict e\room\NPC[0]\Sound
-								e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"Room\895Chamber\GuardScream" + Rand(1, 3) + ".ogg")
+								e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\895Chamber\GuardScream" + Rand(1, 3) + ".ogg"))
 								e\room\NPC[0]\SoundCHN = PlaySound2(e\room\NPC[0]\Sound, Camera, e\room\NPC[0]\Collider, 100)
 								e\room\NPC[0]\PrevState = 1
 								e\room\NPC[0]\State2 = 0.0
@@ -2237,7 +2237,7 @@ Function UpdateEvents()
 								e\EventState=e\EventState + fs\FPSfactor[0]
 								AnimateNPC(e\room\NPC[0], 270, 286, 0.4, False)
 								If e\Sound=0 Then
-									LoadEventSound(e, SFXPath$+"General\BodyFall.ogg")
+									LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"General\BodyFall.ogg"))
 									e\SoundCHN = PlaySound_Strict(e\Sound)
 									
 									de.Decals = CreateDecal(3, EntityX(e\room\obj), -1531.0 * RoomScale, EntityZ(e\room\obj), 90, Rand(360), 0)
@@ -2248,7 +2248,7 @@ Function UpdateEvents()
 								EndIf
 							EndIf
 							If e\room\NPC[0]\SoundCHN2 = 0 Then
-								e\room\NPC[0]\Sound2 = LoadSound_Strict(SFXPath$+"Room\895Chamber\GuardRadio.ogg")
+								e\room\NPC[0]\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\895Chamber\GuardRadio.ogg"))
 								e\room\NPC[0]\SoundCHN2 = LoopSound2(e\room\NPC[0]\Sound2,e\room\NPC[0]\SoundCHN2,Camera,e\room\NPC[0]\Collider, 5)
 							EndIf
 						ElseIf e\room\NPC[0]\PrevState = 2 Then
@@ -2261,7 +2261,7 @@ Function UpdateEvents()
 								e\room\NPC[0]\SoundCHN = 0
 							EndIf
 							If e\room\NPC[0]\Sound2 = 0 Then
-								e\room\NPC[0]\Sound2 = LoadSound_Strict(SFXPath$+"Room\895Chamber\GuardRadio.ogg")
+								e\room\NPC[0]\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\895Chamber\GuardRadio.ogg"))
 							EndIf
 							e\room\NPC[0]\SoundCHN2 = LoopSound2(e\room\NPC[0]\Sound2,e\room\NPC[0]\SoundCHN2,Camera,e\room\NPC[0]\Collider, 5)
 						EndIf
@@ -2299,10 +2299,9 @@ Function UpdateEvents()
 
 							If Sanity < -1000 Then
 								If WearingNightVision > 1
-									DeathMSG = Chr(34) + "Class D viewed SCP-895 through a pair of digital night vision goggles, presumably enhanced by SCP-914. It might be possible that the subject "
-									DeathMSG = DeathMSG + "was able to resist the memetic effects partially through these goggles. The goggles have been stored for further study." + Chr(34)
+									DeathMSG = Chr(34) + scpLang_GetPhrase$("events.room895nvg") + Chr(34)
 								Else
-									DeathMSG = Chr(34) + "Class D viewed SCP-895 through a pair of digital night vision goggles, killing him." + Chr(34)
+									DeathMSG = Chr(34) + scpLang_GetPhrase$("events.room895nvg2") + Chr(34)
 								EndIf
 								EntityTexture(at\OverlayID[3], at\OverlayTextureID[3])
 								If VomitTimer < -10 Then
@@ -2354,7 +2353,7 @@ Function UpdateEvents()
 					EndIf
 					
 					If WearingNightVision > 0 And (hasBatteryFor895) And EntityDistance(Collider, e\room\Objects[1]) < 10.0 Then
-					    If e\Sound3 = 0 Then e\Sound3 = LoadSound_Strict(SFXPath$ + "Room\895Chamber\NVG.ogg")
+					    If e\Sound3 = 0 Then e\Sound3 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\" + "Room\895Chamber\NVG.ogg"))
 					    e\SoundCHN3 = LoopSound2(e\Sound3, e\SoundCHN3, Camera, e\room\Objects[1], 5.0)
 					Else
 					    FreeSound_Strict(e\Sound3) : e\Sound3 = 0
@@ -2409,7 +2408,7 @@ Function UpdateEvents()
 								MoveEntity e\room\NPC[0]\Collider, 0, 0, 0.5 
 								
 								e\room\RoomDoors[0]\open = False
-								PlaySound2(LoadTempSound(SFXPath$+"Door\EndroomDoor.ogg"), Camera, e\room\obj, 15)
+								PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\EndroomDoor.ogg")), Camera, e\room\obj, 15)
 								
 								e\EventState = 1							
 							EndIf
@@ -2419,12 +2418,12 @@ Function UpdateEvents()
 							e\room\NPC[0]\State = 1
 							e\EventState = 2
 							
-							e\Sound = LoadSound_Strict(SFXPath$+"Character\Janitor\106Abduct.ogg")
+							e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\Janitor\106Abduct.ogg"))
 							PlaySound_Strict(e\Sound)		
 							
 							If e\SoundCHN <> 0 Then StopChannel e\SoundCHN
 						ElseIf e\room\dist < 8
-							If e\Sound = 0 Then e\Sound = LoadSound_Strict(SFXPath$+"Character\Janitor\Idle.ogg")
+							If e\Sound = 0 Then e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\Janitor\Idle.ogg"))
 							e\SoundCHN = LoopSound2(e\Sound, e\SoundCHN, Camera, e\room\NPC[0]\obj, 15.0)
 						EndIf
 					ElseIf e\EventState = 2
@@ -2487,7 +2486,7 @@ Function UpdateEvents()
 							If e\room\RoomDoors[1]\openstate > 50 Or EntityDistance(Collider, e\room\RoomDoors[1]\frameobj) < 0.5 Then
 								e\room\RoomDoors[1]\openstate = Min(e\room\RoomDoors[1]\openstate, 50)
 								e\room\RoomDoors[1]\open = False
-								PlaySound2 (LoadTempSound(SFXPath$+"Door\DoorError.ogg"), Camera, e\room\RoomDoors[1]\frameobj)
+								PlaySound2 (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\DoorError.ogg")), Camera, e\room\RoomDoors[1]\frameobj)
 							EndIf							
 						EndIf
 					Else
@@ -2592,8 +2591,8 @@ Function UpdateEvents()
 					
 					If (EntityY(Collider) < 2000.0 * RoomScale Or EntityY(Collider) > 2608.0 * RoomScale) Then CurrStepSFX = 1
 					
-					If e\Sound = 0 Then LoadEventSound(e, SFXPath$+"Room\PocketDimension\Rumble.ogg")
-					If e\Sound2 = 0 Then e\Sound2 = LoadEventSound(e,SFXPath$+"Room\PocketDimension\PrisonVoices.ogg", 1)
+					If e\Sound = 0 Then LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Rumble.ogg"))
+					If e\Sound2 = 0 Then e\Sound2 = LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\PrisonVoices.ogg"), 1)
 					
 					If e\EventState = 0 Then
 						CameraFogColor Camera, 0, 0, 0
@@ -2665,7 +2664,7 @@ Function UpdateEvents()
 						
 						If e\EventState3 = 1 Or e\EventState3 = 2 Then ;the "trick room"
 							If e\EventState3 = 1 And (e\room\RoomDoors[0]\openstate > 150 Or e\room\RoomDoors[1]\openstate > 150) Then
-								PlaySound_Strict LoadTempSound(SFXPath$+"Horror\Horror16.ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Horror\Horror16.ogg"))
 								BlurTimer = 800
 								e\EventState3 = 2
 							EndIf
@@ -2744,8 +2743,8 @@ Function UpdateEvents()
 								
 								;check if player is at the sinkhole (the exit from the trench room)
 								If EntityY(Collider) < 8.5 Then
-									LoadEventSound(e,SFXPath$+"Room\PocketDimension\Rumble.ogg")
-									LoadEventSound(e,SFXPath$+"Room\PocketDimension\PrisonVoices.ogg", 1)
+									LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Rumble.ogg"))
+									LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\PrisonVoices.ogg"), 1)
 									
 									;move to the "exit room"
 									BlurTimer = 1500
@@ -2777,10 +2776,9 @@ Function UpdateEvents()
 											FreeEntity pvt
 											
 											If KillTimer = 0 Then
-												DeathMSG = "In addition to the decomposed appearance typical of SCP-106's victims, the body exhibits injuries that have not been observed before: "
-												DeathMSG = DeathMSG + "massive skull fracture, three broken ribs, fractured shoulder and multiple heavy lacerations."
+												DeathMSG = scpLang_GetPhrase$("events.pocketdimension")
 												
-												PlaySound_Strict LoadTempSound(SFXPath$+"Room\PocketDimension\Impact.ogg")
+												PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Impact.ogg"))
 												KillTimer = -1.0
 											EndIf
 										EndIf
@@ -2810,8 +2808,8 @@ Function UpdateEvents()
 									
 									;If Injuries > 1.0 Then
 									If Float(e\EventStr) > 1.0 And Float(e\EventStr) < 1000.0 Then
-										PlaySound_Strict LoadTempSound(SFXPath$+"Room\PocketDimension\Kneel.ogg")
-										LoadEventSound(e, SFXPath$+"Room\PocketDimension\Screech.ogg")
+										PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Kneel.ogg"))
+										LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Screech.ogg"))
 										e\EventStr = Float(1000.0)
 									EndIf
 									
@@ -2835,8 +2833,8 @@ Function UpdateEvents()
 										ResetEntity Collider
 										Crouch = False
 										
-										LoadEventSound(e,SFXPath$+"Room\PocketDimension\Explosion.ogg")
-										LoadEventSound(e,SFXPath$+"Room\PocketDimension\TrenchPlane.ogg", 1)
+										LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Explosion.ogg"))
+										LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\TrenchPlane.ogg"), 1)
 										PositionEntity e\room\Objects[20], EntityX(e\room\Objects[8], True) - 1000, 0, 0, True
 										
 										e\EventStr = Float(0)
@@ -2867,7 +2865,7 @@ Function UpdateEvents()
 													
 													PlayerRoom = r
 													
-													PlaySound_Strict(LoadTempSound(SFXPath$+"Room\PocketDimension\Exit.ogg"))
+													PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Exit.ogg")))
 													
 													TeleportEntity(Collider, EntityX(r\Objects[0], True), 0.4, EntityZ(r\Objects[0], True), 0.3, True)
 													
@@ -2944,7 +2942,7 @@ Function UpdateEvents()
 								
 								If KillTimer => 0 Then 
 									PlaySound_Strict HorrorSFX(8)
-									DeathMSG = "In addition to the decomposed appearance typical of the victims of SCP-106, the subject seems to have suffered multiple heavy fractures to both of his legs."
+									DeathMSG = scpLang_GetPhrase$("events.pocketdimension2")
 								EndIf
 								KillTimer = Min(-1, KillTimer)	
 								BlurTimer = 3000
@@ -3174,7 +3172,7 @@ Function UpdateEvents()
 												RemoveItem(SelectedItem)
 												SelectedItem=Null
 												e\EventState2 = e\EventState2 + 1
-												PlaySound_Strict LoadTempSound(SFXPath$+"SCP\294\Coin_Drop.ogg")
+												PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\294\Coin_Drop.ogg"))
 												inserted = True
 											EndIf
 										EndIf
@@ -3184,11 +3182,11 @@ Function UpdateEvents()
 										If Using294 Then MouseHit1=False
 									ElseIf e\EventState2 = 1 And (Not inserted) Then
 										Using294=False
-										Msg = "You need to insert another Quarter in order to use this machine."
+										Msg = scpLang_GetPhrase$("events.cafe1")
 										MsgTimer = 70*5
 									ElseIf (Not inserted) Then
 										Using294=False
-										Msg = "You need to insert two Quarters in order to use this machine."
+										Msg = scpLang_GetPhrase$("events.cafe2")
 										MsgTimer = 70*5
 									EndIf
 								EndIf
@@ -3450,7 +3448,7 @@ Function UpdateEvents()
 							e\room\RoomDoors[0]\open = False
 							PlaySound2(CloseDoorSFX(3, 0), Camera, e\room\RoomDoors[0]\obj, 8.0)			
 							
-							PlaySound_Strict (LoadTempSound(SFXPath$+"Room\Room2ElevatorDeath.ogg"))
+							PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\Room2ElevatorDeath.ogg")))
 							
 							e\EventState = 2.05
 						EndIf
@@ -3522,9 +3520,9 @@ Function UpdateEvents()
 							e\EventState3 = e\EventState2*5
 						Else
 							If temp = 0 And e\EventState2 = 1.0 Then ;turn on the fan
-								PlaySound2 (LoadTempSound(SFXPath$+"Ambient\Room ambience\FanOn.ogg"), Camera, e\room\Objects[0], 8.0)
+								PlaySound2 (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ambient\Room ambience\FanOn.ogg")), Camera, e\room\Objects[0], 8.0)
 							ElseIf temp = 1 And e\EventState2 = 0.0 ;turn off the fan
-								PlaySound2 (LoadTempSound(SFXPath$+"Ambient\Room ambience\FanOff.ogg"), Camera, e\room\Objects[0], 8.0)
+								PlaySound2 (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ambient\Room ambience\FanOff.ogg")), Camera, e\room\Objects[0], 8.0)
 							EndIf
 						EndIf
 					Else
@@ -3590,7 +3588,7 @@ Function UpdateEvents()
 				
 				If temp And EntityY(Collider, True) > EntityY(e\room\obj, True) And EntityY(Collider, True) < 4.0 Then
 					
-					If e\Sound = 0 Then e\Sound = LoadSound_Strict(SFXPath$+"Room\Tesla\Shock.ogg")
+					If e\Sound = 0 Then e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Tesla\Shock.ogg"))
 					
 					If e\EventState = 0 Then
 						If e\room\dist < 8 Then
@@ -3747,7 +3745,7 @@ Function UpdateEvents()
 											LightFlash = 0.4
 											CameraShake = 1.0
 											Kill()
-											DeathMSG = SubjectName$ + " was killed by the Tesla gate at [DATA REDACTED]."
+											DeathMSG = SubjectName$ + " " + scpLang_GetPhrase$("events.tesla")
 										EndIf
 									Next
 								EndIf
@@ -3923,7 +3921,7 @@ Function UpdateEvents()
 										If Abs(EntityZ(n\Collider) - EntityZ(e\room\obj, True)) < 4.0 Then
 											temp = True
 											If e\EventState2 = 0 Then
-												n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\Tesla0.ogg")
+												n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Tesla0.ogg"))
 												PlayMTFSound(n\Sound, n)
 							
 												n\Idle = 70 * 10
@@ -3936,7 +3934,7 @@ Function UpdateEvents()
 										If Abs(EntityZ(n\Collider) - EntityZ(e\room\obj, True)) < 4.0 Then
 											temp = True
 											If e\EventState2 = 0 Then
-												n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\Tesla0.ogg")
+												n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Tesla0.ogg"))
 												PlayMTFSound(n\Sound, n)
 												
 												n\Idle = 70 * 10 
@@ -3953,7 +3951,7 @@ Function UpdateEvents()
 						EndIf
 					Else
 						If e\EventState2 >= 70 * 92 And e\EventState2 - fs\FPSfactor[0] < 70 * 92
-							PlayAnnouncement(SFXPath$+"Character\MTF\Tesla" + Rand(1, 3) + ".ogg")
+							PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Tesla" + Rand(1, 3) + ".ogg"))
 						EndIf
 						
 						e\EventState2 = Max(e\EventState2 - fs\FPSfactor[0], 0)
@@ -4829,14 +4827,14 @@ Function UpdateEvents()
 					If e\room\Objects[2] = 0 Then
 						e\room\Objects[2] =	CopyEntity(o\NPCModelID[30])
 						ScaleEntity(e\room\Objects[2], 0.07, 0.07, 0.07)
-						tex = LoadTexture_Strict(NPCsPath$+"duck(3).png")
+						tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"duck(3).png"))
 						EntityTexture e\room\Objects[2], tex
 						FreeTexture tex
 						PositionEntity (e\room\Objects[2], EntityX(e\room\Objects[0],True), EntityY(e\room\Objects[0],True), EntityZ(e\room\Objects[0],True))
 						PointEntity e\room\Objects[2], e\room\obj
 						RotateEntity(e\room\Objects[2], 0, EntityYaw(e\room\Objects[2],True),0, True)
 						
-						LoadEventSound(e,SFXPath$+"SCP\Joke\Saxophone.ogg")
+						LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"SCP\Joke\Saxophone.ogg"))
 					Else
 						If EntityInView(e\room\Objects[2],Camera)=False Then
 							e\EventState = e\EventState + fs\FPSfactor[0]
@@ -4861,7 +4859,7 @@ Function UpdateEvents()
 						ScaleEntity e\room\Objects[2], 0.05,0.05,0.05
 						SetAnimTime(e\room\Objects[2], 414)
 						
-						Local imgPath$ = ItemsPath$+"1048\1048_"+Rand(1,26)+".png"
+						Local imgPath$ = scpModding_ProcessFilePath$("GFX\items\"+"1048\1048_"+Rand(1,26)+".png")
 						
 						Local itt.ItemTemplates
 						For itt.ItemTemplates = Each ItemTemplates
@@ -4915,7 +4913,7 @@ Function UpdateEvents()
 								
 								If MouseHit1 Then
 									If ItemAmount >= MaxItemAmount Then
-										Msg = "You cannot carry any more items."
+										Msg = scpLang_GetPhrase$("events.moreitems")
 										MsgTimer = 70 * 5
 									Else
 										SelectedItem = CreateItem("Drawing", "paper", 0.0, 0.0, 0.0)
@@ -4981,7 +4979,7 @@ Function UpdateEvents()
 						Curr096\State=6
 						Curr096\State2=70*10
 						
-						LoadEventSound(e,SFXPath$+"Character\Guard\096ServerRoom1.ogg")
+						LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Character\Guard\096ServerRoom1.ogg"))
 						e\SoundCHN = PlaySound_Strict(e\Sound)
 						
 						e\room\NPC[0]=CreateNPC(NPCtypeGuard, EntityX(e\room\Objects[7],True),EntityY(e\room\Objects[7],True),EntityZ(e\room\Objects[7],True))
@@ -5069,9 +5067,9 @@ Function UpdateEvents()
 						If AnimTime(Curr096\obj)>25 And AnimTime(Curr096\obj)<150 Then
 							FreeSound_Strict e\Sound : e\Sound = 0
 							If PlayerRoom <> e\room Then
-							    e\Sound3 = LoadSound_Strict(SFXPath$+"Character\Guard\096ServerRoom2.ogg")
+							    e\Sound3 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\Guard\096ServerRoom2.ogg"))
 							Else
-							    e\Sound3 = LoadSound_Strict(SFXPath$+"Character\Guard\096ServerRoom3.ogg")
+							    e\Sound3 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\Guard\096ServerRoom3.ogg"))
 							EndIf
 							e\SoundCHN3 = PlaySound_Strict(e\Sound3)
 						
@@ -5147,7 +5145,7 @@ Function UpdateEvents()
 						
 						;generator on
 						If z Then
-							If e\Sound2=0 Then LoadEventSound(e,SFXPath$+"General\GeneratorOn.ogg",1)
+							If e\Sound2=0 Then LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"General\GeneratorOn.ogg"),1)
 							e\EventState3 = Min(1.0, e\EventState3+fs\FPSfactor[0]/450)
 						Else
 							e\EventState3 = Min(0.0, e\EventState3-fs\FPSfactor[0]/450)
@@ -5339,7 +5337,7 @@ Function UpdateEvents()
 									de\Size = 0.05 : de\SizeChange = 0.0005 : EntityAlpha(de\obj, 0.8) : UpdateDecals
 								Next
 							Case 40
-								PlaySound_Strict(LoadTempSound(SFXPath$+"radio\franklin4.ogg"))
+								PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"radio\franklin4.ogg")))
 							Case 50
 								e\room\NPC[1]=CreateNPC(NPCtypeGuard, EntityX(e\room\obj)+Cos(e\room\angle+90)*600*RoomScale, 0.35, EntityZ(e\room\obj)+Sin(e\room\angle+90)*600*RoomScale)
 								e\room\NPC[1]\State=7
@@ -5350,7 +5348,7 @@ Function UpdateEvents()
 								EndIf
 							Case 60
 								If (Not HalloweenTex) Then
-									Local tex970 = LoadTexture_Strict(NPCsPath$+"scp_173_h.pt", 1)
+									Local tex970 = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173_h.pt"), 1)
 									EntityTexture Curr173\obj, tex970, 0, 0
 									FreeTexture tex970
 								EndIf
@@ -5410,7 +5408,7 @@ Function UpdateEvents()
 					If Abs(EntityX(Collider)-e\room\x)<8.0 Then
 						If Abs(EntityZ(Collider)-e\room\z)<8.0 Then
 							If e\Sound = 0 Then
-								e\Sound = LoadSound_Strict(SFXPath$+"SCP\970\Corpse.ogg")
+								e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\970\Corpse.ogg"))
 							EndIf
 							e\SoundCHN = LoopSound2(e\Sound, e\SoundCHN, Camera, e\room\NPC[0]\obj);
 							If e\EventState < 30 Then
@@ -5544,13 +5542,13 @@ Function UpdateEvents()
 								If UpdateLever(e\room\Levers[0])
 									e\room\RoomDoors[4]\open = True
 									If e\Sound2 <> 0 Then FreeSound_Strict e\Sound2 : e\Sound2 = 0
-									e\Sound2 = LoadSound_Strict(SFXPath$+"Door\Door2Open1_dist.ogg")
+									e\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\Door2Open1_dist.ogg"))
 									e\SoundCHN2 = PlaySound2(e\Sound2,Camera,e\room\RoomDoors[4]\obj, 400)
 								EndIf
 								If UpdateLever(e\room\Levers[1])
 									e\room\RoomDoors[4]\open = True
 									If e\Sound2 <> 0 Then FreeSound_Strict e\Sound2 : e\Sound2 = 0
-									e\Sound2 = LoadSound_Strict(SFXPath$+"Door\Door2Open1_dist.ogg")
+									e\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\Door2Open1_dist.ogg"))
 									e\SoundCHN2 = PlaySound2(e\Sound2,Camera,e\room\RoomDoors[4]\obj, 400)
 								EndIf
 							EndIf
@@ -5585,7 +5583,7 @@ Function UpdateEvents()
 							
 							If EntityY(Collider)< -6400.0 * RoomScale And KillTimer >= 0 And FallTimer >= 0 Then
 								DeathMSG = ""
-								PlaySound_Strict LoadTempSound(SFXPath$+"Room\PocketDimension\Impact.ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Impact.ogg"))
 								KillTimer = -1.0
 							EndIf
 						EndIf
@@ -5675,12 +5673,12 @@ Function UpdateEvents()
 						EndIf
 					Else
 						
-						If e\Sound = 0 Then LoadEventSound(e, MusicPath + "Room012Golgotha.ogg")
+						If e\Sound = 0 Then LoadEventSound(e, scpModding_ProcessFilePath$("SFX\Music\" + "Room012Golgotha.ogg"))
 						If EntityY(Collider) < - 50.0 * RoomScale
 						    e\SoundCHN = LoopSound2(e\Sound, e\SoundCHN, Camera, e\room\Objects[3], 5.0)
 						EndIf
 						
-						If e\Sound2 = 0 Then LoadEventSound(e, MusicPath + "Room012.ogg", 1)
+						If e\Sound2 = 0 Then LoadEventSound(e, scpModding_ProcessFilePath$("SFX\Music\" + "Room012.ogg"), 1)
 						
 						If e\EventState < 90 Then e\EventState = CurveValue(90, e\EventState, 500)
 						PositionEntity e\room\Objects[2], EntityX(e\room\Objects[2], True), (-130 - 448 * Sin(e\EventState))*RoomScale, EntityZ(e\room\Objects[2], True), True
@@ -5726,66 +5724,66 @@ Function UpdateEvents()
 								If dist < 0.6 Then
 									e\EventState3 = Min(e\EventState3 + fs\FPSfactor[0], 86 * 70)
 									If e\EventState3 > 70 And e\EventState3-fs\FPSfactor[0] =< 70 Then
-										PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech1.ogg")
+										PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\012\Speech1.ogg"))
 									ElseIf e\EventState3 > 13 * 70 And e\EventState3-fs\FPSfactor[0] =< 13 * 70
 									    If I_1033RU\HP = 0
-										    Msg = "You start pushing your nails into your wrist, drawing blood."
+										    Msg = scpLang_GetPhrase$("events.room0121")
 										    MsgTimer = 7 * 70
 										    Injuries = Injuries + 0.5
-										    PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech2.ogg")
+										    PlaySound_Strict LoadTempSound("SFX\"+"SCP\012\Speech2.ogg")
 										Else
-										    Msg = "You start pushing your nails into your wrist, but SCP-1033-RU protected you."
+										    Msg = scpLang_GetPhrase$("events.room0122")
 										    MsgTimer = 7 * 70
-									        PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech2.ogg")
+									        PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\012\Speech2.ogg"))
 									        Damage1033RU(10 + (Rand(5) * SelectedDifficulty\aggressiveNPCs))
                                         EndIf
 									ElseIf e\EventState3 > 31 * 70 And e\EventState3-fs\FPSfactor[0] =< 31 * 70
 									    If I_1033RU\HP = 0
-										    tex = LoadTexture_Strict(MapPath$+"scp-012_1.png")
+										    tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"scp-012_1.png"))
 										    EntityTexture (e\room\Objects[4], tex, 0,1)
 										    FreeTexture tex
-										    Msg="You tear open your left wrist and start writing on the composition with your blood."
+										    Msg=scpLang_GetPhrase$("events.room0123")
 										    MsgTimer = 7 * 70
 										    Injuries = Max(Injuries, 1.5)
-										    PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech" + Rand(3, 4)+ ".ogg")
+										    PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\012\Speech" + Rand(3, 4)+ ".ogg"))
 										Else
-									        Msg="You can't open your left wrist."
+									        Msg=scpLang_GetPhrase$("events.room0124")
 										    MsgTimer = 7*70
-									        PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech" + Rand(3, 4) + ".ogg")
+									        PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\012\Speech" + Rand(3, 4) + ".ogg"))
 									        Damage1033RU(10 + (Rand(5) * SelectedDifficulty\aggressiveNPCs))
                                        EndIf
 									ElseIf e\EventState3 > 49 * 70 And e\EventState3 - fs\FPSfactor[0] =< 49 * 70
 									    If I_1033RU\HP = 0
-										    Msg="You push your fingers deeper into the wound."
+										    Msg=scpLang_GetPhrase$("events.room0125")
 										    MsgTimer = 8 * 70
 										    Injuries = Injuries + 0.3
-										    PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech5.ogg")
+										    PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\012\Speech5.ogg"))
 										 Else
-									        Msg="You can't push your fingers deeper."
+									        Msg=scpLang_GetPhrase$("events.room0126")
 										    MsgTimer = 8 * 70
-                                            PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech5.ogg")
+                                            PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\012\Speech5.ogg"))
                                             Damage1033RU(15 + (Rand(5) * SelectedDifficulty\aggressiveNPCs))
                                         EndIf
 									ElseIf e\EventState3 > 63 * 70 And e\EventState3 - fs\FPSfactor[0] =< 63 * 70
 									    If I_1033RU\HP = 0
-										    tex = LoadTexture_Strict(MapPath$+"scp-012_2.png")
+										    tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"scp-012_2.png"))
 										    EntityTexture (e\room\Objects[4], tex, 0, 1)	
 										    FreeTexture tex
 										    Injuries = Injuries + 0.5
-										    PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech6.ogg")
+										    PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\012\Speech6.ogg"))
 										Else
 									        Damage1033RU(25 + (Rand(5) * SelectedDifficulty\aggressiveNPCs))
 	                                    EndIf
 									ElseIf e\EventState3 > 74 * 70 And e\EventState3 - fs\FPSfactor[0] =< 74 * 70
 									    If I_1033RU\HP = 0
-										    tex = LoadTexture_Strict(MapPath$+"scp-012_3.png")
+										    tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"scp-012_3.png"))
 										    EntityTexture (e\room\Objects[4], tex, 0, 1)
 										    FreeTexture tex
 										
-										    Msg="You rip the wound wide open. Grabbing scoops of blood pouring out."
+										    Msg=scpLang_GetPhrase$("events.room0127")
 										    MsgTimer = 7*70
 										    Injuries = Injuries + 0.8
-										    PlaySound_Strict LoadTempSound(SFXPath$+"SCP\012\Speech7.ogg")
+										    PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\012\Speech7.ogg"))
 										    Crouch = True
 										
 										    de.Decals = CreateDecal(17, EntityX(Collider), -768.0 * RoomScale + 0.01, EntityZ(Collider), 90, Rnd(360), 0)
@@ -5795,8 +5793,7 @@ Function UpdateEvents()
 									    EndIf
 									ElseIf e\EventState3 > 85 * 70 And e\EventState3 - fs\FPSfactor[0] =< 85 * 70
 									    If I_1033RU\HP = 0	
-										    DeathMSG = SubjectName$ + " found in a pool of blood next to SCP-012. Subject seems to have ripped open his wrists and written three extra "
-										    DeathMSG = DeathMSG + "lines to the composition before dying of blood loss."
+										    DeathMSG = SubjectName$ + scpLang_GetPhrase$("events.room0128")
 										    Kill(True)
 										Else
 										    e\EventState3 = 1.0
@@ -5850,8 +5847,8 @@ Function UpdateEvents()
 						If EntityDistance(Collider, e\room\Objects[3])<2 Then
 							n.NPCs = CreateNPC(NPCtypeD, EntityX(e\room\Objects[4],True),0.5,EntityZ(e\room\Objects[4],True))
 							
-							n\texture = NPCsPath$+"scp_035_victim.png"
-							n\Model = NPCsPath$+"scp_035.b3d"
+							n\texture = scpModding_ProcessFilePath$("GFX\npcs\"+"scp_035_victim.png")
+							n\Model = scpModding_ProcessFilePath$("GFX\npcs\"+"scp_035.b3d")
 							HideEntity n\obj
 							
 							SetAnimTime(n\obj, 501)
@@ -5865,7 +5862,7 @@ Function UpdateEvents()
 					ElseIf e\EventState > 0
 						If e\room\NPC[0]=Null Then
 							For n.NPCs = Each NPCs
-								If n\texture = NPCsPath$+"scp_035_victim.png" Then
+								If n\texture = scpModding_ProcessFilePath$("GFX\npcs\"+"scp_035_victim.png") Then
 									e\room\NPC[0]=n
 									
 									temp = e\room\NPC[0]\Frame
@@ -5897,7 +5894,7 @@ Function UpdateEvents()
 							If EntityDistance(Collider, e\room\Objects[3])<1.2 
 								If EntityInView(e\room\NPC[0]\obj, Camera) Then
 									GiveAchievement(Achv035)
-									PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\035\GetUp.ogg"))
+									PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\035\GetUp.ogg")))
 									e\EventState = 1.5
 								EndIf
 							EndIf
@@ -5924,12 +5921,12 @@ Function UpdateEvents()
 										If e\EventState3 > 1 And e\EventState3-fs\FPSfactor[0]=<1 Then
 											e\room\NPC[0]\State = 0
 											If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-											e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Gased1.ogg")
+											e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Gased1.ogg"))
 											e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 										ElseIf e\EventState3>15*70 And e\EventState3<25*70
 											If e\EventState3-fs\FPSfactor[0]=<15*70 Then
 												If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-												e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Gased2.ogg")
+												e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Gased2.ogg"))
 												e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 												SetNPCFrame( e\room\NPC[0],553)
 											EndIf
@@ -5948,9 +5945,9 @@ Function UpdateEvents()
 											
 											If e\EventState3-fs\FPSfactor[0]=<35*70 Then 
 												If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-												e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\GasedKilled1.ogg")
+												e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\GasedKilled1.ogg"))
 												e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
-												PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\035\KilledGetUp.ogg"))
+												PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\035\KilledGetUp.ogg")))
 												e\EventState = 60*70
 											EndIf
 										EndIf
@@ -6001,16 +5998,16 @@ Function UpdateEvents()
 										e\EventState3=-e\EventState3
 										If e\EventState3<-35*70 Then ;the host is dead
 											If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-											e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\GasedKilled2.ogg")
+											e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\GasedKilled2.ogg"))
 											e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 											e\EventState = 60*70
 										Else 
 											If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
 											If e\EventState3<-20*70 Then
-												e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\GasedStop2.ogg")
+												e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\GasedStop2.ogg"))
 											Else
 												e\EventState3=-21*70
-												e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\GasedStop1.ogg")
+												e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\GasedStop1.ogg"))
 											EndIf
 											
 											e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
@@ -6021,20 +6018,20 @@ Function UpdateEvents()
 										e\EventState = e\EventState+fs\FPSfactor[0]
 										If e\EventState > 4*70 And e\EventState-fs\FPSfactor[0] =<4*70 Then
 											If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-											e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Help1.ogg")
+											e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Help1.ogg"))
 											e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 											e\EventState = 10*70
 										ElseIf e\EventState > 20*70 And e\EventState-fs\FPSfactor[0] =<20*70
 											If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-											e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Help2.ogg")
+											e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Help2.ogg"))
 											e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 										ElseIf e\EventState > 40*70 And e\EventState-fs\FPSfactor[0] =<40*70
 											If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-											e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Idle1.ogg")
+											e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Idle1.ogg"))
 											e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 										ElseIf e\EventState > 50*70 And e\EventState-fs\FPSfactor[0] =<50*70
 											If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-											e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Idle2.ogg")
+											e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Idle2.ogg"))
 											e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 										ElseIf e\EventState > 80*70 And e\EventState-fs\FPSfactor[0] =<80*70
 											If e\EventState2 Then ;skip the closet part if player has already opened it
@@ -6042,15 +6039,15 @@ Function UpdateEvents()
 											Else
 												If e\EventState3<-30*70 Then ;the host is dead
 													If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-													e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\GasedCloset.ogg")
+													e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\GasedCloset.ogg"))
 													e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 												ElseIf e\EventState3 = 0 ;the gas valves haven't been opened
 													If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-													e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Closet1.ogg")
+													e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Closet1.ogg"))
 													e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 												Else ;gas valves have been opened but 035 isn't dead
 													If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-													e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\GasedCloset.ogg")
+													e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\GasedCloset.ogg"))
 													e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 												EndIf												
 											EndIf
@@ -6059,31 +6056,31 @@ Function UpdateEvents()
 											If e\EventState>110*70 And e\EventState-fs\FPSfactor[0] =<110*70 Then
 												If e\EventState2 Then
 													If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-													e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Closet2.ogg")
+													e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Closet2.ogg"))
 													e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 													e\EventState = 130*70
 												Else
 													If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-													e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Idle3.ogg")
+													e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Idle3.ogg"))
 													e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 												EndIf
 											ElseIf e\EventState>125*70 And e\EventState-fs\FPSfactor[0] =<125*70
 												If e\EventState2 Then
 													If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-													e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Closet2.ogg")
+													e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Closet2.ogg"))
 													e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 												Else
 													If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-													e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Idle4.ogg")
+													e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Idle4.ogg"))
 													e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 												EndIf
 											ElseIf e\EventState>150*70 And e\EventState-fs\FPSfactor[0] =<150*70
 												If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-												e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Idle5.ogg")
+												e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Idle5.ogg"))
 												e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 											ElseIf e\EventState>200*70 And e\EventState-fs\FPSfactor[0] =<200*70
 												If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-												e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Idle6.ogg")
+												e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Idle6.ogg"))
 												e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 												
 											EndIf
@@ -6109,15 +6106,15 @@ Function UpdateEvents()
 									
 									If e\EventState3=0 Then
 										If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-										e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\Escape.ogg")
+										e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\Escape.ogg"))
 										e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 									ElseIf Abs(e\EventState3)>35*70
 										If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-										e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\KilledEscape.ogg")
+										e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\KilledEscape.ogg"))
 										e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 									Else
 										If e\room\NPC[0]\Sound<>0 Then FreeSound_Strict(e\room\NPC[0]\Sound) : e\room\NPC[0]\Sound = 0
-										e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\035\GasedEscape.ogg")
+										e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\035\GasedEscape.ogg"))
 										e\room\NPC[0]\SoundCHN = PlaySound_Strict(e\room\NPC[0]\Sound)
 									EndIf
 									e\EventState2 = 20
@@ -6202,8 +6199,8 @@ Function UpdateEvents()
 										
 										temp = True
 										
-										If e\Sound = 0 Then LoadEventSound(e,SFXPath$+"Room\035Chamber\Whispers1.ogg")
-										If e\Sound2 = 0 Then LoadEventSound(e,SFXPath$+"Room\035Chamber\Whispers2.ogg",1)
+										If e\Sound = 0 Then LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Room\035Chamber\Whispers1.ogg"))
+										If e\Sound2 = 0 Then LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Room\035Chamber\Whispers2.ogg"),1)
 										
 										e\EventState2 = Min(e\EventState2+(fs\FPSfactor[0]/6000),1.0)
 										e\EventState3 = CurveValue(e\EventState2, e\EventState3, 50)
@@ -6220,9 +6217,7 @@ Function UpdateEvents()
 										EndIf
 										
 										If KillTimer < 0 And Bloodloss =>100 Then
-											DeathMSG = "Class D Subject D-9341 found dead inside SCP-035's containment chamber. "
-											DeathMSG = DeathMSG + "The subject exhibits heavy hemorrhaging of blood vessels around the eyes and inside the mouth and nose. "
-											DeathMSG = DeathMSG + "Sent for autopsy."
+											DeathMSG = scpLang_GetPhrase$("events.room035")
 										EndIf
 									EndIf
 								EndIf
@@ -6258,7 +6253,7 @@ Function UpdateEvents()
 					If e\EventState=0 Then	
 						If e\Sound = 0 Then
 							If EntityDistance(Collider, e\room\obj) < 20 Then
-								LoadEventSound(e,SFXPath$+"Room\035Chamber\InProximity.ogg")
+								LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Room\035Chamber\InProximity.ogg"))
 								PlaySound_Strict e\Sound
 							EndIf
 						EndIf
@@ -6295,7 +6290,7 @@ Function UpdateEvents()
 								QuickLoad_CurrEvent = e
 								e\EventStr = "load0"
 							EndIf
-							PlaySound_Strict LoadTempSound(SFXPath$+"Room\Blackout.ogg")
+							PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\Blackout.ogg"))
 							If EntityDistance(e\room\Objects[11],Collider) < EntityDistance(e\room\Objects[12], Collider) Then
 								it = CreateItem("Research Sector-02 Scheme", "paper", EntityX(e\room\Objects[11], True),EntityY(e\room\Objects[11], True), EntityZ(e\room\Objects[11], True))
 								EntityType it\collider,HIT_ITEM
@@ -6332,7 +6327,7 @@ Function UpdateEvents()
 									ShouldPlay = 8
 									e\EventState = Max(e\EventState,70 * 180)
 									SecondaryLightOn = CurveValue(1.0, SecondaryLightOn, 10.0)
-									If e\Sound2 = 0 Then LoadEventSound(e, SFXPath$+"Ambient\Room ambience\FuelPump.ogg", 1)
+									If e\Sound2 = 0 Then LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Ambient\Room ambience\FuelPump.ogg"), 1)
 									e\SoundCHN2 = LoopSound2(e\Sound2, e\SoundCHN2, Camera, e\room\Objects[10], 6.0)
 									For i = 4 To 6
 										e\room\RoomDoors[i]\locked = False
@@ -6373,7 +6368,7 @@ Function UpdateEvents()
 										e\room\RoomDoors[i]\open = True
 										e\room\NPC[0]\PathStatus = FindPath(e\room\NPC[0], EntityX(Collider), EntityY(Collider), EntityZ(Collider))
 										If e\room\NPC[0]\Sound2 <> 0 Then FreeSound_Strict(e\room\NPC[0]\Sound2)
-										e\room\NPC[0]\Sound2 = LoadSound_Strict(SFXPath$+"SCP\049\DetectedInChamber.ogg")
+										e\room\NPC[0]\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049\DetectedInChamber.ogg"))
 										e\room\NPC[0]\SoundCHN2 = LoopSound2(e\room\NPC[0]\Sound2, e\room\NPC[0]\SoundCHN2, Camera, e\room\NPC[0]\obj)
 										e\room\NPC[0]\Idle = 0
 										e\room\NPC[0]\HideFromNVG = False
@@ -6466,9 +6461,9 @@ Function UpdateEvents()
 								MoveEntity e\room\NPC[1]\Collider, 0, 0, 0.1
 								PointEntity Collider, e\room\NPC[1]\Collider
 								
-								PlaySound_Strict LoadTempSound(SFXPath$+"Character\MTF\049\Player0492_1.ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Player0492_1.ogg"))
 								
-								LoadEventSound(e,SFXPath$+"SCP\049_2\Breath.ogg")
+								LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"SCP\049_2\Breath.ogg"))
 								
 								I_008\Zombie = True
 							EndIf
@@ -6489,7 +6484,7 @@ Function UpdateEvents()
 						FreeEntity pvt%
 						
 						If KillTimer < 0 Then
-							PlaySound_Strict LoadTempSound(SFXPath$+"Character\MTF\049\Player0492_2.ogg")
+							PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Player0492_2.ogg"))
 							RemoveEvent(e)
 						Else
 							If e\SoundCHN = 0 Then
@@ -6527,7 +6522,7 @@ Function UpdateEvents()
 							    If e\room\RoomDoors[0]\openstate > 50 Or EntityDistance(Collider, e\room\RoomDoors[0]\frameobj) < 0.5 Then
 								    e\room\RoomDoors[0]\openstate = Min(e\room\RoomDoors[0]\openstate, 50)
 								    e\room\RoomDoors[0]\open = False
-								    PlaySound_Strict (LoadTempSound(SFXPath$+"Door\DoorError.ogg"))
+								    PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\DoorError.ogg")))
 							    EndIf							
 						    EndIf
 					    ElseIf e\EventState < 10000
@@ -6538,7 +6533,7 @@ Function UpdateEvents()
 								    GiveAchievement(Achv079)
 								    e\EventState = 3
 								    e\EventState2 = 1
-								    e\SoundCHN3 = StreamSound_Strict(SFXPath$+"SCP\079\Speech.ogg", SFXVolume, 0)
+								    e\SoundCHN3 = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\079\Speech.ogg"), SFXVolume, 0)
 								    e\SoundCHN3_IsStream = True
 							    EndIf							
 						    ElseIf e\EventState < 2000 Then
@@ -6563,7 +6558,7 @@ Function UpdateEvents()
 								    If e\SoundCHN3 <> 0
 								    	StopStream_Strict(e\SoundCHN3) : e\SoundCHN3 = 0
 								    EndIf
-							    	e\SoundCHN3 = StreamSound_Strict(SFXPath$+"SCP\079\Refuse.ogg", SFXVolume, 0)
+							    	e\SoundCHN3 = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\079\Refuse.ogg"), SFXVolume, 0)
 						    	EndIf
 						    EndIf
 					    Else
@@ -6592,7 +6587,7 @@ Function UpdateEvents()
 						If e\SoundCHN3 <> 0
 							StopStream_Strict(e\SoundCHN3) : e\SoundCHN3 = 0
 						EndIf
-						e\SoundCHN3 = StreamSound_Strict(SFXPath$+"SCP\079\GateB.ogg", SFXVolume, 0)
+						e\SoundCHN3 = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\079\GateB.ogg"), SFXVolume, 0)
 						e\SoundCHN3_IsStream = True
 						e\EventState2 = 2
 						
@@ -6674,11 +6669,11 @@ Function UpdateEvents()
 						    If e\EventState = 0 Then 
 							    If SoundTransmission And Rand(100) = 1 Then
 							    	If e\SoundCHN2 = 0 Then
-									    LoadEventSound(e, SFXPath$+"Character\LureSubject\Idle" + Rand(1, 6) + ".ogg", 1)
+									    LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Character\LureSubject\Idle" + Rand(1, 6) + ".ogg"), 1)
 									    e\SoundCHN2 = PlaySound_Strict(e\Sound2)								
 								    EndIf
 								    If ChannelPlaying(e\SoundCHN2) = False Then
-									    LoadEventSound(e, SFXPath$+"Character\LureSubject\Idle" + Rand(1, 6) + ".ogg", 1)
+									    LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Character\LureSubject\Idle" + Rand(1, 6) + ".ogg"), 1)
 									    e\SoundCHN2 = PlaySound_Strict(e\Sound2)
 								    EndIf
 							    EndIf
@@ -6691,7 +6686,7 @@ Function UpdateEvents()
 										    If e\SoundCHN2 <> 0 Then
 											    If ChannelPlaying(e\SoundCHN2) Then StopChannel e\SoundCHN2
 										    EndIf 
-										    FemurBreakerSFX = LoadSound_Strict(SFXPath$+"Room\106Chamber\FemurBreaker.ogg")
+										    FemurBreakerSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\106Chamber\FemurBreaker.ogg"))
 										    e\SoundCHN2 = PlaySound_Strict(FemurBreakerSFX)
 									    EndIf
 								    EndIf
@@ -6699,11 +6694,11 @@ Function UpdateEvents()
 						    ElseIf e\EventState = 1 ;bone broken
 							    If SoundTransmission And e\EventState3 < 2000.0 Then 
 								    If e\SoundCHN2 = 0 Then 
-									    LoadEventSound(e, SFXPath$+"Character\LureSubject\Sniffling.ogg", 1)
+									    LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Character\LureSubject\Sniffling.ogg"), 1)
 									    e\SoundCHN2 = PlaySound_Strict(e\Sound2)								
 								    EndIf
 								    If ChannelPlaying(e\SoundCHN2) = False Then
-									    LoadEventSound(e, SFXPath$+"Character\LureSubject\Sniffling.ogg", 1)
+									    LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Character\LureSubject\Sniffling.ogg"), 1)
 									    e\SoundCHN2 = PlaySound_Strict(e\Sound2)
 								    EndIf
 							    EndIf
@@ -6738,7 +6733,7 @@ Function UpdateEvents()
 									    If e\SoundCHN2 <> 0 Then
 									    	If ChannelPlaying(e\SoundCHN2) Then StopChannel e\SoundCHN2
 				    				    EndIf 
-									    LoadEventSound(e, SFXPath$+"Character\LureSubject\106Bait.ogg", 1)
+									    LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Character\LureSubject\106Bait.ogg"), 1)
 									    e\SoundCHN2 = PlaySound_Strict(e\Sound2)
 								    ElseIf e\EventState3 - fs\FPSfactor[0] < 2900 And e\EventState3 >= 2900 Then
 									    If FemurBreakerSFX <> 0 Then FreeSound_Strict FemurBreakerSFX : FemurBreakerSFX = 0
@@ -6833,7 +6828,7 @@ Function UpdateEvents()
 						ShouldPlay = 16
 						If (e\EventState < 65) Then
 							If (Distance(EntityX(Collider), EntityZ(Collider), EntityX(e\room\Objects[0], True), EntityZ(e\room\Objects[0], True)) < 2.0) Then
-								PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\205\Enter.ogg"))
+								PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\205\Enter.ogg")))
 								
 								e\EventState = Max(e\EventState, 65)
 								
@@ -6888,7 +6883,7 @@ Function UpdateEvents()
 								Animate2(e\room\Objects[6], AnimTime(e\room\Objects[6]), 228, 376, 0.2)
 								If e\EventState2 > 40 * 70 Then 
 									e\EventState = e\EventState + 1
-									PlaySound2(LoadTempSound(SFXPath$+"SCP\205\Horror.ogg"), Camera, e\room\Objects[6], 10, 0.3)
+									PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\205\Horror.ogg")), Camera, e\room\Objects[6], 10, 0.3)
 								EndIf	
 							Case 7
 								ShowEntity e\room\Objects[1]
@@ -6901,7 +6896,7 @@ Function UpdateEvents()
 								Animate2(e\room\Objects[5], AnimTime(e\room\Objects[5]), 500, 648, 0.2)
 								If e\EventState2 > 60 * 70 Then 
 									e\EventState = e\EventState + 1
-									PlaySound2(LoadTempSound(SFXPath$+"SCP\205\Horror.ogg"), Camera, e\room\Objects[6], 10, 0.5)
+									PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\205\Horror.ogg")), Camera, e\room\Objects[6], 10, 0.5)
 								EndIf
 							Case 9
 								ShowEntity e\room\Objects[1]
@@ -6916,7 +6911,7 @@ Function UpdateEvents()
 								
 								If e\EventState2 > 80 * 70 Then 
 									e\EventState = e\EventState + 1
-									PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\205\Horror.ogg"))
+									PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\205\Horror.ogg")))
 								EndIf
 							Case 11
 								ShowEntity e\room\Objects[1]
@@ -6958,10 +6953,7 @@ Function UpdateEvents()
 								EndIf
 							Case 67
 								If (Rand(150) = 1) Then
-									DeathMSG = "The SCP-205 cycle seems to have resumed it's normal course after the anomalies observed during "
-									DeathMSG = DeathMSG + "[DATA REDACTED]. The body of " + SubjectName$ + " was discovered inside the chamber. "
-									DeathMSG = DeathMSG + "The subject exhibits signs of blunt force trauma typical for personnel who have "
-									DeathMSG = DeathMSG + "entered the chamber when the lights are off."
+									DeathMSG = scpLang_GetPhrase$("events.room205")
 									
 									PlaySound_Strict DamageSFX(Rand(2, 3))
 									
@@ -7080,7 +7072,7 @@ Function UpdateEvents()
 										If i = e\EventState2 Then
 											BlinkTimer = -10
 											
-											PlaySound_Strict(LoadTempSound(SFXPath$+"Door\WoodenDoorOpen.ogg"))
+											PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\WoodenDoorOpen.ogg")))
 											
 											RotateEntity e\room\Objects[3], 0, 0, 0
 											RotateEntity e\room\Objects[4], 0, 180, 0
@@ -7100,8 +7092,8 @@ Function UpdateEvents()
 											e\EventState = 0.0
 											e\EventState3 = 0.0
 										Else
-											PlaySound_Strict(LoadTempSound(SFXPath$+"Door\WoodenDoorBudge.ogg"))
-											Msg = "The door will not budge."
+											PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\WoodenDoorBudge.ogg")))
+											Msg = scpLang_GetPhrase$("events.room860")
 											MsgTimer = 70 * 5
 										EndIf
 									EndIf
@@ -7131,14 +7123,14 @@ Function UpdateEvents()
 								
 								If SelectedItem = Null Then
 									If MouseHit1 Then
-										PlaySound_Strict(LoadTempSound(SFXPath$+"Door\WoodenDoorBudge.ogg"))
-										Msg = "The door will not budge."
+										PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\WoodenDoorBudge.ogg")))
+										Msg = scpLang_GetPhrase$("events.room860")
 										MsgTimer = 5 * 70
 									EndIf
 								ElseIf SelectedItem\itemtemplate\tempname="scp860"
 								    DrawHandIcon = True 
 									If MouseHit1 Then
-										PlaySound_Strict(LoadTempSound(SFXPath$+"Door\WoodenDoorOpen.ogg"))
+										PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\WoodenDoorOpen.ogg")))
 										ShowEntity fr.Forest\Forest_Pivot
 										SelectedItem = Null
 										
@@ -7253,20 +7245,20 @@ Function UpdateEvents()
 						BlurTimer = Max(BlurTimer, 100)
 						
 						If e\EventState2>200 And e\EventState2-fs\FPSfactor[0] =< 200 Then 							
-							e\Sound = LoadSound_Strict(MusicPath + "Room1123.ogg")
+							e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\Music\" + "Room1123.ogg"))
 							e\SoundCHN = PlaySound_Strict(e\Sound)
 						EndIf
 						
 						If e\EventState2 > 1000 Then
 							If e\Sound2 = 0 Then
-								e\Sound2 = LoadSound_Strict(SFXPath$+"Door\1123DoorOpen.ogg")
+								e\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\1123DoorOpen.ogg"))
 								e\SoundCHN2 = PlaySound_Strict(e\Sound2)
 							EndIf
 							RotateEntity e\room\Objects[11], 0, CurveAngle(10, EntityYaw(e\room\Objects[11],0), 40), 0,False
 							If e\EventState2 >= 1040 And e\EventState2 - fs\FPSfactor[0] < 1040 Then 
-								PlaySound2(LoadTempSound(SFXPath$+"SCP\1123\Officer1.ogg"), Camera, e\room\NPC[0]\obj)
+								PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1123\Officer1.ogg")), Camera, e\room\NPC[0]\obj)
 							ElseIf e\EventState2 >= 1400 And e\EventState2 - fs\FPSfactor[0] < 1400 Then 
-								PlaySound2(LoadTempSound(SFXPath$+"SCP\1123\Officer2.ogg"), Camera, e\room\NPC[0]\obj)
+								PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1123\Officer2.ogg")), Camera, e\room\NPC[0]\obj)
 							EndIf
 							e\room\NPC[0]\State = 3
 							AnimateNPC(e\room\NPC[0], 3, 26, 0.2, True)
@@ -7282,7 +7274,7 @@ Function UpdateEvents()
 						EndIf
 					ElseIf e\EventState = 3
 						If e\room\RoomDoors[0]\openstate > 160 Then
-							If e\Sound = 0 Then e\Sound = LoadSound_Strict(MusicPath + "Room1123.ogg")
+							If e\Sound = 0 Then e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\Music\" + "Room1123.ogg"))
 							e\SoundCHN = PlaySound_Strict(e\Sound)
 							
 							PositionEntity e\room\NPC[0]\Collider, EntityX(e\room\Objects[7], True), EntityY(e\room\Objects[7], True), EntityZ(e\room\Objects[7], True)
@@ -7304,7 +7296,7 @@ Function UpdateEvents()
 								If MouseHit1 Then
 									RotateEntity e\room\Objects[13], 0, 1, 0, False
 									RotateEntity e\room\Objects[11], 0, 90, 0, False
-									PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\1123\Horror.ogg"))
+									PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1123\Horror.ogg")))
 								EndIf
 							EndIf							
 						Else
@@ -7351,7 +7343,7 @@ Function UpdateEvents()
 							de.Decals = CreateDecal(3, EntityX(Collider), 512.0 * RoomScale + 0.0005, EntityZ(Collider), 90, Rnd(360), 0)
 							de\size = 0.5 : ScaleSprite de\obj, de\size, de\size
 							
-							e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"SCP\1123\Officer3.ogg")
+							e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1123\Officer3.ogg"))
 							
 							e\EventState = 6
 						EndIf
@@ -7361,7 +7353,7 @@ Function UpdateEvents()
 						If e\room\NPC[0]\Sound <> 0 Then 
 							If e\room\NPC[0]\SoundCHN <> 0 Then
 								If (Not ChannelPlaying(e\room\NPC[0]\SoundCHN)) Then 
-									PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\1123\Gunshot.ogg"))
+									PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1123\Gunshot.ogg")))
 									e\EventState = 7
 									FreeSound_Strict e\room\NPC[0]\Sound : e\room\NPC[0]\Sound = 0	
 								EndIf
@@ -7440,7 +7432,7 @@ Function UpdateEvents()
                     ;EndIf
                     If e\EventState = 2 Then
                         If EntityDistance(Collider, e\room\Objects[6]) < 2.5 And e\EventState > 0 Then
-							PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\079\TestroomWarning.ogg"))
+							PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\079\TestroomWarning.ogg")))
 							For i = 0 To 5
 								em.Emitters = CreateEmitter(EntityX(e\room\Objects[i], True), EntityY(e\room\Objects[i], True), EntityZ(e\room\Objects[i], True), 0)
 								TurnEntity(em\Obj, 90, 0, 0, True)
@@ -7504,11 +7496,11 @@ Function UpdateEvents()
 					If e\EventState > 30 Then
 					    LightBlink = 1.0
 						If e\EventState - fs\FPSfactor[0] =< 30 Then 
-							PlaySound_Strict LoadTempSound(SFXPath$+"Ambient\General\Ambient3.ogg")
+							PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ambient\General\Ambient3.ogg"))
 						EndIf
 					EndIf
 					If e\EventState - fs\FPSfactor[0] =< 100 And e\EventState > 100 Then
-						PlaySound_Strict LoadTempSound(SFXPath$+"Ambient\General\Ambient6.ogg")
+						PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ambient\General\Ambient6.ogg"))
 						PositionEntity(Curr173\Collider, EntityX(e\room\obj), 0.6, EntityZ(e\room\obj))
 						ResetEntity(Curr173\Collider)					
 						Curr173\Idle = True		
@@ -7609,7 +7601,7 @@ Function UpdateEvents()
 							EndIf
 						Else
 							If e\room\Objects[2]=0
-								Local Glasstex = LoadTexture_Strict(MapPath$+"glass.png", 1 + 2)
+								Local Glasstex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"glass.png"), 1 + 2)
 								e\room\Objects[2] = CreateSprite()
 								EntityTexture(e\room\Objects[2], Glasstex)
 								SpriteViewMode(e\room\Objects[2], 2)
@@ -7639,7 +7631,7 @@ Function UpdateEvents()
 										;left and 173 moved to some other room?) -> disable the event
 										RemoveEvent(e)
 									Else
-										PlaySound2(LoadTempSound(SFXPath$+"General\GlassBreak.ogg"), Camera, Curr173\obj) 
+										PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\GlassBreak.ogg")), Camera, Curr173\obj) 
 										FreeEntity(e\room\Objects[2])
 										e\room\Objects[2]=0
 										PositionEntity(Curr173\Collider, EntityX(e\room\Objects[1], True), 0.5, EntityZ(e\room\Objects[1], True))
@@ -7666,7 +7658,7 @@ Function UpdateEvents()
 					
 					e\EventState = 2	
 				Else
-					If e\Sound = 0 Then e\Sound = LoadSound_Strict(SFXPath$+"Character\Guard\SuicideGuard1.ogg")
+					If e\Sound = 0 Then e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\Guard\SuicideGuard1.ogg"))
 					If e\room\dist < 15.0 And e\room\dist >= 4.0 Then 
 						e\SoundCHN = LoopSound2(e\Sound, e\SoundCHN, Camera, e\room\NPC[0]\Collider, 15.0)
 						
@@ -7680,7 +7672,7 @@ Function UpdateEvents()
 						If e\SoundCHN2 = 0
 							StopChannel(e\SoundCHN)
 							FreeSound_Strict(e\Sound)
-							e\room\NPC[0]\Sound = LoadSound_Strict(SFXPath$+"Character\Guard\SuicideGuard2.ogg")
+							e\room\NPC[0]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\Guard\SuicideGuard2.ogg"))
 							e\SoundCHN2 = PlaySound2(e\room\NPC[0]\Sound, Camera, e\room\NPC[0]\Collider, 15.0)
 						EndIf
 						UpdateSoundOrigin(e\SoundCHN2,Camera,e\room\NPC[0]\Collider, 15.0)
@@ -7737,16 +7729,16 @@ Function UpdateEvents()
 										    If (Not WearingHazmat) Then
 										        If I_1033RU\HP = 0
 											        Injuries = Injuries + 0.1
-											        Msg = "The window shattered and a piece of glass cut your arm."
+											        Msg = scpLang_GetPhrase$("events.room0081")
                                                 Else
                                                     Damage1033RU(10 + (Rand(5) * SelectedDifficulty\aggressiveNPCs))
-                                                    Msg = "The window shattered and a piece of glass cut your arm, but SCP-1033-RU protected you."
+                                                    Msg = scpLang_GetPhrase$("events.room0082")
                                                 EndIf
 											    If I_008\Timer = 0 Then I_008\Timer = 1
 											    MsgTimer = 70*8
 										    EndIf
 										
-										    PlaySound2(LoadTempSound(SFXPath$+"General\GlassBreak.ogg"), Camera, e\room\Objects[0]) 
+										    PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\GlassBreak.ogg")), Camera, e\room\Objects[0]) 
 										
 										    e\EventState2 = 1
 									    EndIf
@@ -7845,7 +7837,7 @@ Function UpdateEvents()
 								e\EventState=e\EventState + fs\FPSfactor[0]
 								AnimateNPC(e\room\NPC[0], 11, 19, 0.25, False)
 								If e\Sound = 0 Then 
-									LoadEventSound(e,SFXPath$+"General\BodyFall.ogg")
+									LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"General\BodyFall.ogg"))
 									PlaySound_Strict e\Sound
 									
 									de.Decals = CreateDecal(0, EntityX(e\room\obj), 0.001, EntityZ(e\room\obj), 90, Rand(360), 0)
@@ -7870,7 +7862,7 @@ Function UpdateEvents()
 					e\EventState = 1
 				ElseIf PlayerRoom = e\room
 					If e\Sound = 0 Then
-						e\Sound = LoadSound_Strict(SFXPath$+"Room\Sinkhole.ogg")
+						e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Sinkhole.ogg"))
 					Else
 						e\SoundCHN = LoopSound2(e\Sound, e\SoundCHN, Camera, e\room\obj, 4.5, 1.5)
 					EndIf
@@ -7882,7 +7874,7 @@ Function UpdateEvents()
 						
 						If dist < 0.5 Then
 							If e\EventState2 = 0 Then
-								PlaySound_Strict(LoadTempSound(SFXPath$+"Room\SinkholeFall.ogg"))
+								PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\SinkholeFall.ogg")))
 							EndIf
 							
 							CurrSpeed = CurveValue(0.0, CurrSpeed, Max(dist * 50, 1.0))
@@ -7916,7 +7908,7 @@ Function UpdateEvents()
 					e\EventState = e\EventState - fs\FPSfactor[0]
 					
 					If e\EventState < 17 * 70 Then
-						If	e\EventState + fs\FPSfactor[0] => 17 * 70 Then LoadEventSound(e,SFXPath$+"SCP\682\Roar.ogg") : e\SoundCHN = PlaySound_Strict(e\Sound)
+						If	e\EventState + fs\FPSfactor[0] => 17 * 70 Then LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"SCP\682\Roar.ogg")) : e\SoundCHN = PlaySound_Strict(e\Sound)
 						If e\EventState > 17 * 70 - 3 * 70 Then CameraShake = 0.5
 						If e\EventState < 17 * 70 - 7.5 * 70 And e\EventState > 17 * 70 - 11 * 70 Then CameraShake = 2.0				
 						If e\EventState < 70 Then 
@@ -7952,7 +7944,7 @@ Function UpdateEvents()
 							If GrabbedEntity = e\room\Objects[0] Then
 								If e\EventState = 0 Then
 									DrawHandIcon = True
-									TurnEntity(GrabbedEntity, 0, 0, -mouse_x_speed_1 * 2.5)
+									TurnEntity(GrabbedEntity, 0, 0, -mouse_x_leverTurn * 2.5)
 									
 									angle = WrapAngle(EntityRoll(e\room\Objects[0]))
 									If angle > 181 Then DrawArrowIcon(3) = True
@@ -7971,7 +7963,7 @@ Function UpdateEvents()
 													If Abs(EntityY(it\collider) - (e\room\y + 648.0 * RoomScale)) < 104.0 Then
 														e\EventState = 1
 														e\SoundCHN = PlaySound2(MachineSFX, Camera, e\room\Objects[1])
-														e\room\RoomDoors[1]\SoundCHN = PlaySound2(LoadTempSound(SFXPath$+"SCP\914\DoorClose.ogg"), Camera, e\room\RoomDoors[1]\obj)
+														e\room\RoomDoors[1]\SoundCHN = PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\914\DoorClose.ogg")), Camera, e\room\RoomDoors[1]\obj)
 														Exit
 													EndIf
 												End If
@@ -7982,7 +7974,7 @@ Function UpdateEvents()
 							ElseIf GrabbedEntity = e\room\Objects[1]
 								If e\EventState = 0 Then
 									DrawHandIcon = True
-									TurnEntity(GrabbedEntity, 0, 0, -mouse_x_speed_1 * 2.5)
+									TurnEntity(GrabbedEntity, 0, 0, -mouse_x_leverTurn * 2.5)
 									
 									angle# = WrapAngle(EntityRoll(e\room\Objects[1]))
 									DrawArrowIcon(3) = True
@@ -8045,7 +8037,7 @@ Function UpdateEvents()
 						e\room\RoomDoors[1]\open = False
 						If e\EventState > 70 * 2 Then
 							If e\room\RoomDoors[0]\open = True Then
-								e\room\RoomDoors[0]\SoundCHN = PlaySound2(LoadTempSound(SFXPath$+"SCP\914\DoorClose.ogg"), Camera, e\room\RoomDoors[0]\obj)
+								e\room\RoomDoors[0]\SoundCHN = PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\914\DoorClose.ogg")), Camera, e\room\RoomDoors[0]\obj)
 							EndIf
 							
 							e\room\RoomDoors[0]\open = False
@@ -8063,9 +8055,8 @@ Function UpdateEvents()
 										KillTimer = Min(-1, KillTimer)
 										BlinkTimer = -10
 										If e\SoundCHN <> 0 Then StopChannel e\SoundCHN
-										DeathMSG = Chr(34) + "A heavily mutilated corpse found inside the output booth of SCP-914. DNA testing identified the corpse as Class D " + SubjectName$ + ". "
-										DeathMSG = DeathMSG + "The subject had obviously been " + Chr(34) + "refined" + Chr(34) + " by SCP-914 on the " + Chr(34) + "Rough" + Chr(34) + " setting, but we are still confused as to how he "
-										DeathMSG = DeathMSG + "ended up inside the intake booth and who or what wound the key." + Chr(34)
+										DeathMSG = Chr(34) + scpLang_GetPhrase$("events.room9141_1") + " " + SubjectName$
+										DeathMSG = DeathMSG + scpLang_GetPhrase$("events.room9141_2") + " " + Chr(34) + scpLang_GetPhrase$("events.room9141_3") + Chr(34) + " " + scpLang_GetPhrase$("events.room9141_4") + " " + Chr(34) + scpLang_GetPhrase$("events.room9141_5") + Chr(34) + " " + scpLang_GetPhrase$("events.room9141_6") + Chr(34)
 									Case "coarse"
 										BlinkTimer = -10
 										If e\EventState - fs\FPSfactor[1] < 70 * 3 Then PlaySound_Strict Use914SFX
@@ -8099,7 +8090,7 @@ Function UpdateEvents()
 								Select setting
 									Case "coarse"
 										Injuries = 4.0
-										Msg = "You notice countless small incisions all around your body. They are bleeding heavily."
+										Msg = scpLang_GetPhrase$("events.room9142")
 										MsgTimer = 70*8
 									Case "1:1"
 										InvertMouse = (Not InvertMouse)
@@ -8117,7 +8108,7 @@ Function UpdateEvents()
 							RotateEntity(e\room\Objects[0], 0, 0, 0)
 							e\EventState = 0
 							
-							Local opensfx914 = LoadTempSound(SFXPath$+"SCP\914\DoorOpen.ogg")
+							Local opensfx914 = LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\914\DoorOpen.ogg"))
 							e\room\RoomDoors[0]\SoundCHN = PlaySound2(opensfx914, Camera, e\room\RoomDoors[0]\obj)
 							e\room\RoomDoors[1]\SoundCHN = PlaySound2(opensfx914, Camera, e\room\RoomDoors[1]\obj)
 						End If
@@ -8151,8 +8142,8 @@ Function UpdateEvents()
 							
 							RotateEntity(e\room\Objects[0], -90.0, Rnd(0.0, 360.0), 0.0)
 							
-							e\Sound = LoadSound_Strict(SFXPath$+"SCP\1048A\Shriek.ogg")
-							e\Sound2 = LoadSound_Strict(SFXPath$+"SCP\1048A\Growth.ogg")
+							e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1048A\Shriek.ogg"))
+							e\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1048A\Growth.ogg"))
 							
 							e\EventState = 1
 						EndIf
@@ -8185,7 +8176,7 @@ Function UpdateEvents()
 									e\EventState = 3	
 									PlaySound_Strict e\Sound2
 									
-									Msg = "Something is growing all around your body."
+									Msg = scpLang_GetPhrase$("events.room10481")
 									MsgTimer = 70.0 * 3.0
 								Else
 									e\EventState3 = 70 * 30
@@ -8199,32 +8190,31 @@ Function UpdateEvents()
 							If (e\EventState2 > 250.0 And e\EventState2 - fs\FPSfactor[0] <= 250.0) Then
 								Select Rand(3)
 									Case 1
-										Msg = "Ears are growing all over your body."
+										Msg = scpLang_GetPhrase$("events.room10482")
 									Case 2
-										Msg = "Ear-like organs are growing all over your body."
+										Msg = scpLang_GetPhrase$("events.room10483")
 									Case 3
-										Msg = "Ears are growing all over your body. They are crawling on your skin."
+										Msg = scpLang_GetPhrase$("events.room10484")
 								End Select
 								
 								MsgTimer = 70.0 * 3.0
 							Else If (e\EventState2 > 600.0 And e\EventState2-fs\FPSfactor[0] <= 600.0)
 								Select Rand(4)
 									Case 1
-										Msg = "It is becoming difficult to breathe."
+										Msg = scpLang_GetPhrase$("events.room10485")
 									Case 2
-										Msg = "You have excellent hearing now. Also, you are dying."
+										Msg = scpLang_GetPhrase$("events.room10486")
 									Case 3
-										Msg = "The ears are growing inside your body."
+										Msg = scpLang_GetPhrase$("events.room10487")
 									Case 4
-										Msg = Chr(34) + "Can't... Breathe..." + Chr(34)
+										Msg = Chr(34) + scpLang_GetPhrase$("events.room10488") + Chr(34)
 								End Select
 								
 								MsgTimer = 70.0 * 5.0
 							EndIf
 							
 							If (e\EventState2 > 70 * 15) Then
-								DeathMSG = "A dead body covered in ears was found in [DATA REDACTED]. Subject was presumably attacked by an instance of SCP-1048-A and suffocated to death by the ears. "
-								DeathMSG = DeathMSG + "Body was sent for autopsy."
+								DeathMSG = scpLang_GetPhrase$("events.room10489")
 								Kill()
 								e\EventState = 4
 								RemoveEvent(e)
@@ -8295,14 +8285,14 @@ Function UpdateEvents()
 									
 					If e\EventState < 2.0
 						If e\EventState = 0.0
-							LoadEventSound(e, SFXPath$+"Character\Scientist\EmilyScream.ogg")
+							LoadEventSound(e, scpModding_ProcessFilePath$("SFX\"+"Character\Scientist\EmilyScream.ogg"))
 							e\SoundCHN = PlaySound2(e\Sound, Camera, e\room\Objects[0], 100, 1.0)
 							de.Decals = CreateDecal(0, EntityX(e\room\Objects[0], True), e\room\y + 1.8 * RoomScale, EntityZ(e\room\Objects[0], True), 90, Rand(360), 0)
 							de\Size = 0.5 : EntityAlpha(de\obj, 0.8)
 							EntityFX de\obj, 1
 							e\EventState = 1.0
 							If Rand(10) = 1 Then
-								Msg = "Fuck you Emily"
+								Msg = scpLang_GetPhrase$("events.room2scps")
 								MsgTimer = 70*5
 							EndIf
 						ElseIf e\EventState = 1.0
@@ -8465,13 +8455,11 @@ Function UpdateEvents()
 									    RemoveItem(Inventory(e\EventState2))
 									    e\EventState = e\EventState + 1.0
 									    e\EventState3 = 0.0
-									    DeathMSG = "A dead Class D subject without hand was discovered within the SCP-1162's containment chamber."
-									    DeathMSG = DeathMSG + " Most likely he interaction with SCP-198"
-									    DeathMSG = DeathMSG + " and SCP-1162."
-									    PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg")
+									    DeathMSG = scpLang_GetPhrase$("events.room11621")
+									    PlaySound_Strict LoadTempSound("SFX\"+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg")
 									    LightFlash = 5.0
 									    Kill(True)
-									    Msg = "SCP-198 is now detached from your body, but you have high injuries."
+									    Msg = scpLang_GetPhrase$("events.room11622")
 									    MsgTimer = 70 * 5
 							            Exit
 									Case "scp357"
@@ -8486,10 +8474,10 @@ Function UpdateEvents()
 									        RemoveItem(Inventory(e\EventState2))
 									        e\EventState = e\EventState + 1.0
 									        e\EventState3 = 0.0
-									        DeathMSG = SubjectName$ + ". Cause of death: Unknown."
+									        DeathMSG = SubjectName$ + scpLang_GetPhrase$("events.room11623")
 									        BlurTimer = 1000
 									        Kill(True)
-									        Msg = "SCP-357 is now detached from your body, but you have high injuries."
+									        Msg = scpLang_GetPhrase$("events.room11624")
 									        MsgTimer = 70 * 5
 									        Exit
 									    Else
@@ -8508,7 +8496,7 @@ Function UpdateEvents()
 								RemoveItem(Inventory(e\EventState2))
 								it=CreateItem(itt\name,itt\tempname, EntityX(pp, True), EntityY(pp, True), EntityZ(pp, True))
 								EntityType(it\collider, HIT_ITEM)
-								PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\Exchange" + Rand(0, 4) + ".ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\Exchange" + Rand(0, 4) + ".ogg"))
 								e\EventState3 = 0.0
 							
 								GiveAchievement(Achv1162)
@@ -8534,16 +8522,14 @@ Function UpdateEvents()
 								MouseHit1 = False
 								e\EventState3 = 0.0
 								If Injuries > 15
-									DeathMSG = "A dead"+SubjectName$+" was discovered within the containment chamber of SCP-1162."
-									DeathMSG = DeathMSG + " An autopsy revealed that his right lung was missing, which suggests"
-									DeathMSG = DeathMSG + " interaction with SCP-1162."
-									PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg")
+									DeathMSG = scpLang_GetPhrase$("events.room11625")
+									PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg"))
 									LightFlash = 5.0
 									Kill(True)
 								Else
-									PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg")
+									PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg"))
 									LightFlash = 5.0
-									Msg = "You feel a sudden overwhelming pain in your chest."
+									Msg = scpLang_GetPhrase$("events.room11626")
 									MsgTimer = 70*5
 								EndIf
 								Exit
@@ -8552,7 +8538,7 @@ Function UpdateEvents()
 					;trade with nostalgia item
 					ElseIf e\EventState3 >= 3.0
 						If e\EventState3 < 3.1
-							PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\Exchange" + Rand(0, 4) + ".ogg")
+							PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\Exchange" + Rand(0, 4) + ".ogg"))
 							RemoveItem(Inventory(e\EventState2))
 						Else
 							Injuries = Injuries + 5.0
@@ -8564,16 +8550,14 @@ Function UpdateEvents()
 							de\size = 0.75 : ScaleSprite de\obj, de\size, de\size
 							FreeEntity pvt
 							If Injuries > 15
-								DeathMSG = "A dead Class D subject was discovered within the containment chamber of SCP-1162."
-								DeathMSG = DeathMSG + " An autopsy revealed that his right lung was missing, which suggests"
-								DeathMSG = DeathMSG + " interaction with SCP-1162."
-								PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg")
+								DeathMSG = scpLang_GetPhrase$("events.room11627")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg"))
 								LightFlash = 5.0
 								Kill(True)
 							Else
-								PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\BodyHorrorExchange" + Rand(1, 4) + ".ogg"))
 								LightFlash = 5.0
-								Msg = "You notice something moving in your pockets and a sudden pain in your chest."
+								Msg = scpLang_GetPhrase$("events.room11628")
 								MsgTimer = 70 * 5
 							EndIf
 							e\EventState2 = 0.0
@@ -8618,13 +8602,13 @@ Function UpdateEvents()
 							e\EventState = 1.0
 							If brokendoor
 								If e\Sound2 <> 0 Then FreeSound_Strict(e\Sound2) : e\Sound2 = 0
-								e\Sound2 = LoadSound_Strict(SFXPath$+"Door\DoorSparks.ogg")
+								e\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\DoorSparks.ogg"))
 								e\SoundCHN2 = PlaySound2(e\Sound2, Camera, e\room\Objects[1], 5)
 							EndIf
 							StopChannel e\SoundCHN
 							e\SoundCHN = 0
 							If e\Sound <> 0 Then FreeSound_Strict(e\Sound) : e\Sound = 0
-							e\Sound = LoadSound_Strict(SFXPath$+"Door\Airlock.ogg")
+							e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\Airlock.ogg"))
 							e\room\RoomDoors[0]\locked = False
 							e\room\RoomDoors[1]\locked = False
 							UseDoor(e\room\RoomDoors[0])
@@ -8790,7 +8774,7 @@ Function UpdateEvents()
 								e\room\RoomDoors[0]\locked = True
 								e\room\RoomDoors[1]\locked = True
 								If e\room\NPC[0]\Reload = 0
-									PlaySound_Strict LoadTempSound(SFXPath$+"Door\DoorOpen079.ogg")
+									PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\DoorOpen079.ogg"))
 									e\room\NPC[0]\Reload = 1
 								EndIf
 								If (Not e\room\RoomDoors[0]\open)
@@ -8825,7 +8809,7 @@ Function UpdateEvents()
 							If e\room\NPC[0]\PathTimer# = 0.0
 								If e\room\NPC[0]\PrevState = 1 Then
 									If (e\room\NPC[0]\SoundCHN2 = 0) Then
-										e\room\NPC[0]\Sound2 = LoadSound_Strict(SFXPath$+"SCP\049\Room2SL1.ogg")
+										e\room\NPC[0]\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049\Room2SL1.ogg"))
 										e\room\NPC[0]\SoundCHN2 = PlaySound2(e\room\NPC[0]\Sound2, Camera, e\room\NPC[0]\Collider)
 									Else
 										If (Not ChannelPlaying(e\room\NPC[0]\SoundCHN2))
@@ -8836,7 +8820,7 @@ Function UpdateEvents()
 								ElseIf e\room\NPC[0]\PrevState = 2
 									If e\room\NPC[0]\State3 = 3 Then
 										If (e\room\NPC[0]\SoundCHN2 = 0) Then
-											e\room\NPC[0]\Sound2 = LoadSound_Strict(SFXPath$+"SCP\049\Room2SL2.ogg")
+											e\room\NPC[0]\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049\Room2SL2.ogg"))
 											e\room\NPC[0]\SoundCHN2 = PlaySound2(e\room\NPC[0]\Sound2, Camera, e\room\NPC[0]\Collider)
 										Else
 											If (Not ChannelPlaying(e\room\NPC[0]\SoundCHN2))
@@ -8914,7 +8898,7 @@ Function UpdateEvents()
 										If e\room\RoomDoors[0]\open
 											e\room\RoomDoors[0]\open = False
 											e\room\RoomDoors[0]\fastopen = 1
-											PlaySound_Strict LoadTempSound(SFXPath$+"Door\DoorClose079.ogg")
+											PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\DoorClose079.ogg"))
 										EndIf
 									EndIf
 								Else
@@ -8923,7 +8907,7 @@ Function UpdateEvents()
 										e\room\RoomDoors[0]\open = True
 										sound=Rand(0, 2)
 										PlaySound2(OpenDoorSFX(0, sound), Camera, e\room\RoomDoors[0]\obj)
-										PlaySound_Strict LoadTempSound(SFXPath$+"Door\DoorOpen079.ogg")
+										PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\DoorOpen079.ogg"))
 									EndIf
 								EndIf
 							EndIf
@@ -8933,7 +8917,7 @@ Function UpdateEvents()
 								e\room\RoomDoors[0]\open = True
 								sound = Rand(0, 2)
 								PlaySound2(OpenDoorSFX(0, sound), Camera, e\room\RoomDoors[0]\obj)
-								PlaySound_Strict LoadTempSound(SFXPath$+"Door\DoorOpen079.ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\DoorOpen079.ogg"))
 							EndIf
 						EndIf
 					EndIf
@@ -9145,11 +9129,11 @@ Function UpdateEvents()
 				If EntityDistance(e\room\Objects[4], Collider) < 0.5 Then
 				    DrawHandIcon = True
 		            If MouseHit1 Then
-					    Msg = "You feel a cold breeze next to your body."
+					    Msg = scpLang_GetPhrase$("events.medibay")
 					    MsgTimer = 70 * 5
 			            Injuries = 0
 			            Bloodloss = 0
-			            e\Sound = LoadSound_Strict(SFXPath$+"SCP\Joke\Quack.ogg")
+			            e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\Joke\Quack.ogg"))
 						e\SoundCHN = PlaySound2(e\Sound, Camera, e\room\Objects[4], 10, 0.8)
 			            GiveAchievement(AchvDuck)
 			   	    EndIf
@@ -9215,7 +9199,7 @@ Function UpdateEvents()
 							RotateEntity e\room\NPC[0]\Collider,0,e\room\angle+180,0
 							MoveEntity e\room\NPC[0]\Collider,0,0,-0.5
 							e\room\NPC[0]\State = 3
-							e\room\NPC[0]\texture = NPCsPath$+"scp_035_victim.png"
+							e\room\NPC[0]\texture = scpModding_ProcessFilePath$("GFX\npcs\"+"scp_035_victim.png")
 							ChangeNPCTextureID(e\room\NPC[0],6)
 							SetNPCFrame(e\room\NPC[0],19)
 						EndIf
@@ -9263,7 +9247,7 @@ Function UpdateEvents()
 				If PlayerRoom = e\room Then
 					UpdateButton(e\room\Objects[2])
 					If ClosestButton = e\room\Objects[2] And MouseHit1 Then
-						Msg = "The elevator appears to be broken."
+						Msg = scpLang_GetPhrase$("events.elevatorbroken")
 						PlaySound2(ButtonSFX2, Camera, e\room\Objects[2])
 						MsgTimer = 5 * 70
 						MouseHit1 = 0
@@ -9277,7 +9261,7 @@ Function UpdateEvents()
 					For i = 0 To 1
 						UpdateButton(e\room\Objects[i])
 						If ClosestButton = e\room\Objects[i] And MouseHit1 Then
-							Msg = "The elevator appears to be broken."
+							Msg = scpLang_GetPhrase$("events.elevatorbroken")
 							PlaySound2(ButtonSFX2, Camera, e\room\Objects[i])
 							MsgTimer = 5 * 70
 							MouseHit1 = 0
@@ -9436,7 +9420,7 @@ Function UpdateEvents()
 					e\room\NPC[0]\State = 3
 					SetNPCFrame(e\room\NPC[0], 40)
 					e\room\NPC[0]\IsDead = True
-					tex = LoadTexture_Strict(NPCsPath$+"body_c.png")
+					tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"body_c.png"))
 					EntityTexture(e\room\NPC[0]\obj, tex)
 					FreeTexture tex
 					e\EventState = 1
@@ -9465,11 +9449,11 @@ Function UpdateEvents()
 					    EndIf
 					    If e\EventState >= 300.0 And e\EventState3 = 0.0 Then
 						    e\EventState3 = 1.0
-						    PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\294\burn.ogg"))
+						    PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\294\burn.ogg")))
 						    If Rand(2) = 1 Then
-							    Msg = "You feel a burning pain in your right leg."
+							    Msg = scpLang_GetPhrase$("events.room0091")
 						    Else
-							    Msg = "You feel a burning pain in your left leg."
+							    Msg = scpLang_GetPhrase$("events.room0092")
 						    EndIf
 						    MsgTimer = 70 * 5
 						    CameraShake = 5.0
@@ -9492,7 +9476,7 @@ Function UpdateEvents()
 					    EndIf
 				    EndIf
 				    If e\EventState >= 4290.0 And e\EventState3 = 1.0 Then
-			            PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\009\IceCracking.ogg"))
+			            PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\009\IceCracking.ogg")))
 					    e\EventState3 = 2.0
 				    EndIf
 				    If e\EventState >= 4300.0 And e\EventState3 >= 2.0 Then
@@ -9508,16 +9492,11 @@ Function UpdateEvents()
 				
 				    If e\EventState >= 4502.0 And e\EventState3 = 2.0 Then
 					    If PlayerRoom = e\room Then
-						    DeathMSG = "Two crystallized Class D subjects was found by the maintenance team dispatched to repair "
-						    DeathMSG = DeathMSG + " SCP-009's containment chamber. The bodies is currently unidentifiable"
-						    DeathMSG = DeathMSG + " due to massive damage caused by the substance."
+						    DeathMSG = scpLang_GetPhrase$("events.room0093")
 					    ElseIf EntityDistance(Collider, e\room\obj) < 128.0 Then
-						    DeathMSG = "A crystallized Class D subject was found near SCP-009's containment chamber."
-						    DeathMSG = DeathMSG + " The body is currently unidentifiable due to massive damage caused by the substance."
+						    DeathMSG = scpLang_GetPhrase$("events.room0094")
 					    Else
-						    DeathMSG = "Found a crystallized " + SubjectName$ + ". Death caused by"
-						    DeathMSG = DeathMSG + " exposure to SCP-009. How the subject reached [DATA REDACTED]"
-						    DeathMSG = DeathMSG + " before total contamination is unknown."
+						    DeathMSG = scpLang_GetPhrase$("events.room0095")
 					    EndIf
 					    Kill()
 					    e\EventState3 = 3.0
@@ -9531,7 +9510,7 @@ Function UpdateEvents()
                         If Curr096 = Null And RemoteDoorOn Then
 
                             ;Playing Event sound #1
-					        e\Sound = LoadSound_Strict(SFXPath$+"Door\DoorClose079.ogg")
+					        e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\DoorClose079.ogg"))
 						    e\SoundCHN = PlaySound2(e\Sound, Camera, e\room\RoomDoors[0]\obj, 30, 0.5)
 						
 						    ;Locking and closing the door by SCP-079
@@ -9539,7 +9518,7 @@ Function UpdateEvents()
 							e\room\RoomDoors[0]\locked = True
 						
 						    ;Playing Event sound #2
-						    e\Sound2 = LoadSound_Strict(SFXPath$+"Room\096Chamber\096ChamberEvent.ogg")
+						    e\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\096Chamber\096ChamberEvent.ogg"))
 						    e\SoundCHN2 = PlaySound2(e\Sound2, Camera, e\room\Objects[3], 30, 1.5)
 
 				    	    ;Spawn items
@@ -9585,7 +9564,7 @@ Function UpdateEvents()
 					            If e\EventState3 = 0 Then
 					                e\EventState3 = 1
 				                Else
-					                e\Sound3 = LoadSound_Strict(MusicPath + "096.ogg")
+					                e\Sound3 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\Music\" + "096.ogg"))
 						            e\SoundCHN3 = LoopSound2(e\Sound3, e\SoundCHN3, Camera, e\room\Objects[3], 4)
 						        EndIf	
 			                EndIf
@@ -9628,7 +9607,7 @@ Function UpdateEvents()
 					            If I_409\Timer < 1 Then
 						            DrawHandIcon = True
 						            If MouseHit1 Then
-						                Msg = "You touched the SCP-409."
+						                Msg = scpLang_GetPhrase$("events.room409")
 						                MsgTimer = 70*6
 						                BlurTimer = 2000
 						                I_409\Timer = I_409\Timer + 1.0
@@ -9716,7 +9695,7 @@ Function UpdateEvents()
 							    e\room\RoomDoors[0]\open = Not e\room\RoomDoors[0]\open
 							
 							    ;sound
-								If e\Sound = 0 Then e\Sound = LoadSound_Strict(SFXPath$+"Door\DoorSparks.ogg")
+								If e\Sound = 0 Then e\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\DoorSparks.ogg"))
 								e\SoundCHN = PlaySound2(e\Sound, Camera, e\room\Objects[0], 3)
 								
 							    ;particles
@@ -9755,7 +9734,7 @@ Function UpdateEvents()
 		
 		If ExplosionTimer < 140.0 Then
 			If ExplosionTimer - fs\FPSfactor[0] < 5.0 Then
-				ExplosionSFX = LoadSound_Strict(SFXPath$+"Ending\GateB\Nuke1.ogg")
+				ExplosionSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\Nuke1.ogg"))
 				PlaySound_Strict ExplosionSFX
 				CameraShake = 10.0
 				ExplosionTimer = 5.0
@@ -9766,7 +9745,7 @@ Function UpdateEvents()
 			CameraShake = Min((ExplosionTimer / 20.0), 20.0)
 			If ExplosionTimer-fs\FPSfactor[0] < 140.0 Then
 				BlinkTimer = 1.0
-				ExplosionSFX = LoadSound_Strict(SFXPath$+"Ending\GateB\Nuke2.ogg")
+				ExplosionSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\Nuke2.ogg"))
 				PlaySound_Strict ExplosionSFX				
 				For i = 0 To (10 + (10 * (ParticleAmount + 1)))
 					p.Particles = CreateParticle(EntityX(Collider)+Rnd(-0.5,0.5),EntityY(Collider)-Rnd(0.2,1.5),EntityZ(Collider)+Rnd(-0.5,0.5),0, Rnd(0.2,0.6), 0.0, 350)	
@@ -9869,7 +9848,7 @@ Function UpdateDimension1499()
 						n\PrevState = 2
 						n\Angle = 270
 						RotateEntity n\Collider, 0, n\Angle, 0
-						tex = LoadTexture_Strict(NPCsPath$+"scp_1499_1_king.png")
+						tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_1499_1_king.png"))
 						EntityTexture n\obj, tex
 						FreeTexture tex
 						e\room\NPC[0] = n
@@ -9885,7 +9864,7 @@ Function UpdateDimension1499()
 							For y = 0 To 2
 								du = New Dummy1499
 								du\obj = CopyEntity(e\room\NPC[1]\obj)
-								scale# = (GetINIFloat("Data\NPCs.ini", "SCP-1499-1", "scale") / 4.0) * Rnd(0.8, 1.0)
+								scale# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-1499-1", "scale") / 4.0) * Rnd(0.8, 1.0)
 								ScaleEntity du\obj, scale#, scale#, scale#
 								EntityFX du\obj, 1
 								du\anim = Rand(0, 1)
@@ -9901,7 +9880,7 @@ Function UpdateDimension1499()
 							For y = 0 To 2
 								du = New Dummy1499
 								du\obj = CopyEntity(e\room\NPC[1]\obj)
-								scale# = (GetINIFloat("Data\NPCs.ini", "SCP-1499-1", "scale") / 4.0) * Rnd(0.8, 1.0)
+								scale# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-1499-1", "scale") / 4.0) * Rnd(0.8, 1.0)
 								ScaleEntity du\obj, scale#, scale#, scale#
 								EntityFX du\obj, 1
 								du\anim = Rand(0, 1)
@@ -10056,7 +10035,7 @@ Function UpdateDimension1499()
 							For i = 2 To 5
 								If i = 2
 									If e\room\NPC[i]\Sound <> 0 Then FreeSound_Strict e\room\NPC[i]\Sound : e\room\NPC[i]\Sound = 0
-									e\room\NPC[i]\Sound = LoadSound_Strict(SFXPath$+"SCP\1499\Triggered.ogg")
+									e\room\NPC[i]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1499\Triggered.ogg"))
 									e\room\NPC[i]\SoundCHN = PlaySound2(e\room\NPC[i]\Sound, Camera, e\room\NPC[i]\Collider, 50.0)
 								EndIf
 								e\room\NPC[i]\State = 1
@@ -10072,8 +10051,8 @@ Function UpdateDimension1499()
 							ShouldPlay = 66
 							If NowPlaying = 66 Then
 								If e\SoundCHN = 0 Then
-									e\Sound2 = LoadSound_Strict(MusicPath + "HaveMercyOnMe(Choir).ogg")
-									e\SoundCHN = StreamSound_Strict(MusicPath + "HaveMercyOnMe(NoChoir).ogg", MusicVolume)
+									e\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\Music\" + "HaveMercyOnMe(Choir).ogg"))
+									e\SoundCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\Music\" + "HaveMercyOnMe(NoChoir).ogg"), MusicVolume)
 									e\SoundCHN_IsStream = True
 								EndIf
 							EndIf
@@ -10198,7 +10177,7 @@ Function UpdateEndings()
 							pvt = CreatePivot()
 							PositionEntity pvt, EntityX(e\room\Objects[0], True), EntityY(e\room\Objects[0], True), EntityZ(e\room\Objects[0], True)
 							
-							e\room\Objects[0] = LoadMesh_Strict(MapPath$+"exit1terrain.b3d", e\room\obj)
+							e\room\Objects[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"exit1terrain.b3d"), e\room\obj)
 							ScaleEntity e\room\Objects[0], RoomScale, RoomScale, RoomScale, True
 							RotateEntity e\room\Objects[0], 0, e\room\angle, 0, True
 							PositionEntity(e\room\Objects[0], EntityX(pvt), EntityY(pvt), EntityZ(pvt), True)
@@ -10208,10 +10187,10 @@ Function UpdateEndings()
 							Delay 100
 							
 							CreateConsoleMsg("")
-							CreateConsoleMsg("WARNING! Teleporting away from this area may cause bugs or crashing.", 255, 0, 0)
+							CreateConsoleMsg(scpLang_GetPhrase$("events.gateconsole"), 255, 0, 0)
 							CreateConsoleMsg("")
 							
-							Sky = sky_CreateSky(MapPath$+"sky\sky")
+							Sky = sky_CreateSky(scpModding_ProcessFilePath$("GFX\map\"+"sky\sky"))
 							RotateEntity Sky, 0, e\room\angle - 90, 0
 							
 							e\EventState = 1.0
@@ -10254,7 +10233,7 @@ Function UpdateEndings()
 									
 									e\room\NPC[0]\State = 3
 									
-									PlayAnnouncement(SFXPath$+"Ending\GateB\682Battle.ogg")
+									PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\682Battle.ogg"))
 								EndIf								
 							Else
 								ShouldPlay = 6
@@ -10302,7 +10281,7 @@ Function UpdateEndings()
 								ElseIf e\EventState > 35.0 * 70 And e\EventState < 36.5 * 70	
 									CameraShake = 1.5		
 									If e\EventState-fs\FPSfactor[0] =< 35.0 * 70 Then
-										e\SoundCHN = StreamSound_Strict(SFXPath$+"Ending\GateB\DetonatingAlphaWarheads.ogg", SFXVolume, 0)
+										e\SoundCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\DetonatingAlphaWarheads.ogg"), SFXVolume, 0)
 										e\SoundCHN_IsStream = True
 									EndIf									
 								ElseIf e\EventState > 39.5 * 70 And e\EventState < 39.8 * 70		
@@ -10325,7 +10304,7 @@ Function UpdateEndings()
 							If e\EventState >= 45.0 * 70 Then
 								If e\EventState < 75.0 * 70 Then
 									If e\SoundCHN2=0
-										e\SoundCHN2 = StreamSound_Strict(SFXPath$+"Ending\GateB\Siren.ogg", SFXVolume, Mode)
+										e\SoundCHN2 = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\Siren.ogg"), SFXVolume, Mode)
 										e\SoundCHN2_IsStream = True
 									EndIf
 								Else
@@ -10347,7 +10326,7 @@ Function UpdateEndings()
 											ExplosionTimer = Max(ExplosionTimer, 0.1)
 											I_END\SelectedEnding = "B2"
 										Else
-											PlayAnnouncement(SFXPath$+"Ending\GateB\AlphaWarheadsFail.ogg")
+											PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\AlphaWarheadsFail.ogg"))
 																						
 											e\EventState = 85.0 * 70
 											
@@ -10388,7 +10367,7 @@ Function UpdateEndings()
 												If n\NPCtype = NPCtypeMTF2
 													If n\State = 5 And EntityDistance(n\Collider, Collider) < 3.0
 														If e\EventState3 = 0.0
-															PlaySound_Strict LoadTempSound(SFXPath$+"Ending\GateB\PlayerDetect.ogg")
+															PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\PlayerDetect.ogg"))
 															e\EventState3 = e\EventState3 + fs\FPSfactor[0]
 															For n2.NPCs = Each NPCs
 																If n2\NPCtype = n\NPCtype
@@ -10429,7 +10408,7 @@ Function UpdateEndings()
 										
 										                UnableToMove% = True
 										
-                                                        PlaySound_Strict(LoadTempSound(SFXPath$+"Ending\GateB\PlayerDetect.ogg"))
+                                                        PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\PlayerDetect.ogg")))
 
                                                         e\EventState4 = 1
                                                     Else
@@ -10450,11 +10429,11 @@ Function UpdateEndings()
 												    Next
 												EndIf
 											ElseIf e\EventState3 >= 1300.0
-                                                ent% = LoadSprite(GFXPath$+"bloodsprite.png", 1 + 2)
+                                                ent% = LoadSprite(scpModding_ProcessFilePath$("GFX\"+"bloodsprite.png"), 1 + 2)
 												EntityFX ent%, 1 + 2 + 8
 												ScaleSprite ent%, 1.5, 1.5
 												CurrSpeed = 0
-												PlaySound_Strict LoadTempSound(SFXPath$+"Ending\GateB\Gunshot.ogg")
+												PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\Gunshot.ogg"))
 												chs\GodMode = 0
 												chs\NoClip = 0
 												chs\Cheats = 0
@@ -10492,7 +10471,7 @@ Function UpdateEndings()
 										angle# = WrapAngle(EntityRoll(e\room\Objects[12]))
 										TurnEntity e\room\Objects[12], 0, 0, (5.0+Abs(Sin(angle)) * 2) * fs\FPSfactor[0]
 										If angle < 270 And WrapAngle(EntityRoll(e\room\Objects[12])) >= 270 Then
-											PlaySound_Strict LoadTempSound(SFXPath$+"Character\Apache\Crash1.ogg")
+											PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\Apache\Crash1.ogg"))
 											e\room\NPC[3]\State = 4
 											e\room\NPC[3]\State2 = 1.0
 											e\room\NPC[3]\EnemyX = EntityX(e\room\Objects[7], True)
@@ -10597,7 +10576,7 @@ Function UpdateEndings()
 					
 					If e\EventState = 0 Then
 						DrawLoading(0)
-						e\room\Objects[0] = LoadRMesh(MapPath$+"gateatunnel_opt.rmesh", Null)
+						e\room\Objects[0] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"gateatunnel_opt.rmesh"), Null)
 						PositionEntity e\room\Objects[0], EntityX(e\room\obj, True),EntityY(e\room\obj,True),EntityZ(e\room\obj,True)
 						ScaleEntity (e\room\Objects[0],RoomScale,RoomScale,RoomScale)
 						EntityType e\room\Objects[0], HIT_MAP
@@ -10636,10 +10615,10 @@ Function UpdateEndings()
 						Next
 						
 						CreateConsoleMsg("")
-						CreateConsoleMsg("WARNING! Teleporting away from this area may cause bugs or crashing.", 255, 0, 0)
+						CreateConsoleMsg(scpLang_GetPhrase$("events.room0091"), 255, 0, 0)
 						CreateConsoleMsg("")
 						
-						Sky = sky_CreateSky(MapPath$+"sky\sky")
+						Sky = sky_CreateSky(scpModding_ProcessFilePath$("GFX\map\"+"sky\sky"))
 						RotateEntity Sky,0,e\room\angle,0
 						
 						DrawLoading(60)
@@ -10676,11 +10655,11 @@ Function UpdateEndings()
 						ztemp#=EntityZ(e\room\Objects[9],True)
 						FreeEntity e\room\Objects[9]
 						
-						e\room\Objects[9] = LoadMesh_Strict(MapPath$+"lightgunbase.b3d")
+						e\room\Objects[9] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"lightgunbase.b3d"))
 						ScaleEntity e\room\Objects[9], RoomScale,RoomScale,RoomScale
 						EntityFX(e\room\Objects[9],0)
 						PositionEntity(e\room\Objects[9], xtemp, e\room\y+992.0*RoomScale, ztemp)
-						e\room\Objects[10] = LoadMesh_Strict(MapPath$+"lightgun.b3d")
+						e\room\Objects[10] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"lightgun.b3d"))
 						EntityFX(e\room\Objects[10],0)
 						ScaleEntity e\room\Objects[10], RoomScale,RoomScale,RoomScale
 						PositionEntity(e\room\Objects[10], xtemp, e\room\y+(992.0+288.0)*RoomScale, ztemp-176.0*RoomScale,True)
@@ -10702,7 +10681,7 @@ Function UpdateEndings()
 						
 						RotateEntity Collider, 0, EntityYaw(Collider)+(e\room\angle+180),0
 						
-						If (Not Contained106) Then PlaySound_Strict LoadTempSound(SFXPath$+"Ending\GateA\106Escape.ogg") 
+						If (Not Contained106) Then PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\106Escape.ogg")) 
 						
 						DrawLoading(100)
 					Else
@@ -10807,7 +10786,7 @@ Function UpdateEndings()
 									Curr106\CurrSpeed = CurveValue(0, Curr106\CurrSpeed, Max(5*dist,2.0))
 									If dist < 15.0 Then
 										If e\SoundCHN2 = 0 Then
-											e\SoundCHN2 = PlaySound_Strict (LoadTempSound(SFXPath$+"Ending\GateA\Franklin.ogg"))
+											e\SoundCHN2 = PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\Franklin.ogg")))
 										EndIf
 										
 										If dist<0.4 Then
@@ -10816,7 +10795,7 @@ Function UpdateEndings()
 											If Curr106\State3=0 Then 
 												SetNPCFrame(Curr106, 259.0)
 												If e\Sound <> 0 Then FreeSound_Strict e\Sound : e\Sound = 0
-												LoadEventSound(e,SFXPath$+"Ending\GateA\106Retreat.ogg")
+												LoadEventSound(e,scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\106Retreat.ogg"))
 												e\SoundCHN = PlaySound2(e\Sound, Camera, Curr106\Collider, 35.0)
 											EndIf
 											
@@ -10845,7 +10824,7 @@ Function UpdateEndings()
 										Else
 											If dist < 8.5 Then 
 												If e\EventState2=0;ChannelPlaying(e\SoundCHN2) = 0 Then
-													e\SoundCHN2 = PlaySound_Strict (LoadTempSound(SFXPath$+"Ending\GateA\HIDTurret.ogg"))
+													e\SoundCHN2 = PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\HIDTurret.ogg")))
 													e\EventState2 = 1
 												ElseIf e\EventState2>0
 													e\EventState2=e\EventState2+fs\FPSfactor[0]
@@ -10899,7 +10878,7 @@ Function UpdateEndings()
 												e\room\NPC[i]\PathTimer = 70*2
 												e\room\NPC[i]\LastSeen = 70*100
 											Next
-											e\room\NPC[5]\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\ThereHeIs1.ogg")
+											e\room\NPC[5]\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ThereHeIs1.ogg"))
 											PlaySound2(e\room\NPC[5]\Sound, Camera, e\room\NPC[5]\Collider, 25.0)
 											
 											e\room\RoomDoors[2]\open = True
@@ -10928,7 +10907,7 @@ Function UpdateEndings()
 											    e\room\NPC[i] = CreateNPC(NPCtypeCI, EntityX(e\room\Objects[i+8], True), EntityY(e\room\Objects[i+8], True)+0.4, EntityZ(e\room\Objects[i+8], True))
 											Next
 
-											e\SoundCHN = PlaySound2(LoadTempSound(SFXPath$+"Ending\GateA\Bell1.ogg"), Camera, e\room\NPC[9]\Collider)
+											e\SoundCHN = PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\Bell1.ogg")), Camera, e\room\NPC[9]\Collider)
 											
 											p.Particles = CreateParticle(EntityX(e\room\Objects[17], True), EntityY(Camera, True), EntityZ(e\room\Objects[17],True), 4, 8.0, 0, 50)
 											p\speed = 0.15
@@ -10981,11 +10960,11 @@ Function UpdateEndings()
 									
 									If e\EventState3=>230.0 Then
 										If e\EventState3-fs\FPSfactor[0]<230.0 Then
-											e\SoundCHN = PlaySound_Strict(LoadTempSound(SFXPath$+"Ending\GateA\CI.ogg"))
+											e\SoundCHN = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\CI.ogg")))
 										EndIf
 										
 										If ChannelPlaying(e\SoundCHN)=False And I_END\SelectedEnding="" Then
-											PlaySound_Strict LoadTempSound(SFXPath$+"Ending\GateA\Bell2.ogg")
+											PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\Bell2.ogg"))
 											
 											p.Particles = CreateParticle(EntityX(e\room\Objects[17],True),EntityY(Camera,True), EntityZ(e\room\Objects[17],True), 4, 8.0, 0, 50)
 											p\speed = 0.15
@@ -11057,7 +11036,7 @@ Function UpdateEndings()
 												Next
 												
 												If e\EventState2=1 Then
-													e\SoundCHN = PlaySound_Strict (LoadTempSound(SFXPath$+"Ending\GateA\STOPRIGHTTHERE.ogg"))
+													e\SoundCHN = PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\STOPRIGHTTHERE.ogg")))
 													e\EventState2=2			
 												EndIf
 											Else
@@ -11107,7 +11086,7 @@ Function UpdateEndings()
 		
 		If ExplosionTimer < 140.0 Then
 			If ExplosionTimer-fs\FPSfactor[0] < 5.0 Then
-				ExplosionSFX = LoadSound_Strict(SFXPath$+"Ending\GateB\Nuke1.ogg")
+				ExplosionSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\Nuke1.ogg"))
 				PlaySound_Strict ExplosionSFX
 				CameraShake = 10.0
 				ExplosionTimer = 5.0
@@ -11118,7 +11097,7 @@ Function UpdateEndings()
 			CameraShake = Min((ExplosionTimer/20.0),20.0)
 			If ExplosionTimer-fs\FPSfactor[0] < 140.0 Then
 				BlinkTimer = 1.0
-				ExplosionSFX = LoadSound_Strict(SFXPath$+"Ending\GateB\Nuke2.ogg")
+				ExplosionSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\Nuke2.ogg"))
 				PlaySound_Strict ExplosionSFX				
 				For i = 0 To (10+(10*(ParticleAmount+1)))
 					p.Particles = CreateParticle(EntityX(Collider)+Rnd(-0.5,0.5),EntityY(Collider)-Rnd(0.2,1.5),EntityZ(Collider)+Rnd(-0.5,0.5),0, Rnd(0.2,0.6), 0.0, 350)	

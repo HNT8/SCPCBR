@@ -1,0 +1,6 @@
+[mod]
+name = "My Custom Map"
+delimeter = "mycustommap"
+version = "1.0"
+description = "This mod adds my custom map to the game!"
+scripts = ["Assets\\Scripts\\script.lua"]

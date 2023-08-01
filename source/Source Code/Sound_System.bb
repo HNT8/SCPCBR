@@ -91,7 +91,7 @@ Function UpdateMusic()
 		
 		If NowPlaying < 66
 			If CurrMusic = 0
-				MusicCHN = StreamSound_Strict(MusicPath+Music(NowPlaying)+".ogg",0.0,Mode)
+				MusicCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Music\"+Music(NowPlaying)+".ogg"),0.0,Mode)
 				CurrMusic = 1
 			EndIf
 			SetStreamVolume_Strict(MusicCHN,CurrMusicVolume)
@@ -500,94 +500,94 @@ End Function
 Function LoadAllSounds()
 	;Dim OpenDoorSFX%(3,3), CloseDoorSFX%(3,3)
 	For i = 0 To 2
-		OpenDoorSFX(0,i) = LoadSound_Strict(SFXPath$+"Door\DoorOpen" + (i + 1) + ".ogg")
-		CloseDoorSFX(0,i) = LoadSound_Strict(SFXPath$+"Door\DoorClose" + (i + 1) + ".ogg")
-		OpenDoorSFX(2,i) = LoadSound_Strict(SFXPath$+"Door\Door2Open" + (i + 1) + ".ogg")
-		CloseDoorSFX(2,i) = LoadSound_Strict(SFXPath$+"Door\Door2Close" + (i + 1) + ".ogg")
-		OpenDoorSFX(3,i) = LoadSound_Strict(SFXPath$+"Door\ElevatorOpen" + (i + 1) + ".ogg")
-		CloseDoorSFX(3,i) = LoadSound_Strict(SFXPath$+"Door\ElevatorClose" + (i + 1) + ".ogg")
+		OpenDoorSFX(0,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\DoorOpen" + (i + 1) + ".ogg"))
+		CloseDoorSFX(0,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\DoorClose" + (i + 1) + ".ogg"))
+		OpenDoorSFX(2,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\Door2Open" + (i + 1) + ".ogg"))
+		CloseDoorSFX(2,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\Door2Close" + (i + 1) + ".ogg"))
+		OpenDoorSFX(3,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\ElevatorOpen" + (i + 1) + ".ogg"))
+		CloseDoorSFX(3,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\ElevatorClose" + (i + 1) + ".ogg"))
 	Next
 	For i = 0 To 1
-		OpenDoorSFX(1,i) = LoadSound_Strict(SFXPath$+"Door\BigDoorOpen" + (i + 1) + ".ogg")
-		CloseDoorSFX(1,i) = LoadSound_Strict(SFXPath$+"Door\BigDoorClose" + (i + 1) + ".ogg")
+		OpenDoorSFX(1,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\BigDoorOpen" + (i + 1) + ".ogg"))
+		CloseDoorSFX(1,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\BigDoorClose" + (i + 1) + ".ogg"))
 	Next
 
-	KeyCardSFX1 = LoadSound_Strict(SFXPath$+"Interact\KeyCardUse1.ogg")
-	KeyCardSFX2 = LoadSound_Strict(SFXPath$+"Interact\KeyCardUse2.ogg")
-	ButtonSFX2 = LoadSound_Strict(SFXPath$+"Interact\Button2.ogg")
-	ScannerSFX1 = LoadSound_Strict(SFXPath$+"Interact\ScannerUse1.ogg")
-	ScannerSFX2 = LoadSound_Strict(SFXPath$+"Interact\ScannerUse2.ogg")
+	KeyCardSFX1 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Interact\KeyCardUse1.ogg"))
+	KeyCardSFX2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Interact\KeyCardUse2.ogg"))
+	ButtonSFX2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Interact\Button2.ogg"))
+	ScannerSFX1 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Interact\ScannerUse1.ogg"))
+	ScannerSFX2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Interact\ScannerUse2.ogg"))
 
 	For i = 0 To 1
-  	    OpenDoorFastSFX(i) = LoadSound_Strict(SFXPath$+"Door\DoorOpenFast" + (i + 1) + ".ogg")
+  	    OpenDoorFastSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Door\DoorOpenFast" + (i + 1) + ".ogg"))
 	Next
-	CautionSFX% = LoadSound_Strict(SFXPath$+"Room\LockroomSiren.ogg")
+	CautionSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\LockroomSiren.ogg"))
 
 	;NuclearSirenSFX%
 
-	CameraSFX = LoadSound_Strict(SFXPath$+"General\Camera.ogg") 
+	CameraSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Camera.ogg"))
 
-	StoneDragSFX% = LoadSound_Strict(SFXPath$+"SCP\173\StoneDrag.ogg")
+	StoneDragSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\173\StoneDrag.ogg"))
 
-	GunshotSFX% = LoadSound_Strict(SFXPath$+"General\Gunshot.ogg")
-	Gunshot2SFX% = LoadSound_Strict(SFXPath$+"General\Gunshot2.ogg")
-	Gunshot3SFX% = LoadSound_Strict(SFXPath$+"General\BulletMiss.ogg")
-	Gunshot4SFX% = LoadSound_Strict(SFXPath$+"General\Gunshot3.ogg")
-	BullethitSFX% = LoadSound_Strict(SFXPath$+"General\BulletHit.ogg")
+	GunshotSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Gunshot.ogg"))
+	Gunshot2SFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Gunshot2.ogg"))
+	Gunshot3SFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\BulletMiss.ogg"))
+	Gunshot4SFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Gunshot3.ogg"))
+	BullethitSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\BulletHit.ogg"))
 
-	TeslaIdleSFX = LoadSound_Strict(SFXPath$+"Room\Tesla\Idle.ogg")
-	TeslaActivateSFX = LoadSound_Strict(SFXPath$+"Room\Tesla\WindUp.ogg")
-	TeslaPowerUpSFX = LoadSound_Strict(SFXPath$+"Room\Tesla\PowerUp.ogg")
+	TeslaIdleSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Tesla\Idle.ogg"))
+	TeslaActivateSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Tesla\WindUp.ogg"))
+	TeslaPowerUpSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Tesla\PowerUp.ogg"))
 
-	MagnetUpSFX% = LoadSound_Strict(SFXPath$+"Room\106Chamber\MagnetUp.ogg") 
-	MagnetDownSFX = LoadSound_Strict(SFXPath$+"Room\106Chamber\MagnetDown.ogg")
+	MagnetUpSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\106Chamber\MagnetUp.ogg"))
+	MagnetDownSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\106Chamber\MagnetDown.ogg"))
 	;FemurBreakerSFX%
 	;EndBreathCHN%
 	;EndBreathSFX%
 
 	;Dim DecaySFX%(5)
 	For i = 0 To 3
-		DecaySFX(i) = LoadSound_Strict(SFXPath$+"SCP\106\Decay" + i + ".ogg")
+		DecaySFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\106\Decay" + i + ".ogg"))
 	Next
 
-	BurstSFX = LoadSound_Strict(SFXPath$+"Room\TunnelBurst.ogg")
+	BurstSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\TunnelBurst.ogg"))
 
 	;DrawLoading(20, True)
 
 	;Dim RustleSFX%(7)
 	For i = 0 To 6
-		RustleSFX(i) = LoadSound_Strict(SFXPath$+"SCP\372\Rustle" + i + ".ogg")
+		RustleSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\372\Rustle" + i + ".ogg"))
 	Next
 
-	Death914SFX% = LoadSound_Strict(SFXPath$+"SCP\914\PlayerDeath.ogg") 
-	Use914SFX% = LoadSound_Strict(SFXPath$+"SCP\914\PlayerUse.ogg")
+	Death914SFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\914\PlayerDeath.ogg"))
+	Use914SFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\914\PlayerUse.ogg"))
 
 	;Dim DripSFX%(6)
 	For i = 0 To 5
-		DripSFX(i) = LoadSound_Strict(SFXPath$+"Character\D9341\BloodDrip" + i + ".ogg")
+		DripSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\BloodDrip" + i + ".ogg"))
 	Next
 
-	LeverSFX% = LoadSound_Strict(SFXPath$+"Interact\LeverFlip.ogg") 
-	LightSFX% = LoadSound_Strict(SFXPath$+"General\LightSwitch.ogg")
+	LeverSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Interact\LeverFlip.ogg"))
+	LightSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\LightSwitch.ogg"))
 
-	ButtGhostSFX% = LoadSound_Strict(SFXPath$+"SCP\Joke\789J.ogg")
+	ButtGhostSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\Joke\789J.ogg"))
 
 	;Dim RadioSFX(5,10)
-	RadioSFX(1,0) = LoadSound_Strict(SFXPath$+"Radio\RadioAlarm.ogg")
-	RadioSFX(1,1) = LoadSound_Strict(SFXPath$+"Radio\RadioAlarm2.ogg")
+	RadioSFX(1,0) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Radio\RadioAlarm.ogg"))
+	RadioSFX(1,1) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Radio\RadioAlarm2.ogg"))
 	For i = 0 To 8
-		RadioSFX(2,i) = LoadSound_Strict(SFXPath$+"Radio\SCPRadio"+i+".ogg")
+		RadioSFX(2,i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Radio\SCPRadio"+i+".ogg"))
 	Next
-	RadioSquelch = LoadSound_Strict(SFXPath$+"Radio\Squelch.ogg")
-	RadioStatic = LoadSound_Strict(SFXPath$+"Radio\Static.ogg")
-	RadioBuzz = LoadSound_Strict(SFXPath$+"Radio\Buzz.ogg")
+	RadioSquelch = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Radio\Squelch.ogg"))
+	RadioStatic = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Radio\Static.ogg"))
+	RadioBuzz = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Radio\Buzz.ogg"))
 
-	ElevatorBeepSFX = LoadSound_Strict(SFXPath$+"General\Elevator\Beep.ogg") 
-	ElevatorMoveSFX = LoadSound_Strict(SFXPath$+"General\Elevator\Moving.ogg") 
+	ElevatorBeepSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Elevator\Beep.ogg"))
+	ElevatorMoveSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Elevator\Moving.ogg"))
 
 	;Dim PickSFX%(10)
 	For i = 0 To 5 ;3
-		PickSFX(i) = LoadSound_Strict(SFXPath$+"Interact\PickItem" + i + ".ogg")
+		PickSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Interact\PickItem" + i + ".ogg"))
 	Next
 
 	;AmbientSFXCHN% 
@@ -604,72 +604,72 @@ Function LoadAllSounds()
 
 	;Dim OldManSFX%(9)
 	For i = 0 To 2
-		OldManSFX(i) = LoadSound_Strict(SFXPath$+"SCP\106\Corrosion" + (i + 1) + ".ogg")
+		OldManSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\106\Corrosion" + (i + 1) + ".ogg"))
 	Next
-	OldManSFX(3) = LoadSound_Strict(SFXPath$+"SCP\106\Laugh.ogg")
-	OldManSFX(4) = LoadSound_Strict(SFXPath$+"SCP\106\Breathing.ogg")
-	OldManSFX(5) = LoadSound_Strict(SFXPath$+"Room\PocketDimension\Enter.ogg")
+	OldManSFX(3) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\106\Laugh.ogg"))
+	OldManSFX(4) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\106\Breathing.ogg"))
+	OldManSFX(5) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\PocketDimension\Enter.ogg"))
 	For i = 0 To 2
-		OldManSFX(6+i) = LoadSound_Strict(SFXPath$+"SCP\106\WallDecay"+(i+1)+".ogg")
+		OldManSFX(6+i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\106\WallDecay"+(i+1)+".ogg"))
 	Next
-	OldManSFX(9) = LoadSound_Strict(SFXPath$+"SCP\106\Laugh2.ogg")
+	OldManSFX(9) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\106\Laugh2.ogg"))
 
 	;Dim Scp173SFX%(3)
 	For i = 0 To 2
-		Scp173SFX(i) = LoadSound_Strict(SFXPath$+"SCP\173\Rattle" + (i + 1) + ".ogg")
+		Scp173SFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\173\Rattle" + (i + 1) + ".ogg"))
 	Next
 
 	;Dim HorrorSFX%(20)
 	For i = 0 To 11
-		HorrorSFX(i) = LoadSound_Strict(SFXPath$+"Horror\Horror" + i + ".ogg")
+		HorrorSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Horror\Horror" + i + ".ogg"))
 	Next
 	For i = 14 To 15
-		HorrorSFX(i) = LoadSound_Strict(SFXPath$+"Horror\Horror" + i + ".ogg")
+		HorrorSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Horror\Horror" + i + ".ogg"))
 	Next
 
 	;Dim IntroSFX%(20)
 
 	For i = 7 To 9
-		IntroSFX(i) = LoadSound_Strict(SFXPath$+"Room\Intro\Bang" + (i - 6) + ".ogg")
+		IntroSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Bang" + (i - 6) + ".ogg"))
 	Next
 	For i = 10 To 12
-		IntroSFX(i) = LoadSound_Strict(SFXPath$+"Room\Intro\Light" + (i - 9) + ".ogg")
+		IntroSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Light" + (i - 9) + ".ogg"))
 	Next
-	;IntroSFX(13) = LoadSound_Strict(SFXPath$+"Intro\Shoot1.ogg")
-	;IntroSFX(14) = LoadSound_Strict(SFXPath$+"Intro\Shoot2.ogg")
-	IntroSFX(15) = LoadSound_Strict(SFXPath$+"Room\Intro\173Vent.ogg")
+	;IntroSFX(13) = LoadSound_Strict("SFX\"+"Intro\Shoot1.ogg")
+	;IntroSFX(14) = LoadSound_Strict("SFX\"+"Intro\Shoot2.ogg")
+	IntroSFX(15) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\173Vent.ogg"))
 
 	;Dim AlarmSFX%(6)
-	AlarmSFX(0) = LoadSound_Strict(SFXPath$+"Alarm\Alarm.ogg")
-	AlarmSFX(1) = LoadSound_Strict(SFXPath$+"Alarm\Alarm2.ogg")
-	AlarmSFX(2) = LoadSound_Strict(SFXPath$+"Alarm\Alarm3.ogg")
+	AlarmSFX(0) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Alarm\Alarm.ogg"))
+	AlarmSFX(1) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Alarm\Alarm2.ogg"))
+	AlarmSFX(2) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Alarm\Alarm3.ogg"))
 
 	;room_gw alarms
-	AlarmSFX(3) = LoadSound_Strict(SFXPath$+"Alarm\Alarm4.ogg")
-	AlarmSFX(4) = LoadSound_Strict(SFXPath$+"Alarm\Alarm5.ogg")
-	AlarmSFX(5) = LoadSound_Strict(SFXPath$+"Alarm\Alarm6.ogg")
+	AlarmSFX(3) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Alarm\Alarm4.ogg"))
+	AlarmSFX(4) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Alarm\Alarm5.ogg"))
+	AlarmSFX(5) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Alarm\Alarm6.ogg"))
 
 	;Dim CommotionState%(27)
 
-	HeartBeatSFX = LoadSound_Strict(SFXPath$+"Character\D9341\Heartbeat.ogg")
+	HeartBeatSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\Heartbeat.ogg"))
 
 	;VomitSFX%
 
 	;Dim BreathSFX(2,5)
  	;BreathCHN%
 	For i = 0 To 4
-		BreathSFX(0,i)=LoadSound_Strict(SFXPath$+"Character\D9341\breath"+i+".ogg")
-		BreathSFX(1,i)=LoadSound_Strict(SFXPath$+"Character\D9341\breath"+i+"gas.ogg")
+		BreathSFX(0,i)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\breath"+i+".ogg"))
+		BreathSFX(1,i)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\breath"+i+"gas.ogg"))
 	Next
 
 	;Dim NeckSnapSFX(3)
 	For i = 0 To 2
-		NeckSnapSFX(i) =  LoadSound_Strict(SFXPath$+"SCP\173\NeckSnap"+(i+1)+".ogg")
+		NeckSnapSFX(i) =  LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\173\NeckSnap"+(i+1)+".ogg"))
 	Next
 
 	;Dim DamageSFX%(9)
 	For i = 0 To 8
-		DamageSFX(i) = LoadSound_Strict(SFXPath$+"Character\D9341\Damage"+(i+1)+".ogg")
+		DamageSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\Damage"+(i+1)+".ogg"))
 	Next
 
 	;Dim MTFSFX%(8)
@@ -678,87 +678,87 @@ Function LoadAllSounds()
 	;CoughCHN% 
 	;VomitCHN%
 	For i = 0 To 2
-		CoughSFX(i) = LoadSound_Strict(SFXPath$+"Character\D9341\Cough" + (i + 1) + ".ogg")
+		CoughSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\Cough" + (i + 1) + ".ogg"))
 	Next
 
- 	MachineSFX% = LoadSound_Strict(SFXPath$+"SCP\914\Refining.ogg")
+ 	MachineSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\914\Refining.ogg"))
 
- 	ApacheSFX = LoadSound_Strict(SFXPath$+"Character\Apache\Propeller.ogg")
+ 	ApacheSFX = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\Apache\Propeller.ogg"))
 
 	;CurrStepSFX
 	;Dim StepSFX%(4, 2, 8) ;(normal/metal, walk/run, id)
 	For i = 0 To 7
-		StepSFX(0, 0, i) = LoadSound_Strict(SFXPath$+"Step\Step" + (i + 1) + ".ogg")
-		StepSFX(1, 0, i) = LoadSound_Strict(SFXPath$+"Step\StepMetal" + (i + 1) + ".ogg")
-		StepSFX(0, 1, i)= LoadSound_Strict(SFXPath$+"Step\Run" + (i + 1) + ".ogg")
-		StepSFX(1, 1, i) = LoadSound_Strict(SFXPath$+"Step\RunMetal" + (i + 1) + ".ogg")
+		StepSFX(0, 0, i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Step\Step" + (i + 1) + ".ogg"))
+		StepSFX(1, 0, i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Step\StepMetal" + (i + 1) + ".ogg"))
+		StepSFX(0, 1, i)= LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Step\Run" + (i + 1) + ".ogg"))
+		StepSFX(1, 1, i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Step\RunMetal" + (i + 1) + ".ogg"))
 		If i < 3
-			StepSFX(2, 0, i) = LoadSound_Strict(SFXPath$+"Character\MTF\Step" + (i + 1) + ".ogg")
-			StepSFX(3, 0, i) = LoadSound_Strict(SFXPath$+"SCP\049\Step"+ (i + 1) + ".ogg")
+			StepSFX(2, 0, i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Step" + (i + 1) + ".ogg"))
+			StepSFX(3, 0, i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049\Step"+ (i + 1) + ".ogg"))
 		EndIf
 		If i < 4
-    	    StepSFX(4, 0, i) = LoadSound_Strict(SFXPath$+"Step\SCP\StepSCP" + (i + 1) + ".ogg")
+    	    StepSFX(4, 0, i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Step\SCP\StepSCP" + (i + 1) + ".ogg"))
     	EndIf
 	Next
 
 	;Dim Step2SFX(6)
 	For i = 0 To 2
-		Step2SFX(i) = LoadSound_Strict(SFXPath$+"Step\StepPD" + (i + 1) + ".ogg")
-		Step2SFX(i+3) = LoadSound_Strict(SFXPath$+"Step\StepForest" + (i + 1) + ".ogg")
+		Step2SFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Step\StepPD" + (i + 1) + ".ogg"))
+		Step2SFX(i+3) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Step\StepForest" + (i + 1) + ".ogg"))
 	Next
 
 	;{~--<MOD>--~}
 
 	;Dim NVGUse%(1) 
 	For i = 0 To 1
-  	    NVGUse(i) = LoadSound_Strict(SFXPath$+"Interact\NVGuse" + i + ".ogg")
+  	    NVGUse(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Interact\NVGuse" + i + ".ogg"))
 	Next
 
 	;Global Ambient1123SFX%
-	Ambient1123SFX% = LoadSound_Strict(SFXPath$+"SCP\1123\Ambient.ogg")
+	Ambient1123SFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1123\Ambient.ogg"))
 
 	;Global FireSFX% 
-	FireSFX% = LoadSound_Strict(SFXPath$+"SCP\457\FireLoop.ogg")
+	FireSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\457\FireLoop.ogg"))
 
 	;Dim DamageSFX1033RU%(1) 
 	For i = 0 To 3
-		DamageSFX1033RU(i) = LoadSound_Strict(SFXPath$+"SCP\1033RU\Damage"+ i +".ogg")
+		DamageSFX1033RU(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1033RU\Damage"+ i +".ogg"))
 	Next
 
 	;Global DeathSFX1033RU%
-	DeathSFX1033RU% = LoadSound_Strict(SFXPath$+"SCP\1033RU\SCPDeath.ogg")
+	DeathSFX1033RU% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1033RU\SCPDeath.ogg"))
 
 	;Dim SizzSFX(1) 
 	For i = 0 To 1
-  	    SizzSFX(i) = LoadSound_Strict(SFXPath$+"SCP\1079\BubbleSizz" + i + ".ogg")
+  	    SizzSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1079\BubbleSizz" + i + ".ogg"))
 	Next
 
 	;Dim MTF2SFX%(8) 
 	
 	;Dim ScientistRadioSFX%(1) 
 	For i = 0 To 1
-  	    ScientistRadioSFX(i) = LoadSound_Strict(SFXPath$+"Character\Scientist\Radio" + i + ".ogg")
+  	    ScientistRadioSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\Scientist\Radio" + i + ".ogg"))
 	Next
 
 	;Dim HorrorSFX%(21)
 	For i = 17 To 21
-  	    HorrorSFX(i) = LoadSound_Strict(SFXPath$+"Horror\Horror" + i + ".ogg")
+  	    HorrorSFX(i) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Horror\Horror" + i + ".ogg"))
 	Next
 
     ;Global RelaxedBreathSFX%
     ;Global RelaxedBreathCHN%
-	RelaxedBreathSFX% = LoadSound_Strict(SFXPath$+"Character\D9341\RelaxedBreathGas.ogg")
+	RelaxedBreathSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\RelaxedBreathGas.ogg"))
 	
 	;Global CrouchSFX%
 	;Global CrouchCHN%
-	CrouchSFX% = LoadSound_Strict(SFXPath$+"Character\D9341\Crouch.ogg")
+	CrouchSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\Crouch.ogg"))
 	
 	;Global RadioStatic895%
-	RadioStatic895% = LoadSound_Strict(SFXPath$+"Radio\Static895.ogg")
+	RadioStatic895% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Radio\Static895.ogg"))
 	
 	;Dim VehicleSFX%(1)
-	VehicleSFX(0) = LoadSound_Strict(SFXPath$+"Room\Intro\Vehicle\VehicleMove.ogg")
-	VehicleSFX(1) = LoadSound_Strict(SFXPath$+"Room\Intro\Vehicle\VehicleIdle.ogg")
+	VehicleSFX(0) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Vehicle\VehicleMove.ogg"))
+	VehicleSFX(1) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\Intro\Vehicle\VehicleIdle.ogg"))
 
 	;{~--<END>--~}
 	

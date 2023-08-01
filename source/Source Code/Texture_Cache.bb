@@ -25,7 +25,7 @@ Function AddTextureToCache(texture%)
 		tc.Materials = New Materials
 		tc\name = StripPath(TextureName(texture))
 		If BumpEnabled Then
-			Local temp$ = GetINIString("Data\materials.ini",tc\name,"bump")
+			Local temp$ = GetINIString(scpModding_ProcessFilePath$("Data\materials.ini"),tc\name,"bump")
 			If temp<>"" Then
 				tc\Bump = LoadTexture_Strict(temp)
 				TextureBlend tc\Bump,6

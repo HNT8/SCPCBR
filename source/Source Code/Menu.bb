@@ -1,23 +1,12 @@
-MenuWhite = LoadImage_Strict("GFX\menu\menuwhite.png")
-MenuBlack = LoadImage_Strict("GFX\menu\menublack.png")
+MenuWhite = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\menuwhite.png"))
+MenuBlack = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\menublack.png"))
 MaskImage MenuBlack, 255,255,0
-Global QuickLoadIcon% = LoadImage_Strict("GFX\menu\QuickLoading.png")
-
-Include "Source Code\Menu_3D.bb"
-
-Init3DMenu()
-
-;SetSteamAchievement("s59")
-;StoreSteamStats()
-;BS_UserStats_SetAchievement(BS_UserStats(), "s59")
-;BS_UserStats_StoreStats(BS_UserStats())
-scpSteam_SetAchievement("s59")
-scpSDK_DeveloperMenu()
+Global QuickLoadIcon% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\QuickLoading.png"))
 
 ResizeImage(QuickLoadIcon, ImageWidth(QuickLoadIcon) * MenuScale, ImageHeight(QuickLoadIcon) * MenuScale)
 
 For i = 0 To 3
-	ArrowIMG(i) = LoadImage_Strict("GFX\menu\arrow.png")
+	ArrowIMG(i) = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\arrow.png"))
 	RotateImage(ArrowIMG(i), 90 * i)
 	HandleImage(ArrowIMG(i), 0, 0)
 Next
@@ -31,7 +20,7 @@ Global SelectedInputBox%
 
 Global SaveMSG$
 
-;nykyisen tallennuksen nimi ja samalla miss?¤ kansiossa tallennustiedosto sijaitsee saves-kansiossa
+;nykyisen tallennuksen nimi ja samalla miss?ï¿½ kansiossa tallennustiedosto sijaitsee saves-kansiossa
 Global CurrSave$
 
 Global SaveGameAmount%
@@ -50,8 +39,18 @@ LoadSaveGames()
 
 Global CurrLoadGamePage% = 0
 
+Dim MenuBlinkTimer%(2), MenuBlinkDuration%(2)
+MenuBlinkTimer%(0) = 1
+MenuBlinkTimer%(1) = 1
+
+Global MenuBack% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\back.png"))
+;Global Menu173% = LoadImage_Strict("GFX\menu\173back.jpg")
+ResizeImage(MenuBack, ImageWidth(MenuBack) * MenuScale * 0.75, ImageHeight(MenuBack) * MenuScale * 0.75)
+;ResizeImage(MenuBack, ImageWidth(MenuBack), ImageHeight(MenuBack))
+;ResizeImage(Menu173, ImageWidth(Menu173) * MenuScale, ImageHeight(Menu173) * MenuScale)
+
 Function UpdateMainMenu()
-    Local fo.Fonts = First Fonts
+       Local fo.Fonts = First Fonts
 	Local x%, y%, width%, height%, temp%
 	Local fs.FPS_Settings = First FPS_Settings
 	
@@ -60,7 +59,12 @@ Function UpdateMainMenu()
 	
 	ShowPointer()
 	
-	Update3DMenu()
+	;Update3DMenu()
+	DrawImage(MenuBack, 0, 0)
+	
+	If (MilliSecs2() Mod MenuBlinkTimer(0)) >= Rand(MenuBlinkDuration(0)) Then
+		;DrawImage(Menu173, GraphicWidth - ImageWidth(Menu173), GraphicHeight - ImageHeight(Menu173))
+	EndIf
 		
 	If Rand(300) = 1 Then
 		ms\MenuBlinkTimer[0] = Rand(4000, 8000)
@@ -120,13 +124,19 @@ Function UpdateMainMenu()
 		OnSliderID = 0
 	EndIf
 	
+	Color 0,0,0
+	AAText(GraphicWidth/2)+3,((GraphicHeight/7)*MenuScale)+3,scpModding_GetGameTitle$(),True,False
+	Color 255,255,255
+	AAText(GraphicWidth/2),((GraphicHeight/7)*MenuScale),scpModding_GetGameTitle$(),True,False
+	
 	If ms\MainMenuTab = 0 Then
-		If DrawButton(GraphicWidth - 10 - 330, GraphicHeight - 10 - 30, 330, 30, "RESET STATS AND ACHIEVEMENTS", False, False, False) Then
-		    scpSteam_ResetStats(True);
-		EndIf
+		;If DrawButton(GraphicWidth - 10 - 330, GraphicHeight - 10 - 30, 330, 30, "RESET STATS AND ACHIEVEMENTS", False, False, False) Then
+		;    scpSteam_ResetStats(True);
+		;EndIf
 		For i% = 0 To 3
 			temp = False
 			hover% = False
+			;x = 159 * MenuScale
 			x = (GraphicWidth/2)-(200 * MenuScale)
 			y = (286 + 100 * i) * MenuScale
 			
@@ -148,7 +158,7 @@ Function UpdateMainMenu()
 			Local txt$
 			Select i
 				Case 0
-					txt = "NEW GAME"
+					txt = scpLang_GetPhrase("menu.newgame")
 					RandomSeed = ""
 					If temp Then 
 						If Rand(15)=1 Then 
@@ -180,7 +190,7 @@ Function UpdateMainMenu()
 								Case 13
 									RandomSeed = "whatpumpkin"
 								Case 14
-									RandomSeed = "I love Jabka"
+									RandomSeed = "the matrix"
 								Case 15
 									RandomSeed = "Walter White"
 							End Select
@@ -199,16 +209,16 @@ Function UpdateMainMenu()
 						ms\MainMenuTab = 1
 					EndIf
 				Case 1
-					txt = "LOAD GAME"
+					txt = scpLang_GetPhrase("menu.loadgame")
 					If temp Then
 						LoadSaveGames()
 						ms\MainMenuTab = 2
 					EndIf
 				Case 2
-					txt = "OPTIONS"
+					txt = scpLang_GetPhrase("menu.options")
 					If temp Then ms\MainMenuTab = 3
 				Case 3
-					txt = "QUIT"
+					txt = scpLang_GetPhrase("menu.quit")
 					If temp Then
 						;DeInitExt
 						;alDestroy()
@@ -233,9 +243,11 @@ Function UpdateMainMenu()
 			If Not hover Then
 				Color 255,255,255
 			Else
-				Color 100,100,150
+				Color 230,35,21
 			EndIf
-			AAText(GraphicWidth/2),y,txt,True,False			
+			AAText(GraphicWidth/2),y,txt,True,False	
+			
+			;DrawButton(x, y, width, height, txt)
 		Next	
 	
 	Else
@@ -245,23 +257,24 @@ Function UpdateMainMenu()
 		
 		width = 400 * MenuScale
 		height = 70 * MenuScale
-
+;;;;
 		Local back%
 		If ms\MainMenuTab<>8
 		    If MouseOn((GraphicWidth/2)+(330*MenuScale), y, 130, 60) And (Rand(20)=1) Then
 		        Color 100+Rand(50),100,100
-                AAText(GraphicWidth/2)+(330*MenuScale)+(3*MenuScale)+Rand(-10*MenuScale,10*MenuScale), y+(3*MenuScale)+Rand(-10*MenuScale,10*MenuScale),"BACK",False,False
+                AAText(GraphicWidth/2)+(330*MenuScale)+(3*MenuScale)+Rand(-10*MenuScale,10*MenuScale), y+(3*MenuScale)+Rand(-10*MenuScale,10*MenuScale),scpLang_GetPhrase$("menu.back"),False,False
             EndIf
             Color 0,0,0
-			AAText(GraphicWidth/2)+(330*MenuScale)+(3*MenuScale), y+(3*MenuScale),"BACK",False,False
+			AAText(GraphicWidth/2)+(330*MenuScale)+(3*MenuScale), y+(3*MenuScale),scpLang_GetPhrase$("menu.back"),False,False
 			If MouseOn((GraphicWidth/2)+(330*MenuScale), y, 130, 60)  Then
-				Color 100, 100, 150
+				Color 230,35,21
 				If MouseHit1 Then back = True : PlaySound_Strict(ButtonSFX)
 			Else
 				Color 255,255,255
 			EndIf
 			
-			AAText(GraphicWidth/2)+(330*MenuScale),y,"BACK",False,False
+			AAText(GraphicWidth/2)+(330*MenuScale),y,scpLang_GetPhrase$("menu.back"),False,False
+			;AAText x + width + 20 * MenuScale, y, "BACK", False, False
 		EndIf
 	
 		If back Then		
@@ -288,6 +301,31 @@ Function UpdateMainMenu()
 					ms\MainMenuTab = 0
 			End Select
 		EndIf
+		;;;;;;;;;;;;;;
+		;If DrawButton(x + width + 20 * MenuScale, y, 580 * MenuScale - width - 20 * MenuScale, height, "BACK", False) Then
+		;	Select ms\MainMenuTab
+		;		Case 1
+		;			PutINIValue(OptionFile, "game", "intro enabled", IntroEnabled%)
+		;			ms\MainMenuTab = 0
+		;		Case 2
+		;			CurrLoadGamePage = 0
+		;			ms\MainMenuTab = 0
+		;		Case 3
+		;			SaveOptionsINI()
+		;			
+		;			UserTrackCheck% = 0
+		;			UserTrackCheck2% = 0
+		;			
+		;			AntiAlias Opt_AntiAlias
+		;			ms\MainMenuTab = 0
+		;		Case 4
+		;			ms\MainMenuTab = 1
+		;			CurrLoadGamePage = 0
+		;			MouseHit1 = False
+		;		Default
+		;			ms\MainMenuTab = 0
+		;	End Select
+		;EndIf
 		
 		Select ms\MainMenuTab
 			Case 1 ; New game
@@ -301,16 +339,21 @@ Function UpdateMainMenu()
 				
 				Color(255, 255, 255)
 				AASetFont fo\Font[1]
-				AAText(GraphicWidth/2, y + height / 2, "NEW GAME", True, True)
+				AAText(GraphicWidth/2, y + height / 2, scpLang_GetPhrase$("menu.newgame"), True, True)
 				
 				x = (GraphicWidth/2)-(290*MenuScale)							
 				y = y + height + 20 * MenuScale
 				width = 580 * MenuScale
-				height = 330 * MenuScale			
+				height = 330 * MenuScale	
+				
+				;x = 160 * MenuScale
+				;y = y + height + 20 * MenuScale
+				;width = 580 * MenuScale
+				;height = 330 * MenuScale		
 				
 				AASetFont fo\Font[0]
 				
-				AAText (x + 20 * MenuScale, y + 20 * MenuScale, "Name:")
+				AAText (x + 20 * MenuScale, y + 20 * MenuScale, scpLang_GetPhrase$("menu.name"))
 				CurrSave = InputBox(x + 150 * MenuScale, y + 15 * MenuScale, 200 * MenuScale, 30 * MenuScale, CurrSave, 1)
 				CurrSave = Left(CurrSave, 15)
 				CurrSave = Replace(CurrSave,":","")
@@ -326,10 +369,10 @@ Function UpdateMainMenu()
 								
 				Color 255,255,255
 				If SelectedMap = "" Then
-					AAText (x + 20 * MenuScale, y + 60 * MenuScale, "Map seed:")
+					AAText (x + 20 * MenuScale, y + 60 * MenuScale, scpLang_GetPhrase$("menu.seed"))
 					RandomSeed = Left(InputBox(x+150*MenuScale, y+55*MenuScale, 200*MenuScale, 30*MenuScale, RandomSeed, 3),15)	
 				Else
-					AAText (x + 20 * MenuScale, y + 60 * MenuScale, "Selected map:")
+					AAText (x + 20 * MenuScale, y + 60 * MenuScale, scpLang_GetPhrase$("menu.map"))
 					Color (255, 255, 255)
 					Rect(x+150*MenuScale, y+55*MenuScale, 200*MenuScale, 30*MenuScale)
 					Color (0, 0, 0)
@@ -342,16 +385,16 @@ Function UpdateMainMenu()
 						AAText(x+150*MenuScale + 100*MenuScale, y+55*MenuScale + 15*MenuScale, SelectedMap, True, True)
 					EndIf
 					
-					If DrawButton(x+370*MenuScale, y+55*MenuScale, 120*MenuScale, 30*MenuScale, "Deselect", False) Then
+					If DrawButton(x+370*MenuScale, y+55*MenuScale, 120*MenuScale, 30*MenuScale, scpLang_GetPhrase$("menu.deselect"), False) Then
 						SelectedMap=""
 					EndIf
 				EndIf	
 				
-				AAText(x + 20 * MenuScale, y + 110 * MenuScale, "Enable intro sequence:")
+				AAText(x + 20 * MenuScale, y + 110 * MenuScale, scpLang_GetPhrase$("menu.enableintro"))
 				IntroEnabled = DrawTick(x + 280 * MenuScale, y + 110 * MenuScale, IntroEnabled)	
 				
 				;Local modeName$, modeDescription$, selectedDescription$
-				AAText (x + 20 * MenuScale, y + 150 * MenuScale, "Difficulty:")				
+				AAText (x + 20 * MenuScale, y + 150 * MenuScale, scpLang_GetPhrase$("menu.difficulty"))				
 						
 				If DrawTick(x + 20 * MenuScale, y + (180+30*SAFE) * MenuScale, (SelectedDifficulty = difficulties(SAFE))) Then SelectedDifficulty = difficulties(SAFE)
 					Color(difficulties(SAFE)\r,difficulties(SAFE)\g,difficulties(SAFE)\b)
@@ -381,7 +424,7 @@ Function UpdateMainMenu()
 				
 				If SelectedDifficulty\customizable Then
 					SelectedDifficulty\permaDeath = DrawTick(x + 160 * MenuScale, y + 165 * MenuScale, (SelectedDifficulty\permaDeath))
-					AAText(x + 200 * MenuScale, y + 165 * MenuScale, "Permadeath")
+					AAText(x + 200 * MenuScale, y + 165 * MenuScale, scpLang_GetPhrase$("menu.permadeath"))
 					
 					If DrawTick(x + 160 * MenuScale, y + 195 * MenuScale, SelectedDifficulty\saveType = SAVEANYWHERE And (Not SelectedDifficulty\permaDeath), SelectedDifficulty\permaDeath) Then 
 						SelectedDifficulty\saveType = SAVEANYWHERE
@@ -389,12 +432,12 @@ Function UpdateMainMenu()
 						SelectedDifficulty\saveType = SAVEONSCREENS
 					EndIf
 					
-					AAText(x + 200 * MenuScale, y + 195 * MenuScale, "Save anywhere")	
+					AAText(x + 200 * MenuScale, y + 195 * MenuScale, scpLang_GetPhrase$("menu.saveanywhere"))	
 					
 					SelectedDifficulty\aggressiveNPCs =  DrawTick(x + 160 * MenuScale, y + 225 * MenuScale, SelectedDifficulty\aggressiveNPCs)
-					AAText(x + 200 * MenuScale, y + 225 * MenuScale, "Aggressive NPCs")
+					AAText(x + 200 * MenuScale, y + 225 * MenuScale, scpLang_GetPhrase$("menu.aggressivenpcs"))
 					
-					AAText(x + 200 * MenuScale, y + 255 * MenuScale, "Two inventory slots")
+					AAText(x + 200 * MenuScale, y + 255 * MenuScale, scpLang_GetPhrase$("menu.twoinventoryslots"))
 					SelectedDifficulty\twoslots =  DrawTick(x + 160 * MenuScale, y + 255 * MenuScale, SelectedDifficulty\twoslots)
 					
 					;Other factor's difficulty
@@ -413,11 +456,11 @@ Function UpdateMainMenu()
 					Color 255,255,255
 					Select SelectedDifficulty\otherFactors
 						Case EASY
-							AAText(x + 200 * MenuScale, y + 285 * MenuScale, "Other difficulty factors: Easy")
+							AAText(x + 200 * MenuScale, y + 285 * MenuScale, scpLang_GetPhrase$("menu.otherfactors1"))
 						Case NORMAL
-							AAText(x + 200 * MenuScale, y + 285 * MenuScale, "Other difficulty factors: Normal")
+							AAText(x + 200 * MenuScale, y + 285 * MenuScale, scpLang_GetPhrase$("menu.otherfactors2"))
 						Case HARD
-							AAText(x + 200 * MenuScale, y + 285 * MenuScale, "Other difficulty factors: Hard")
+							AAText(x + 200 * MenuScale, y + 285 * MenuScale, scpLang_GetPhrase$("menu.otherfactors3"))
 					End Select
 				Else
 					RowText(SelectedDifficulty\description, x+160*MenuScale, y+160*MenuScale, (440-20)*MenuScale, 200)					
@@ -425,19 +468,19 @@ Function UpdateMainMenu()
 				
 				If UnlockThaumiel = 0 Then				
 					If MouseOn(x + 20 * MenuScale, y + (180+30*THAUMIEL) * MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(x+width,y + 210*MenuScale,400*MenuScale,150*MenuScale,"Apollyon")
+						DrawOptionsTooltip(x+width,y + 210*MenuScale,400*MenuScale,150*MenuScale,scpLang_GetPhrase$("menu.apollyon"))
 					EndIf
 				EndIf
 								
-				If DrawButton(x, y + height + 20 * MenuScale, 160 * MenuScale, 70 * MenuScale, "Load map", False) Then
+				If DrawButton(x, y + height + 20 * MenuScale, 160 * MenuScale, 70 * MenuScale, scpLang_GetPhrase$("menu.loadmap"), False) Then
 					ms\MainMenuTab = 4
 					LoadSavedMaps()
 				EndIf
 				
 				AASetFont fo\Font[1]
 				
-				If DrawButton(x + 450 * MenuScale, y + height + 20 * MenuScale, 160 * MenuScale, 70 * MenuScale, "START", False) Then
-					If CurrSave = "" Then CurrSave = "untitled"
+				If DrawButton(x + 450 * MenuScale, y + height + 20 * MenuScale, 160 * MenuScale, 70 * MenuScale, scpLang_GetPhrase$("menu.start"), False) Then
+					If CurrSave = "" Then CurrSave = scpLang_GetPhrase$("menu.untitled")
 					
 					If RandomSeed = "" Then
 						RandomSeed = Abs(MilliSecs())
@@ -480,9 +523,10 @@ Function UpdateMainMenu()
 				
 				Color(255, 255, 255)
 				AASetFont fo\Font[1]
-			    AAText(GraphicWidth/2, y + height / 2, "LOAD GAME", True, True)
+			    AAText(GraphicWidth/2, y + height / 2, scpLang_GetPhrase$("menu.loadgame"), True, True)
 				
-				x = (GraphicWidth/2)-(290*MenuScale)				
+				;x = 160 * MenuScale			
+				x = (GraphicWidth/2)-(290*MenuScale)
 
 				y = y + height + 20 * MenuScale
 				width = 580 * MenuScale
@@ -514,7 +558,7 @@ Function UpdateMainMenu()
                 ;DrawFrame(x+50*MenuScale,y+510*MenuScale,width-100*MenuScale,55*MenuScale)
 
 			    Color(255, 255, 255)				
-				AAText(GraphicWidth/2.0,y+536*MenuScale,"Page "+Int(Max((CurrLoadGamePage+1),1))+"/"+Int(Max((Int(Ceil(Float(SaveGameAmount)/6.0))),1)),True,True)									
+				AAText(x + (width / 2.0),y+536*MenuScale,scpLang_GetPhrase$("menu.page") + " "+Int(Max((CurrLoadGamePage+1),1))+"/"+Int(Max((Int(Ceil(Float(SaveGameAmount)/6.0))),1)),True,True)									
 						
 				AASetFont fo\Font[0]
 				
@@ -523,7 +567,7 @@ Function UpdateMainMenu()
 				EndIf
 				
 				If SaveGameAmount = 0 Then
-					AAText (x + 20 * MenuScale, y + 20 * MenuScale, "No saved games.")
+					AAText (x + 20 * MenuScale, y + 20 * MenuScale, scpLang_GetPhrase$("menu.nosavedgames"))
 				Else
 					x = x + 20 * MenuScale
 					y = y + 20 * MenuScale
@@ -541,15 +585,15 @@ Function UpdateMainMenu()
 							AAText(x + 20 * MenuScale, y + 10 * MenuScale, SaveGames(i - 1))
 							AAText(x + 20 * MenuScale, y + (10+18) * MenuScale, SaveGameTime(i - 1)) ;y + (10+23) * MenuScale
 							AAText(x + 120 * MenuScale, y + (10+18) * MenuScale, SaveGameDate(i - 1))
-							AAText(x + 20 * MenuScale, y + (10+36) * MenuScale, "v"+RemasteredVersionNumber)
+							AAText(x + 20 * MenuScale, y + (10+36) * MenuScale, scpModding_Version())
 							
 							If SaveMSG = "" Then
 								If SaveGameVersion(i - 1) <> ModCompatibleNumber And SaveGameVersion(i - 1) <> "5.5.4" Then
 									DrawFrame(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale)
 									Color(255, 0, 0)
-									AAText(x + 330 * MenuScale, y + 34 * MenuScale, "Load", True, True)
+									AAText(x + 330 * MenuScale, y + 34 * MenuScale, scpLang_GetPhrase$("menu.load"), True, True)
 								Else
-									If DrawButton(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False) Then
+									If DrawButton(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, scpLang_GetPhrase$("menu.load"), False) Then
 										LoadEntities()
 										LoadAllSounds()
 										LoadGame(SavePath + SaveGames(i - 1) + "\")
@@ -559,7 +603,7 @@ Function UpdateMainMenu()
 									EndIf
 								EndIf
 								
-								If DrawButton(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Delete", False) Then
+								If DrawButton(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, scpLang_GetPhrase$("menu.delete"), False) Then
 									SaveMSG = SaveGames(i - 1)
 									Exit
 								EndIf
@@ -570,11 +614,11 @@ Function UpdateMainMenu()
 								Else
 									Color(100, 100, 100)
 								EndIf
-								AAText(x + 330 * MenuScale, y + 34 * MenuScale, "Load", True, True)
+								AAText(x + 330 * MenuScale, y + 34 * MenuScale, scpLang_GetPhrase$("menu.Load"), True, True)
 								
 								DrawFrame(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale)
 								Color(100, 100, 100)
-								AAText(x + 450 * MenuScale, y + 34 * MenuScale, "Delete", True, True)
+								AAText(x + 450 * MenuScale, y + 34 * MenuScale, scpLang_GetPhrase$("menu.delete"), True, True)
 							EndIf
 							
 							y = y + 80 * MenuScale
@@ -587,15 +631,15 @@ Function UpdateMainMenu()
 						x = 740 * MenuScale
 						y = 376 * MenuScale
 						DrawFrame(x, y, 420 * MenuScale, 200 * MenuScale)
-						RowText("Are you sure you want to delete this save?", x + 20 * MenuScale, y + 15 * MenuScale, 400 * MenuScale, 200 * MenuScale)
+						RowText(scpLang_GetPhrase$("menu.deletesaveconfirm"), x + 20 * MenuScale, y + 15 * MenuScale, 400 * MenuScale, 200 * MenuScale)
 						;AAText(x + 20 * MenuScale, y + 15 * MenuScale, "Are you sure you want to delete this save?")
-						If DrawButton(x + 50 * MenuScale, y + 150 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Yes", False) Then
+						If DrawButton(x + 50 * MenuScale, y + 150 * MenuScale, 100 * MenuScale, 30 * MenuScale, scpLang_GetPhrase$("menu.yes"), False) Then
 							DeleteFile(CurrentDir() + SavePath + SaveMSG + "\save.txt")
 							DeleteDir(CurrentDir() + SavePath + SaveMSG)
 							SaveMSG = ""
 							LoadSaveGames()
 						EndIf
-						If DrawButton(x + 250 * MenuScale, y + 150 * MenuScale, 100 * MenuScale, 30 * MenuScale, "No", False) Then
+						If DrawButton(x + 250 * MenuScale, y + 150 * MenuScale, 100 * MenuScale, 30 * MenuScale, scpLang_GetPhrase$("menu.no"), False) Then
 							SaveMSG = ""
 						EndIf
 					EndIf
@@ -614,8 +658,9 @@ Function UpdateMainMenu()
 				Color(255, 255, 255)
 				AASetFont fo\Font[1]
 								
-				AAText(GraphicWidth/2, y + height / 2, "OPTIONS", True, True)				
+				AAText(GraphicWidth/2, y + height / 2, scpLang_GetPhrase$("menu.options"), True, True)				
 
+				;x = 160 * MenuScale
 				x = (GraphicWidth/2)-(290*MenuScale)
 				y = y + height + 20 * MenuScale
 				width = 580 * MenuScale
@@ -633,10 +678,10 @@ Function UpdateMainMenu()
 				EndIf
 				
 				Color 255,255,255
-				If DrawButton(x+20*MenuScale,y+15*MenuScale,width/5,height/2, "GRAPHICS", False) Then ms\MainMenuTab = 3
-				If DrawButton(x+160*MenuScale,y+15*MenuScale,width/5,height/2, "AUDIO", False) Then ms\MainMenuTab = 5
-				If DrawButton(x+300*MenuScale,y+15*MenuScale,width/5,height/2, "CONTROLS", False) Then ms\MainMenuTab = 6
-				If DrawButton(x+440*MenuScale,y+15*MenuScale,width/5,height/2, "ADVANCED", False) Then ms\MainMenuTab = 7
+				If DrawButton(x+20*MenuScale,y+15*MenuScale,width/5,height/2, scpLang_GetPhrase$("menu.graphics"), False) Then ms\MainMenuTab = 3
+				If DrawButton(x+160*MenuScale,y+15*MenuScale,width/5,height/2, scpLang_GetPhrase$("menu.audio"), False) Then ms\MainMenuTab = 5
+				If DrawButton(x+300*MenuScale,y+15*MenuScale,width/5,height/2, scpLang_GetPhrase$("menu.controls"), False) Then ms\MainMenuTab = 6
+				If DrawButton(x+440*MenuScale,y+15*MenuScale,width/5,height/2, scpLang_GetPhrase$("menu.advanced"), False) Then ms\MainMenuTab = 7
 				
 				AASetFont fo\Font[0]
 				y = y + 70 * MenuScale
@@ -662,12 +707,12 @@ Function UpdateMainMenu()
 					y=y+20*MenuScale
 					
 					Color 255,255,255				
-					AAText(x + 20 * MenuScale, y, "Enable bump mapping:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.bumpmapping"))
 					Local CurrBumpEnabled = BumpEnabled	
 					BumpEnabled = DrawTick(x + 310 * MenuScale, y + MenuScale, BumpEnabled)
 					If CurrBumpEnabled<>BumpEnabled Then
-						DeInit3DMenu()
-						Init3DMenu()
+						;DeInit3DMenu()
+						;Init3DMenu()
 				    EndIf
 					If MouseOn(x + 310 * MenuScale, y + MenuScale, 20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"bump")
@@ -676,7 +721,7 @@ Function UpdateMainMenu()
 					y=y+30*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "VSync:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.vsync"))
 					Vsync% = DrawTick(x + 310 * MenuScale, y + MenuScale, Vsync%)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"vsync")
@@ -685,7 +730,7 @@ Function UpdateMainMenu()
 					y=y+30*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Anti-aliasing:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.antialiasing"))
 					Opt_AntiAlias = DrawTick(x + 310 * MenuScale, y + MenuScale, Opt_AntiAlias%)
 					;AAText(x + 20 * MenuScale, y + 15 * MenuScale, "(fullscreen mode only)")
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
@@ -695,12 +740,12 @@ Function UpdateMainMenu()
 					y=y+30*MenuScale ;40
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Enable room lights:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.roomlights"))
                     Local CurrEnableRoomLights = EnableRoomLights
                     EnableRoomLights = DrawTick(x + 310 * MenuScale, y + MenuScale, EnableRoomLights)
                     If CurrEnableRoomLights <>EnableRoomLights Then
-	                    DeInit3DMenu()
-						Init3DMenu()
+	                    ;DeInit3DMenu()
+						;Init3DMenu()
 				    EndIf
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"roomlights")
@@ -710,7 +755,7 @@ Function UpdateMainMenu()
 					
 					ScreenGamma = (SlideBar(x + 310*MenuScale, y+6*MenuScale, 150*MenuScale, ScreenGamma*50.0)/50.0)
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Screen gamma")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.gamma"))
 					
 					If MouseOn(x+310*MenuScale,y+6*MenuScale,150*MenuScale+14,20) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"gamma",ScreenGamma)
@@ -719,8 +764,8 @@ Function UpdateMainMenu()
 					y=y+50*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Particle amount:")
-					ParticleAmount = Slider3(x+310*MenuScale,y+6*MenuScale,150*MenuScale,ParticleAmount,2,"MINIMAL","REDUCED","FULL")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.particleamount"))
+					ParticleAmount = Slider3(x+310*MenuScale,y+6*MenuScale,150*MenuScale,ParticleAmount,2,scpLang_GetPhrase$("menu.minimal"),scpLang_GetPhrase$("menu.reduced"),scpLang_GetPhrase$("menu.full"))
 					If (MouseOn(x + 310 * MenuScale, y-6*MenuScale, 150*MenuScale+14, 20) And OnSliderID=0) Or OnSliderID=2
 						DrawOptionsTooltip(tx,ty,tw,th,"particleamount",ParticleAmount)
 					EndIf
@@ -728,7 +773,7 @@ Function UpdateMainMenu()
 					y=y+50*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Texture LOD Bias:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.lodbias"))
 					TextureDetails = Slider5(x+310*MenuScale,y+6*MenuScale,150*MenuScale,TextureDetails,3,"0.8","0.4","0.0","-0.4","-0.8")
 					Select TextureDetails%
 						Case 0
@@ -750,12 +795,12 @@ Function UpdateMainMenu()
 					y=y+50*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Save textures in the VRAM:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.vram"))
 					Local CurrSaveTexturesInVRam = SaveTexturesInVRam
 					SaveTexturesInVRam = DrawTick(x + 310 * MenuScale, y + MenuScale, SaveTexturesInVRam)
 					If CurrSaveTexturesInVRam<>SaveTexturesInVRam Then
-						DeInit3DMenu()
-						Init3DMenu()
+						;DeInit3DMenu()
+						;Init3DMenu()
 					EndIf
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"vram")
@@ -767,7 +812,7 @@ Function UpdateMainMenu()
 					SlideBarFOV = (SlideBar(x + 310*MenuScale, y+6*MenuScale,150*MenuScale, SlideBarFOV*2.0)/2.0)
 					FOV = SlideBarFOV+40
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Field of view:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.fov"))
 					Color 255,255,0
 					AAText(x + 25 * MenuScale, y + 25 * MenuScale, Int(FOV#)+" FOV")
 					If MouseOn(x+310*MenuScale,y+6*MenuScale,150*MenuScale+14,20)
@@ -784,7 +829,7 @@ Function UpdateMainMenu()
 					
 					MusicVolume = (SlideBar(x + 310*MenuScale, y-4*MenuScale, 150*MenuScale, MusicVolume*100.0)/100.0)
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Music volume:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.musicvolume"))
 					;If MouseOn(x+310*MenuScale,y-4*MenuScale,150*MenuScale,20)
 					;	DrawOptionsTooltip(tx,ty,tw,th,"musicvol")
 					;EndIf
@@ -799,7 +844,7 @@ Function UpdateMainMenu()
 					PrevSFXVolume = (SlideBar(x + 310*MenuScale, y-4*MenuScale, 150*MenuScale, SFXVolume*100.0)/100.0)
 					SFXVolume = PrevSFXVolume
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Sound volume:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.soundvolume"))
 					;If MouseOn(x+310*MenuScale,y-4*MenuScale,150*MenuScale,20)
 					;	DrawOptionsTooltip(tx,ty,tw,th,"soundvol")
 					;EndIf
@@ -820,7 +865,7 @@ Function UpdateMainMenu()
 					y = y + 30*MenuScale
 					
 					Color 255,255,255
-					AAText x + 20 * MenuScale, y, "Sound auto-release:"
+					AAText x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.soundautorelease")
 					EnableSFXRelease = DrawTick(x + 310 * MenuScale, y + MenuScale, EnableSFXRelease)
 					If EnableSFXRelease_Prev% <> EnableSFXRelease
 						If EnableSFXRelease%
@@ -851,7 +896,7 @@ Function UpdateMainMenu()
 					y = y + 30*MenuScale
 					
 					Color 255,255,255
-					AAText x + 20 * MenuScale, y, "Enable user tracks:"
+					AAText x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.usertracks")
 					EnableUserTracks = DrawTick(x + 310 * MenuScale, y + MenuScale, EnableUserTracks)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"usertrack")
@@ -860,28 +905,28 @@ Function UpdateMainMenu()
 					If EnableUserTracks
 						y = y + 30 * MenuScale
 						Color 255,255,255
-						AAText x + 20 * MenuScale, y, "User track mode:"
+						AAText x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.trackmode")
 						UserTrackMode = DrawTick(x + 310 * MenuScale, y + MenuScale, UserTrackMode)
 						If UserTrackMode
-							AAText x + 350 * MenuScale, y + MenuScale, "Repeat"
+							AAText x + 350 * MenuScale, y + MenuScale, scpLang_GetPhrase$("menu.repeat")
 						Else
-							AAText x + 350 * MenuScale, y + MenuScale, "Random"
+							AAText x + 350 * MenuScale, y + MenuScale, scpLang_GetPhrase$("menu.random")
 						EndIf
 						If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 							DrawOptionsTooltip(tx,ty,tw,th,"usertrackmode")
 						EndIf
-						If DrawButton(x + 20 * MenuScale, y + 30 * MenuScale, 190 * MenuScale, 25 * MenuScale, "Scan for User Tracks",False)
+						If DrawButton(x + 20 * MenuScale, y + 30 * MenuScale, 190 * MenuScale, 25 * MenuScale, scpLang_GetPhrase$("menu.trackscan"),False)
 							
 							UserTrackCheck% = 0
 							UserTrackCheck2% = 0
 							
-							Dir=ReadDir(MusicPath2$)
+							Dir=ReadDir("SFX\Radio\UserTracks")
 							Repeat
 								file$=NextFile(Dir)
 								If file$="" Then Exit
-								If FileType(MusicPath2$+file$) = 1 Then
+								If FileType("SFX\Radio\UserTracks"+file$) = 1 Then
 									UserTrackCheck = UserTrackCheck + 1
-									test = LoadSound(MusicPath2$+file$)
+									test = LoadSound("SFX\Radio\UserTracks"+file$)
 									If test<>0
 										UserTrackCheck2 = UserTrackCheck2 + 1
 									EndIf
@@ -895,7 +940,7 @@ Function UpdateMainMenu()
 							DrawOptionsTooltip(tx,ty,tw,th,"usertrackscan")
 						EndIf
 						If UserTrackCheck%>0
-							AAText x + 20 * MenuScale, y + 100 * MenuScale, "User tracks found ("+UserTrackCheck2+"/"+UserTrackCheck+" successfully loaded)"
+							AAText x + 20 * MenuScale, y + 100 * MenuScale, scpLang_GetPhrase$("menu.trackfound") + " ("+UserTrackCheck2+"/"+UserTrackCheck+" " + scpLang_GetPhrase$("menu.successfullyloaded") + ")"
 						EndIf
 					Else
 						UserTrackCheck%=0
@@ -912,7 +957,7 @@ Function UpdateMainMenu()
 					
 					MouseSensitivity = (SlideBar(x + 310*MenuScale, y-4*MenuScale, 150*MenuScale, (MouseSensitivity+0.5)*100.0)/100.0)-0.5
 					Color(255, 255, 255)
-					AAText(x + 20 * MenuScale, y, "Mouse sensitivity:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.mousesensitivity"))
 
 					If MouseOn(x+310*MenuScale,y-4*MenuScale,150*MenuScale+14,20)
 						DrawOptionsTooltip(tx,ty,tw,th,"mousesensitivity",MouseSensitivity)
@@ -921,7 +966,7 @@ Function UpdateMainMenu()
 					y = y + 40*MenuScale
 					
 					Color(255, 255, 255)
-					AAText(x + 20 * MenuScale, y, "Invert mouse Y-axis:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.invertmouse"))
 					InvertMouse = DrawTick(x + 310 * MenuScale, y + MenuScale, InvertMouse)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"mouseinvert")
@@ -929,42 +974,42 @@ Function UpdateMainMenu()
 
 					y = y + 40*MenuScale
 					
-					MouseSmooth = (SlideBar(x + 310*MenuScale, y-4*MenuScale, 150*MenuScale, (MouseSmooth)*50.0)/50.0)
+					mouse_smooth = DrawTick(x + 310*MenuScale, y+MenuScale,mouse_smooth)
 					Color(255, 255, 255)
-					AAText(x + 20 * MenuScale, y, "Mouse smoothing:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.mousesmoothing"))
 					If MouseOn(x+310*MenuScale,y-4*MenuScale,150*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"mousesmoothing",MouseSmooth)
+						DrawOptionsTooltip(tx,ty,tw,th,"mousesmoothing")
 					EndIf
 					
 					Color(255, 255, 255)				
 					y = y + 30*MenuScale
-					AAText(x + 20 * MenuScale, y, "Control configuration:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.controlconfig"))
 					y = y + 10*MenuScale
 					
-					AAText(x + 20 * MenuScale, y + 20 * MenuScale, "Move Forward")
+					AAText(x + 20 * MenuScale, y + 20 * MenuScale, scpLang_GetPhrase$("menu.moveforward"))
 					InputBox(x + 160 * MenuScale, y + 20 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_UP,210)),5)		
-					AAText(x + 20 * MenuScale, y + 40 * MenuScale, "Strafe Left")
+					AAText(x + 20 * MenuScale, y + 40 * MenuScale, scpLang_GetPhrase$("menu.strafeleft"))
 					InputBox(x + 160 * MenuScale, y + 40 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_LEFT,210)),3)	
-					AAText(x + 20 * MenuScale, y + 60 * MenuScale, "Move Backward")
+					AAText(x + 20 * MenuScale, y + 60 * MenuScale, scpLang_GetPhrase$("menu.movebackward"))
 					InputBox(x + 160 * MenuScale, y + 60 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_DOWN,210)),6)				
-					AAText(x + 20 * MenuScale, y + 80 * MenuScale, "Strafe Right")
+					AAText(x + 20 * MenuScale, y + 80 * MenuScale, scpLang_GetPhrase$("menu.straferight"))
 					InputBox(x + 160 * MenuScale, y + 80 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_RIGHT,210)),4)	
-					AAText(x + 20 * MenuScale, y + 100 * MenuScale, "Quick Save")
+					AAText(x + 20 * MenuScale, y + 100 * MenuScale, scpLang_GetPhrase$("menu.quicksave"))
 					InputBox(x + 160 * MenuScale, y + 100 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_SAVE,210)),11)
 					
-					AAText(x + 280 * MenuScale, y + 20 * MenuScale, "Manual Blink")
+					AAText(x + 280 * MenuScale, y + 20 * MenuScale, scpLang_GetPhrase$("menu.manualblink"))
 					InputBox(x + 470 * MenuScale, y + 20 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_BLINK,210)),7)				
-					AAText(x + 280 * MenuScale, y + 40 * MenuScale, "Sprint")
+					AAText(x + 280 * MenuScale, y + 40 * MenuScale, scpLang_GetPhrase$("menu.sprint"))
 					InputBox(x + 470 * MenuScale, y + 40 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_SPRINT,210)),8)
-					AAText(x + 280 * MenuScale, y + 60 * MenuScale, "Open/Close Inventory")
+					AAText(x + 280 * MenuScale, y + 60 * MenuScale, scpLang_GetPhrase$("menu.inventory"))
 					InputBox(x + 470 * MenuScale, y + 60 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_INV,210)),9)
-					AAText(x + 280 * MenuScale, y + 80 * MenuScale, "Crouch")
+					AAText(x + 280 * MenuScale, y + 80 * MenuScale, scpLang_GetPhrase$("menu.crouch"))
 					InputBox(x + 470 * MenuScale, y + 80 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_CROUCH,210)),10)
 					If CanOpenConsole	
-					    AAText(x + 280 * MenuScale, y + 100 * MenuScale, "Open/Close Console")
+					    AAText(x + 280 * MenuScale, y + 100 * MenuScale, scpLang_GetPhrase$("menu.console"))
 					    InputBox(x + 470 * MenuScale, y + 100 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_CONSOLE,210)),12)
 					EndIf
-					AAText(x + 280 * MenuScale, y + 120 * MenuScale, "Take Screenshot")
+					AAText(x + 280 * MenuScale, y + 120 * MenuScale, scpLang_GetPhrase$("menu.screenshot"))
 					InputBox(x + 470 * MenuScale, y + 120 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_SCREENSHOT,210)),13)
 					
 					If MouseOn(x+20*MenuScale,y,width-40*MenuScale,140*MenuScale)
@@ -1010,7 +1055,7 @@ Function UpdateMainMenu()
 					y = y + 20*MenuScale
 					
 					Color 255,255,255				
-					AAText(x + 20 * MenuScale, y, "Show HUD:")	
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.hud"))	
 					HUDenabled = DrawTick(x + 310 * MenuScale, y + MenuScale, HUDenabled)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"hud")
@@ -1019,7 +1064,7 @@ Function UpdateMainMenu()
 					y=y+30*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Enable console:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.enableconsole"))
 					CanOpenConsole = DrawTick(x + 310 * MenuScale, y + MenuScale, CanOpenConsole)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"consoleenable")
@@ -1029,7 +1074,7 @@ Function UpdateMainMenu()
 					
 					If CanOpenConsole
 					    Color 255,255,255
-					    AAText(x + 20 * MenuScale, y, "Open console on error:")
+					    AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.consoleonerror"))
 					    ConsoleOpening = DrawTick(x + 310 * MenuScale, y + MenuScale, ConsoleOpening)
 					    If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						    DrawOptionsTooltip(tx,ty,tw,th,"consoleerror")
@@ -1042,12 +1087,12 @@ Function UpdateMainMenu()
 					
 					If CanOpenConsole
 					    Color 255,255,255
-					    AAText(x + 20 * MenuScale, y, "Console Version:")
+					    AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.consoleversion"))
 				        ConsoleVersion = DrawTick(x + 310 * MenuScale, y + MenuScale, ConsoleVersion)
 					    If ConsoleVersion = 1 Then
-					       AAText(x + 350 * MenuScale, y, "New Version")
+					       AAText(x + 350 * MenuScale, y, scpLang_GetPhrase$("menu.consolenew"))
 					    Else
-					        AAText(x + 350 * MenuScale, y, "Old Version")
+					        AAText(x + 350 * MenuScale, y, scpLang_GetPhrase$("menu.consoleold"))
 					    EndIf    
 					    If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						     DrawOptionsTooltip(tx,ty,tw,th,"consoleversion")
@@ -1056,17 +1101,21 @@ Function UpdateMainMenu()
 					
 					y = y + 50*MenuScale
 					
-					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Achievement popups:")
-					AchvMSGenabled% = DrawTick(x + 310 * MenuScale, y + MenuScale, False)
-					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"achpopup")
+					;Color 255,255,255
+					;AAText(x + 20 * MenuScale, y, "Achievement popups:")
+					;AchvMSGenabled% = DrawTick(x + 310 * MenuScale, y + MenuScale, False)
+					;If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
+					;	DrawOptionsTooltip(tx,ty,tw,th,"achpopup")
+					;EndIf
+					
+					If DrawButton(x + 20 * MenuScale, y, 330, 30, scpLang_GetPhrase$("menu.resetstats"), False, False, True) Then
+		    				scpSteam_ResetStats(True);
 					EndIf
 					
 					y = y + 50*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Show FPS:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.showfps"))
 					ShowFPS% = DrawTick(x + 310 * MenuScale, y + MenuScale, ShowFPS%)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"showfps")
@@ -1075,7 +1124,7 @@ Function UpdateMainMenu()
 					y = y + 30*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Framelimit:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.framelimit"))
 					Color 255,255,255
 					If DrawTick(x + 310 * MenuScale, y, CurrFrameLimit > 0.0) Then
 						CurrFrameLimit# = (SlideBar(x + 150*MenuScale, y+30*MenuScale, 100*MenuScale, CurrFrameLimit#*99.0)/99.0)
@@ -1097,7 +1146,7 @@ Function UpdateMainMenu()
 					y = y + 80*MenuScale
 					
 					Color 255,255,255
-					AAText(x + 20 * MenuScale, y, "Antialiased text:")
+					AAText(x + 20 * MenuScale, y, scpLang_GetPhrase$("menu.antialiasedtext"))
 					AATextEnable% = DrawTick(x + 310 * MenuScale, y + MenuScale, AATextEnable%)
 					If AATextEnable_Prev% <> AATextEnable
 						For font.AAFont = Each AAFont
@@ -1115,11 +1164,11 @@ Function UpdateMainMenu()
 							;Next
 						EndIf
 						InitAAFont()
-						fo\Font[0] = AALoadFont(FontPath$+"cour\Courier New.ttf", Int(18 * (GraphicHeight / 1024.0)), 0,0,0)
-						fo\Font[1] = AALoadFont(FontPath$+"courbd\Courier New.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
-						fo\Font[2] = AALoadFont(FontPath$+"DS-DIGI\DS-Digital.ttf", Int(22 * (GraphicHeight / 1024.0)), 0,0,0)
-						fo\Font[3] = AALoadFont(FontPath$+"DS-DIGI\DS-Digital.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
-						fo\Font[4] = AALoadFont(FontPath$+"Journal\Journal.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[0] = AALoadFont("GFX\font\"+"cour\Courier New.ttf", Int(18 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[1] = AALoadFont("GFX\font\"+"courbd\Courier New.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[2] = AALoadFont("GFX\font\"+"DS-DIGI\DS-Digital.ttf", Int(22 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[3] = AALoadFont("GFX\font\"+"DS-DIGI\DS-Digital.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[4] = AALoadFont("GFX\font\"+"Journal\Journal.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
 						fo\ConsoleFont% = AALoadFont("Blitz", Int(22 * (GraphicHeight / 1024.0)), 0,0,0,1)
 						;ReloadAAFont()
 						AATextEnable_Prev% = AATextEnable
@@ -1144,8 +1193,9 @@ Function UpdateMainMenu()
 				
 				Color(255, 255, 255)
 				AASetFont fo\Font[1]
-				AAText(GraphicWidth/2, y + height / 2, "LOAD MAP", True, True)
+				AAText(GraphicWidth/2, y + height / 2, scpLang_GetPhrase$("menu.loadmap"), True, True)
 
+				;x = 160 * MenuScale
 				x = (GraphicWidth/2)-(290*MenuScale)
 				y = y + height + 20 * MenuScale
 				width = 580 * MenuScale
@@ -1181,7 +1231,7 @@ Function UpdateMainMenu()
 				;DrawFrame(x+50*MenuScale,y+510*MenuScale,width-100*MenuScale,55*MenuScale)
 
 				Color(255, 255, 255)				
-				AAText(GraphicWidth/2.0,y+536*MenuScale,"Page "+Int(Max((CurrLoadGamePage+1),1))+"/"+Int(Max((Int(Ceil(Float(SavedMapsAmount)/6.0))),1)),True,True)										
+				AAText(x + (width / 2.0),y+536*MenuScale,scpLang_GetPhrase$("menu.page") + " "+Int(Max((CurrLoadGamePage+1),1))+"/"+Int(Max((Int(Ceil(Float(SavedMapsAmount)/6.0))),1)),True,True)										
 									
 				AASetFont fo\Font[0]
 				
@@ -1192,7 +1242,7 @@ Function UpdateMainMenu()
 				;AASetFont fo\Font[0]
 				
 				If SavedMaps(0)="" Then 
-					AAText (x + 20 * MenuScale, y + 20 * MenuScale, "No saved maps. Use the Map Creator to create new maps.")
+					AAText (x + 20 * MenuScale, y + 20 * MenuScale, scpLang_GetPhrase$("menu.nosavedmaps"))
 				Else
 					x = x + 20 * MenuScale
 					y = y + 20 * MenuScale
@@ -1203,7 +1253,7 @@ Function UpdateMainMenu()
 							AAText(x + 20 * MenuScale, y + 10 * MenuScale, SavedMaps(i - 1))
 							AAText(x + 20 * MenuScale, y + (10+27) * MenuScale, SavedMapsAuthor(i - 1))
 							
-							If DrawButton(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False) Then
+							If DrawButton(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, scpLang_GetPhrase$("menu.load"), False) Then
 								SelectedMap=SavedMaps(i - 1)
 								ms\MainMenuTab = 1
 							EndIf
@@ -1224,7 +1274,7 @@ Function UpdateMainMenu()
 	
 	Color 255, 255, 255
 	AASetFont fo\ConsoleFont
-	AAText 20, GraphicHeight - 30, "SCP: Containment Breach Remastered v"+RemasteredVersionNumber
+	AAText 20, GraphicHeight - 30, "SCP:CB Remastered " + scpModding_Version()
 	If Fullscreen Then DrawImage CursorIMG, ScaledMouseX(),ScaledMouseY()
 	
 	AASetFont fo\Font[0]
@@ -1243,7 +1293,7 @@ Function UpdateLauncher()
     Local i%
 	MenuScale = 1
 	
-	Graphics3DExt(840, 480, 0, 2)
+	Graphics3DExt(600, 500, 0, 2)
 
 	;InitExt
 	
@@ -1252,15 +1302,15 @@ Function UpdateLauncher()
 	RealGraphicWidth = GraphicWidth
 	RealGraphicHeight = GraphicHeight
 
-	fo\Font[0] = LoadFont_Strict(FontPath$+"cour\Courier New.ttf", 18, 0,0,0)
+	fo\Font[0] = LoadFont_Strict(scpModding_ProcessFilePath$("GFX\font\"+"cour\Courier New.ttf"), 18, 0,0,0)
 	SetFont fo\Font[0]
-	MenuWhite = LoadImage_Strict("GFX\menu\menuwhite.png")
-	MenuBlack = LoadImage_Strict("GFX\menu\menublack.png")	
+	MenuWhite = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\menuwhite.png"))
+	MenuBlack = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\menublack.png"))	
 	MaskImage MenuBlack, 255,255,0
-	LauncherIMG = LoadImage_Strict("GFX\menu\launcher.png")		
-	ButtonSFX% = LoadSound_Strict(SFXPath$+"Interact\Button.ogg")		
+	LauncherIMG = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\launcher.png"))		
+	ButtonSFX% = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\Interact\Button.ogg"))		
 	For i = 0 To 3
-		ArrowIMG(i) = LoadImage_Strict("GFX\menu\arrow.png")
+		ArrowIMG(i) = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\arrow.png"))
 		RotateImage(ArrowIMG(i), 90 * i)
 		HandleImage(ArrowIMG(i), 0, 0)
 	Next
@@ -1271,32 +1321,39 @@ Function UpdateLauncher()
 			If GfxModeWidths(n) = GfxModeWidth(i) And GfxModeHeights(n) = GfxModeHeight(i) Then samefound = True : Exit
 		Next
 		If samefound = False Then
-			If GraphicWidth = GfxModeWidth(i) And GraphicHeight = GfxModeHeight(i) Then SelectedGFXMode = GFXModes
-			GfxModeWidths(GFXModes) = GfxModeWidth(i)
-			GfxModeHeights(GFXModes) = GfxModeHeight(i)
-			GFXModes=GFXModes+1 
+			If GfxModeWidth(i) >= 1024 And GfxModeHeight(i) >= 768
+				If GraphicWidth = GfxModeWidth(i) And GraphicHeight = GfxModeHeight(i) Then SelectedGFXMode = GFXModes
+				GfxModeWidths(GFXModes) = GfxModeWidth(i)
+				GfxModeHeights(GFXModes) = GfxModeHeight(i)
+				GFXModes=GFXModes+1 
+			EndIf
 		End If
 	Next
 	
-	BlinkMeterIMG% = LoadImage_Strict(GFXPath$+"blinkmeter.png")
+	BlinkMeterIMG% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"blinkmeter.png"))
 		
-	AppTitle "SCP - CB: Remastered Launcher"
+	AppTitle "SCP:CB Remastered Launcher " + scpModding_Version()
 	
+	Local selectedDevice = 0
+	If Fullscreen Then selectedDevice = 0
+	If BorderlessWindowed Then selectedDevice = 1
+	If (Not Fullscreen) And (Not BorderlessWindowed) Then selectedDevice = 2
+
 	Repeat
 	
-		;Cls
+		; ;Cls
 		Color 0,0,0
 		Rect 0,0,LauncherWidth,LauncherHeight,True
 		
-		MouseHit1 = MouseHit(1)
+		 MouseHit1 = MouseHit(1)
 		
-		Color 255, 255, 255
-		DrawImage(LauncherIMG, 0, 0)
+		 Color 255, 255, 255
+		 DrawImage(LauncherIMG, 0, 0)
 		
-		Text(20, 240 - 65, "Resolution: ")
+		; ;Text(20, 240 - 65, "Resolution: ")
 		
-		Local x% = 40
-		Local y% = 270 - 65
+		Local x% = 70
+		Local y% = 190
 		For i = 0 To (GFXModes - 1)
 			Color 255, 0, 0
 			If SelectedGFXMode = i Then Rect(x - 1, y - 1, 100, 20, False)
@@ -1310,39 +1367,107 @@ Function UpdateLauncher()
 			EndIf
 			
 			y=y+20
-			If y >= 250 - 65 + (LauncherHeight - 80 - 260) Then y = 270 - 65 : x=x+100
+			If y >= 350 Then y = 190 : x=x+100
 		Next
 		
-		;-----------------------------------------------------------------
-		Color 255, 255, 255
-		x = 30
-		y = 369
-		;Rect(x - 10, y, 340, 95)
-		Text(x - 10, y - 25, "Graphics:")
+		; ;-----------------------------------------------------------------
+		; Color 255, 255, 255
+		; x = 30
+		; y = 369
+		; ;Rect(x - 10, y, 340, 95)
+		; ;Text(x - 10, y - 25, "Graphics:")
 		
-		y=y+10
-		For i = 1 To CountGfxDrivers()
-		    Color 255, 0, 0
-			If SelectedGFXDriver = i Then Rect(x - 1, y - 1, 290, 20, False)
-			;text(x, y, bbGfxDriverName(i))
-			Color 255, 255, 255
-			LimitText(GfxDriverName(i), x, y, 290, False)
-			If MouseOn(x - 1, y - 1, 290, 20) Then
-				Color 100, 100, 100
-				Rect(x - 1, y - 1, 290, 20, False)
-				If MouseHit1 Then SelectedGFXDriver = i
-			EndIf
+		; ; y=y+10
+		; ; For i = 1 To CountGfxDrivers()
+		; ;     Color 255, 0, 0
+		; ; 	If SelectedGFXDriver = i Then Rect(x - 1, y - 1, 290, 20, False)
+		; ; 	;text(x, y, bbGfxDriverName(i))
+		; ; 	Color 255, 255, 255
+		; ; 	LimitText(GfxDriverName(i), x, y, 290, False)
+		; ; 	If MouseOn(x - 1, y - 1, 290, 20) Then
+		; ; 		Color 100, 100, 100
+		; ; 		Rect(x - 1, y - 1, 290, 20, False)
+		; ; 		If MouseHit1 Then SelectedGFXDriver = i
+		; ; 	EndIf
 			
-			y=y+20
-		Next
+		; ; 	y=y+20
+		; ; Next
+
 		
-		Fullscreen = DrawTick(40 + 630 - 15, 260 - 55 + 5 - 8, Fullscreen, BorderlessWindowed)
-		BorderlessWindowed = DrawTick(40 + 630 - 15, 260 - 55 + 35, BorderlessWindowed)
+		If DrawButton(323, 218, 241, 30, GfxDriverName(SelectedGFXDriver), False, False, False) Then
+		    If SelectedGFXDriver = CountGfxDrivers()
+				SelectedGFXDriver = 1 
+			Else 
+				SelectedGFXDriver = SelectedGFXDriver + 1 
+			EndIf
+		EndIf
+
+		Local deviceText$
+		If selectedDevice = 0 Then deviceText = scpLang_GetPhrase$("launcher.fullscreen")
+		If selectedDevice = 1 Then deviceText = scpLang_GetPhrase$("launcher.borderless")
+		If selectedDevice = 2 Then deviceText = scpLang_GetPhrase$("launcher.windowed")
+		If DrawButton(323, 281, 241, 30, deviceText, False, False, False) Then
+		    If selectedDevice = 2
+				selectedDevice = 0
+			Else
+				selectedDevice = selectedDevice + 1
+			EndIf
+
+			If selectedDevice = 0 
+				Fullscreen = true
+				BorderlessWindowed = false
+				Windowed = false
+			ElseIf selectedDevice = 1
+				Fullscreen = false
+				BorderlessWindowed = true
+				Windowed = false
+			ElseIf selectedDevice = 2
+				Fullscreen = false
+				BorderlessWindowed = false
+				Windowed = true
+			EndIf
+		EndIf
+
+		If DrawButton(353, 344, 181, 30, scpLang_GetPhrase$("language.name"), False, False, False) Then
+			
+		EndIf
+
+		If DrawButton(323, 344, 30, 30, "<", False, False, False) Then
+			scpLang_BackLang()
+			PutINIValue(OptionFile, "game", "lang", scpLang_GetLang())
+			SaveOptionsINI()
+		EndIf
+
+		If DrawButton(534, 344, 30, 30, ">", False, False, False) Then
+			scpLang_NextLang()
+			PutINIValue(OptionFile, "game", "lang", scpLang_GetLang())
+			SaveOptionsINI()
+		EndIf
+		
+		If (DrawButton(41, 400, 120, 30, scpLang_GetPhrase$("launcher.discord"), False, False, False)) Then
+			ExecFile("https://discord.gg/scpcbr")
+		EndIf
+
+		If (DrawButton(165, 400, 120, 30, scpLang_GetPhrase$("launcher.mods"), False, False, False)) Then
+			ExecFile("https://steamcommunity.com/app/2090230/workshop/")
+		EndIf
+
+		If (DrawButton(41, 432, 120, 30, scpLang_GetPhrase$("launcher.reset"), False, False, False)) Then
+			scpSDK_ResetOptions()
+		EndIf
+
+		If (DrawButton(165, 432, 120, 30, scpLang_GetPhrase$("launcher.store"), False, False, False)) Then
+			ExecFile("https://store.steampowered.com/app/2090230/SCP_Containment_Breach_Remastered/")
+		EndIf
+
+		; Fullscreen = DrawTick(50, 50, Fullscreen)
+		; BorderlessWindowed = DrawTick(50, 70, BorderlessWindowed)
+		; Windowed = DrawTick(50, 90, Windowed)
 		lock% = False
 
-		If BorderlessWindowed Or (Not Fullscreen) Then lock% = True
-		Bit16Mode = DrawTick(40 + 630 - 15, 260 - 55 + 65 + 8, Bit16Mode,lock%)
-		LauncherEnabled = DrawTick(40 + 630 - 15, 260 - 55 + 95 + 8, LauncherEnabled)
+		; If BorderlessWindowed Or (Not Fullscreen) Then lock% = True
+		; Bit16Mode = DrawTick(40 + 630 - 15, 260 - 55 + 65 + 8, Bit16Mode,lock%)
+		; LauncherEnabled = DrawTick(40 + 630 - 15, 260 - 55 + 95 + 8, LauncherEnabled)
 
 		If BorderlessWindowed
  		    Color 255, 0, 0
@@ -1351,72 +1476,74 @@ Function UpdateLauncher()
   		    Color 255, 255, 255
 		EndIf
 
-		Text(40 + 630 + 15, 262 - 55 + 5 - 8, "Fullscreen")
-		Color 255, 255, 255
-		Text(40 + 630 + 15, 262 - 55 + 35 - 8, "Borderless",False,False)
-		Text(40 + 630 + 15, 262 - 55 + 35 + 12, "windowed mode",False,False)
+		; Text(40 + 630 + 15, 262 - 55 + 5 - 8, "Fullscreen")
+		; Color 255, 255, 255
+		; Text(40 + 630 + 15, 262 - 55 + 35 - 8, "Borderless",False,False)
+		; Text(40 + 630 + 15, 262 - 55 + 35 + 12, "windowed mode",False,False)
 
-		If BorderlessWindowed Or (Not Fullscreen)
- 		   Color 255, 0, 0
- 		   Bit16Mode = False
-		Else
-		    Color 255, 255, 255
-		EndIf
+		; If BorderlessWindowed Or (Not Fullscreen)
+ 		;    Color 255, 0, 0
+ 		;    Bit16Mode = False
+		; Else
+		;     Color 255, 255, 255
+		; EndIf
 
-		Text(40 + 630 + 15, 262 - 55 + 65 + 8, "16 Bit")
-		Color 255, 255, 255
-		Text(40 + 630 + 15, 262 - 55 + 95 + 8, "Use launcher")
+		; Text(40 + 630 + 15, 262 - 55 + 65 + 8, "16 Bit")
+		; Color 255, 255, 255
+		; Text(40 + 630 + 15, 262 - 55 + 95 + 8, "Use launcher")
 		
-		If (Not BorderlessWindowed)
-			If Fullscreen
-				Text(40+ 620 + 15, 262 - 55 + 140, ""+(GfxModeWidths(SelectedGFXMode) + "x" + GfxModeHeights(SelectedGFXMode) + "," + (16+(16*(Not Bit16Mode)))))
-			Else
-				Text(40+ 620 + 15, 262 - 55 + 140, ""+(GfxModeWidths(SelectedGFXMode) + "x" + GfxModeHeights(SelectedGFXMode) + ",32"))
-			EndIf
-		Else
-	        Text(40+ 260 + 15, 462 - 55 + 140, ""+GfxModeWidths(SelectedGFXMode) + "x" + GfxModeHeights(SelectedGFXMode) + ",32")
-			If GfxModeWidths(SelectedGFXMode)<G_viewport_width Then
-				Text(40+ 620 + 15, 262 - 55 + 125, "Upscaled to")
-				Text(40+ 620 + 15, 262 - 55 + 145, G_viewport_width + "x" + G_viewport_height + ",32")
-			ElseIf GfxModeWidths(SelectedGFXMode)>G_viewport_width Then
-				Text(40+ 620 + 15, 262 - 55 + 125, "Downscaled to")
-				Text(40+ 620 + 15, 262 - 55 + 145, G_viewport_width + "x" + G_viewport_height + ",32")
-			EndIf
-		EndIf
+		; If (Not BorderlessWindowed)
+		; 	If Fullscreen
+		; 		Text(40+ 620 + 15, 262 - 55 + 140, ""+(GfxModeWidths(SelectedGFXMode) + "x" + GfxModeHeights(SelectedGFXMode) + "," + (16+(16*(Not Bit16Mode)))))
+		; 	Else
+		; 		Text(40+ 620 + 15, 262 - 55 + 140, ""+(GfxModeWidths(SelectedGFXMode) + "x" + GfxModeHeights(SelectedGFXMode) + ",32"))
+		; 	EndIf
+		; Else
+	    ;     Text(40+ 260 + 15, 462 - 55 + 140, ""+GfxModeWidths(SelectedGFXMode) + "x" + GfxModeHeights(SelectedGFXMode) + ",32")
+		; 	If GfxModeWidths(SelectedGFXMode)<G_viewport_width Then
+		; 		Text(40+ 620 + 15, 262 - 55 + 125, "Upscaled to")
+		; 		Text(40+ 620 + 15, 262 - 55 + 145, G_viewport_width + "x" + G_viewport_height + ",32")
+		; 	ElseIf GfxModeWidths(SelectedGFXMode)>G_viewport_width Then
+		; 		Text(40+ 620 + 15, 262 - 55 + 125, "Downscaled to")
+		; 		Text(40+ 620 + 15, 262 - 55 + 145, G_viewport_width + "x" + G_viewport_height + ",32")
+		; 	EndIf
+		; EndIf
 		
-		If DrawButton(LauncherWidth - 20, LauncherHeight - 100, 110, 30, "BUG REPORT", False, False, False) Then
-		    ExecFile("https://discord.gg/ZV9FPvsZnE")
-		EndIf
+		; If DrawButton(LauncherWidth - 20, LauncherHeight - 100, 110, 30, "BUG REPORT", False, False, False) Then
+		;     ExecFile("https://discord.gg/scpcbr")
+		; EndIf
 		
-		If DrawButton(LauncherWidth - 20, LauncherHeight - 65, 110, 30, "DISCORD", False, False, False) Then
-		    ExecFile("https://discord.gg/scpcbr")
-		EndIf
+		; If DrawButton(LauncherWidth - 20, LauncherHeight - 65, 110, 30, "DISCORD", False, False, False) Then
+		;     ExecFile("https://discord.gg/scpcbr")
+		; EndIf
 		
-		If DrawButton(LauncherWidth - 280, LauncherHeight - 100, 110, 30, "WEBSITE", False, False, False) Then
-		    ExecFile("https://scpcbr.com")
-		EndIf
+		; If DrawButton(LauncherWidth - 280, LauncherHeight - 100, 110, 30, "WEBSITE", False, False, False) Then
+		;     ExecFile("https://scpcbr.com")
+		; EndIf
 		
-		If DrawButton(LauncherWidth - 165,LauncherHeight - 100, 140, 30, "LEADERBOARDS", False, False, False) Then
-		    ExecFile("https://scpcbr.com/leaderboards")
-		EndIf
+		; If DrawButton(LauncherWidth - 165,LauncherHeight - 100, 140, 30, "STORE PAGE", False, False, False) Then
+		;     ExecFile("https://store.steampowered.com/app/2090230/SCP_Containment_Breach_Remastered/")
+		; EndIf
 		
-		If DrawButton(LauncherWidth - 280, LauncherHeight - 65, 110, 30, "SPEED RUNS", False, False, False) Then
-		    ExecFile("https://scpcbr.com/speedruns")
-		EndIf
+		; If DrawButton(LauncherWidth - 280, LauncherHeight - 65, 110, 30, "WORKSHOP", False, False, False) Then
+		;     ExecFile("https://steamcommunity.com/app/2090230/workshop/")
+		; EndIf
 		
-		If DrawButton(LauncherWidth - 165, LauncherHeight - 65, 140, 30, "RESET OPTIONS", False, False, False) Then
-		    scpSDK_ResetOptions()
-		EndIf
+		; If DrawButton(LauncherWidth - 165, LauncherHeight - 65, 140, 30, "RESET OPTIONS", False, False, False) Then
+		;     scpSDK_ResetOptions()
+		; EndIf
 
-		If DrawButton(LauncherWidth + 95, LauncherHeight - 100, 75, 30, "LAUNCH", False, False, False) Then
+		If DrawButton(323, 407, 241, 50, scpLang_GetPhrase$("launcher.launch"), True, False, False) Then
 			GraphicWidth = GfxModeWidths(SelectedGFXMode)
 			GraphicHeight = GfxModeHeights(SelectedGFXMode)
 			RealGraphicWidth = GraphicWidth
 			RealGraphicHeight = GraphicHeight
 			Exit
 		EndIf
+
+		
 				
-		If DrawButton(LauncherWidth + 95, LauncherHeight - 65, 75, 30, "EXIT", False, False, False) Then End
+		; If DrawButton(LauncherWidth + 95, LauncherHeight - 65, 75, 30, "EXIT", False, False, False) Then End
 		Flip
 	Forever
 	
@@ -1488,7 +1615,7 @@ Function InitLoadingScreens(file$)
 			ls\ID = LoadingScreenAmount
 			
 			ls\title = TemporaryString
-			ls\imgpath = GetINIString(file, TemporaryString, "image path")
+			ls\imgpath = scpModding_ProcessFilePath$(GetINIString(file, TemporaryString, "image path"))
 			
 			For i = 0 To 4
 				ls\txt[i] = GetINIString(file, TemporaryString, "text"+(i+1))
@@ -1532,7 +1659,7 @@ Function DrawLoading(percent%, shortloading=False)
 		temp = Rand(1,LoadingScreenAmount)
 		For ls.loadingscreens = Each LoadingScreens
 			If ls\id = temp Then
-				If ls\img=0 Then ls\img = LoadImage_Strict("Loadingscreens\"+ls\imgpath)
+				If ls\img=0 Then ls\img = LoadImage_Strict(scpModding_ProcessFilePath$("Loadingscreens\"+ls\imgpath))
 				ls\img = ResizeImage2(ls\img, ImageWidth(ls\img) * MenuScale, ImageHeight(ls\img) * MenuScale)
 				SelectedLoadingScreen = ls 
 				Exit
@@ -1597,9 +1724,9 @@ Function DrawLoading(percent%, shortloading=False)
 			If Not shortloading Then 
 				If firstloop Then 
 					If percent = 0 Then
-						PlaySound_Strict LoadTempSound(SFXPath$+"SCP\990\cwm1.cwm")
+						PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\990\cwm1.cwm"))
 					ElseIf percent = 100
-						PlaySound_Strict LoadTempSound(SFXPath$+"SCP\990\cwm2.cwm")
+						PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\990\cwm2.cwm"))
 					EndIf
 				EndIf
 			EndIf
@@ -1610,101 +1737,101 @@ Function DrawLoading(percent%, shortloading=False)
 			For i = 0 To temp
 				strtemp$ = STRTEMP + Chr(Rand(48,122))
 			Next
-			AAText(GraphicWidth / 2, GraphicHeight / 2 + 80, strtemp, True, True)
+			AAText(GraphicWidth / 2, GraphicHeight / 2 + 80, scpLang_GetPhrase$(strtemp), True, True)
 			
 			If percent = 0 Then 
 				If Rand(5)=1 Then
 					Select Rand(2)
 						Case 1
-							SelectedLoadingScreen\txt[0] = "It will happen on " + CurrentDate() + "."
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.happenon") + " " + CurrentDate() + "."
 						Case 2
 							SelectedLoadingScreen\txt[0] = CurrentTime()
 					End Select
 				Else
 					Select Rand(13)
 						Case 1
-							SelectedLoadingScreen\txt[0] = "A very fine radio might prove to be useful."
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.fineradio")
 						Case 2
-							SelectedLoadingScreen\txt[0] = "ThIS PLaCE WiLL BUrN"
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.burn")
 						Case 3
-							SelectedLoadingScreen\txt[0] = "You cannot control it."
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.cannotcontrol")
 						Case 4
 							SelectedLoadingScreen\txt[0] = "sebotan is a monkey"
 						Case 5
-							SelectedLoadingScreen\txt[0] = "YOU NEED TO TRUST IT"
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.trust")
 						Case 6 
-							SelectedLoadingScreen\txt[0] = "Look my friend in the eye when you address him, isn't that the way of the gentleman?"
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.gentleman")
 						Case 7
 							SelectedLoadingScreen\txt[0] = "???____??_???__????n?"
 						Case 8, 9
-							SelectedLoadingScreen\txt[0] = "Jorge has been expecting you."
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.jorge")
 						Case 10
 							SelectedLoadingScreen\txt[0] = "???????????"
 						Case 11
-							SelectedLoadingScreen\txt[0] = "Make her a member of the midnight crew."
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.midnight")
 						Case 12
 							SelectedLoadingScreen\txt[0] = "eddie is a jew"
 						Case 13
-							SelectedLoadingScreen\txt[0] = "This alloy contains the essence of my life."
+							SelectedLoadingScreen\txt[0] = scpLang_GetPhrase$("dynamicloadingscreens.alloylife")
 					End Select
 				EndIf
 			EndIf
 			
-			strtemp$ = SelectedLoadingScreen\txt[0]
+			strtemp$ = scpLang_GetPhrase$(SelectedLoadingScreen\txt[0])
 			temp = Int(Len(SelectedLoadingScreen\txt[0])-Rand(5))
 			For i = 0 To Rand(10,15);temp
 				strtemp$ = Replace(SelectedLoadingScreen\txt[0],Mid(SelectedLoadingScreen\txt[0],Rand(1,Len(strtemp)-1),1),Chr(Rand(130,250)))
 			Next		
 			AASetFont fo\Font[0]
-			RowText(strtemp, GraphicWidth / 2-200, GraphicHeight / 2 +120,400,300,True)		
+			RowText(scpLang_GetPhrase$(strtemp), GraphicWidth / 2-200, GraphicHeight / 2 +120,400,300,True)		
 		ElseIf SelectedLoadingScreen\title = "SCP-789-J" Then
 			Color 0,0,0
 			AASetFont fo\Font[1]
 			AAText(GraphicWidth / 2 + 1, GraphicHeight / 2 + 80 + 1, SelectedLoadingScreen\title, True, True)
 			AASetFont fo\Font[0]
-			RowText(SelectedLoadingScreen\txt[LoadingScreenText], GraphicWidth / 2-200+1, GraphicHeight / 2 +120+1,400,300,True)
+			RowText(scpLang_GetPhrase$(SelectedLoadingScreen\txt[LoadingScreenText]), GraphicWidth / 2-200+1, GraphicHeight / 2 +120+1,400,300,True)
 			
 			Color 255,255,255
 			AASetFont fo\Font[1]
 			AAText(GraphicWidth / 2, GraphicHeight / 2 +80, SelectedLoadingScreen\title, True, True)
 			AASetFont fo\Font[0]
-			RowText(SelectedLoadingScreen\txt[LoadingScreenText], GraphicWidth / 2-200, GraphicHeight / 2 +120,400,300,True)
+			RowText(scpLang_GetPhrase$(SelectedLoadingScreen\txt[LoadingScreenText]), GraphicWidth / 2-200, GraphicHeight / 2 +120,400,300,True)
 		ElseIf SelectedLoadingScreen\title = "Walter White" Then
 			Color 0,0,0
 			AASetFont fo\Font[1]
 			AAText(GraphicWidth / 2 + 1, GraphicHeight / 2 + 80 + 1, SelectedLoadingScreen\title, True, True)
 			AASetFont fo\Font[0]
-			RowText(SelectedLoadingScreen\txt[LoadingScreenText], GraphicWidth / 2-200+1, GraphicHeight / 2 +120+1,400,300,True)
+			RowText(scpLang_GetPhrase$(SelectedLoadingScreen\txt[LoadingScreenText]), GraphicWidth / 2-200+1, GraphicHeight / 2 +120+1,400,300,True)
 			
 			Color 255,255,255
 			AASetFont fo\Font[1]
 			AAText(GraphicWidth / 2, GraphicHeight / 2 +80, SelectedLoadingScreen\title, True, True)
 			AASetFont fo\Font[0]
-			RowText(SelectedLoadingScreen\txt[LoadingScreenText], GraphicWidth / 2-200, GraphicHeight / 2 +120,400,300,True)
+			RowText(scpLang_GetPhrase$(SelectedLoadingScreen\txt[LoadingScreenText]), GraphicWidth / 2-200, GraphicHeight / 2 +120,400,300,True)
 		Else
 			Color 0,0,0
 			AASetFont fo\Font[1]
 			AAText(GraphicWidth / 2 + 1, GraphicHeight / 2 + 80 + 1, SelectedLoadingScreen\title, True, True)
 			AASetFont fo\Font[0]
-			RowText(SelectedLoadingScreen\txt[LoadingScreenText], GraphicWidth / 2-200+1, GraphicHeight / 2 +120+1,400,300,True)
+			RowText(scpLang_GetPhrase$(SelectedLoadingScreen\txt[LoadingScreenText]), GraphicWidth / 2-200+1, GraphicHeight / 2 +120+1,400,300,True)
 			
 			Color 255,255,255
 			AASetFont fo\Font[1]
 			AAText(GraphicWidth / 2, GraphicHeight / 2 +80, SelectedLoadingScreen\title, True, True)
 			AASetFont fo\Font[0]
-			RowText(SelectedLoadingScreen\txt[LoadingScreenText], GraphicWidth / 2-200, GraphicHeight / 2 +120,400,300,True)
+			RowText(scpLang_GetPhrase$(SelectedLoadingScreen\txt[LoadingScreenText]), GraphicWidth / 2-200, GraphicHeight / 2 +120,400,300,True)
 			
 		EndIf
 		
 		Color 0,0,0
-		AAText(GraphicWidth / 2 + 1, GraphicHeight / 2 - 100 + 1, "LOADING - " + percent + " %", True, True)
+		AAText(GraphicWidth / 2 + 1, GraphicHeight / 2 - 100 + 1, scpLang_GetPhrase$("loadingscreens.loading") + " - " + percent + " %", True, True)
 		Color 255,255,255
-		AAText(GraphicWidth / 2, GraphicHeight / 2 - 100, "LOADING - " + percent + " %", True, True)
+		AAText(GraphicWidth / 2, GraphicHeight / 2 - 100, scpLang_GetPhrase$("loadingscreens.loading") + " - " + percent + " %", True, True)
 		
 		If percent = 100 Then 
-			If firstloop And SelectedLoadingScreen\title = "SCP-789-J" Then PlaySound_Strict LoadTempSound((SFXPath$+"SCP\789\butt.ogg"))
-			If firstloop And SelectedLoadingScreen\title = "Walter White" Then PlaySound_Strict LoadTempSound((SFXPath$+"SCP\WW\walter.ogg"))
-			AAText(GraphicWidth / 2, GraphicHeight - 50, "PRESS ANY KEY TO CONTINUE", True, True)
+			If firstloop And SelectedLoadingScreen\title = "SCP-789-J" Then PlaySound_Strict LoadTempSound((scpModding_ProcessFilePath$("SFX\"+"SCP\789\butt.ogg")))
+			If firstloop And SelectedLoadingScreen\title = "Walter White" Then PlaySound_Strict LoadTempSound((scpModding_ProcessFilePath$("SFX\"+"SCP\WW\walter.ogg")))
+			AAText(GraphicWidth / 2, GraphicHeight - 50, scpLang_GetPhrase$("loadingscreens.anykey"), True, True)
 		Else
 			FlushKeys()
 			FlushMouse()
@@ -1844,13 +1971,15 @@ Function DrawButton%(x%, y%, width%, height%, txt$, bigfont% = True, waitForMous
 	EndIf
 	
 	Color (255, 255, 255)
-	If usingAA Then
-		If bigfont Then AASetFont fo\Font[1] Else AASetFont fo\Font[0]
-		AAText(x + width / 2, y + height / 2, txt, True, True)
-	Else
-		If bigfont Then SetFont fo\Font[1] Else SetFont fo\Font[0]
-		Text(x + width / 2, y + height / 2, txt, True, True)
-	EndIf
+	; If usingAA Then
+	; 	If bigfont Then AASetFont fo\Font[1] Else AASetFont fo\Font[0]
+	; 	AAText(x + width / 2, y + height / 2, txt, True, True)
+	; Else
+	; 	If bigfont Then SetFont fo\Font[1] Else SetFont fo\Font[0]
+	; 	Text(x + width / 2, y + height / 2, txt, True, True)
+	; EndIf
+	If bigfont Then AASetFont fo\Font[1] Else AASetFont fo\Font[0]
+	AAText(x + width / 2, y + height / 2, txt, True, True)
 	
 	Return clicked
 End Function
@@ -1923,8 +2052,8 @@ Function SlideBar#(x%, y%, width%, value#)
 	DrawImage(BlinkMeterIMG, x + width * value / 100.0 +3, y+3)
 	
 	Color 170,170,170 
-	AAText (x - 50 * MenuScale, y + 4*MenuScale, "LOW")					
-	AAText (x + width + 38 * MenuScale, y+4*MenuScale, "HIGH")	
+	AAText (x - 50 * MenuScale, y + 4*MenuScale, scpLang_GetPhrase$("menu.low"))					
+	AAText (x + width + 38 * MenuScale, y+4*MenuScale, scpLang_GetPhrase$("menu.high"))	
 	
 	Return value
 	
@@ -2159,7 +2288,7 @@ Function DrawQuickLoading()
 		DrawImage QuickLoadIcon,GraphicWidth-90,GraphicHeight-150
 		Color 255,255,255
 		AASetFont fo\Font[0]
-		AAText GraphicWidth-100,GraphicHeight-90,"LOADING: "+QuickLoadPercent+"%",1
+		AAText GraphicWidth-100,GraphicHeight-90,scpLang_GetPhrase$("loadingscreens.loading")+": "+QuickLoadPercent+"%",1
 		If QuickLoadPercent > 99
 			If QuickLoadPercent_DisplayTimer < 70
 				QuickLoadPercent_DisplayTimer# = Min(QuickLoadPercent_DisplayTimer+fs\FPSfactor[0],70)
@@ -2193,133 +2322,126 @@ Function DrawOptionsTooltip(x%,y%,width%,height%,option$,value#=0,ingame%=False)
 		;Graphic options
 			;[Block]
 		Case "bump"
-			txt = Chr(34)+"Bump mapping"+Chr(34)+" is used to simulate bumps and dents by distorting the lightmaps."
-			txt2 = "This option cannot be changed in-game."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.bumpmapping")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.bumpmapping2")
+			txt2 = scpLang_GetPhrase$("tooltips.notingame")
 			R = 255
 		Case "vsync"
-			txt = Chr(34)+"Vertical sync"+Chr(34)+" waits for the display to finish its current refresh cycle before calculating the next frame, preventing issues such as "
-			txt = txt + "screen tearing. This ties the game's frame rate to your display's refresh rate and may cause some input lag."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.vsync")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.vsync2")
 		Case "antialias"
-			txt = Chr(34)+"Anti-Aliasing"+Chr(34)+" is used to smooth the rendered image before displaying in order to reduce aliasing around the edges of models."
-			txt2 = "This option only takes effect in fullscreen."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.antialiasing")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.antialiasing2")
+			txt2 = scpLang_GetPhrase$("tooltips.fullscreenonly")
 			R = 255
 		Case "roomlights"
-			txt = "Toggles the artificial lens flare effect generated over specific light sources."
+			txt = scpLang_GetPhrase$("tooltips.roomlights")
 		Case "gamma"
-			txt = Chr(34)+"Gamma correction"+Chr(34)+" is used to achieve a good brightness factor to balance out your display's gamma if the game appears either too dark or bright. "
-			txt = txt + "Setting it too high or low can cause the graphics to look less detailed."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.gammacorrection")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.gammacorrection2")
 			R = 255
 			G = 255
 			B = 255
-			txt2 = "Current value: "+Int(value*100)+"% (default is 100%)"			
+			txt2 = scpLang_GetPhrase$("tooltips.currentval") + " "+Int(value*100)+"% (" + scpLang_GetPhrase$("tooltips.defaultis") + " 100%)"			
 		Case "texquality"
-			txt = Chr(34)+"Texture LOD Bias"+Chr(34)+" affects the distance at which texture detail will change to prevent aliasing. Change this option if textures flicker or look too blurry."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.lodbias")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.lodbias2")
 		Case "particleamount"
-			txt = "Determines the amount of particles that can be rendered per tick."
+			txt = scpLang_GetPhrase$("tooltips.particleamount")
 			Select value
 				Case 0
 					R = 255
-					txt2 = "Only smoke emitters will produce particles."
+					txt2 = scpLang_GetPhrase$("tooltips.particleamountsmoke")
 				Case 1
 					R = 255
 					G = 255
-					txt2 = "Only a few particles will be rendered per tick."
+					txt2 = scpLang_GetPhrase$("tooltips.particleamountfew")
 				Case 2
 					G = 255
-					txt2 = "All particles are rendered."
+					txt2 = scpLang_GetPhrase$("tooltips.particleamountall")
 			End Select
 		Case "vram"
-			txt = "Textures that are stored in the Video-RAM will load faster, but this also has negative effects on the texture quality as well."
-			txt2 = "This option cannot be changed in-game."
+			txt = scpLang_GetPhrase$("tooltips.vram")
+			txt2 = scpLang_GetPhrase$("tooltips.notingame")
 			R = 255
 			;[End Block]
 		;Sound options
 			;[Block]
 		Case "musicvol"
-			txt = "Adjusts the volume of background music. Sliding the bar fully to the left will mute all music."
+			txt = scpLang_GetPhrase$("tooltips.musicvol")
 			R = 255
 			G = 255
 			B = 255
-			txt2 = "Current value: "+Int(value*100)+"% (default is 50%)"			
+			txt2 = scpLang_GetPhrase$("tooltips.currentval")+" "+Int(value*100)+"% (" + scpLang_GetPhrase$("tooltips.defaultis") + " 50%)"			
 		Case "soundvol"
-			txt = "Adjusts the volume of sound effects. Sliding the bar fully to the left will mute all sounds."
+			txt = scpLang_GetPhrase$("tooltips.soundvol")
 			R = 255
 			G = 255
 			B = 255
-			txt2 = "Current value: "+Int(value*100)+"% (default is 50%)"			
+			txt2 = scpLang_GetPhrase$("tooltips.currentval")+" "+Int(value*100)+"% (" + scpLang_GetPhrase$("tooltips.defaultis") + " 50%)"			
 		Case "sfxautorelease"
-			txt = Chr(34)+"Sound auto-release"+Chr(34)+" will free a sound from memory if it not used after 5 seconds. Prevents memory allocation issues."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.soundautorelease")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.soundautorelease2")
 			R = 255
-			txt2 = "This option cannot be changed in-game."
+			txt2 = scpLang_GetPhrase$("tooltips.notingame")
 		Case "usertrack"
-			txt = "Toggles the ability to play custom tracks over channel 1 of the radio. These tracks are loaded from the " + Chr(34) + MusicPath2$ + Chr(34)
-			txt = txt + " directory. Press " + Chr(34) + "1" + Chr(34) + " when the radio is selected to change track."
+			txt = scpLang_GetPhrase$("tooltips.usertrack1")+" " + Chr(34) + "SFX\Radio\UserTracks" + Chr(34)
+			txt = txt + " " + scpLang_GetPhrase$("tooltips.usertrack2") + " " + Chr(34) + "1" + Chr(34) + " " + scpLang_GetPhrase$("tooltips.usertrack3")
 			R = 255
-			txt2 = "This option cannot be changed in-game."
+			txt2 = scpLang_GetPhrase$("tooltips.notingame")
 		Case "usertrackmode"
-			txt = "Sets the playing mode for the custom tracks. "+Chr(34)+"Repeat"+Chr(34)+" plays every file in alphabetical order. "+Chr(34)+"Random"+Chr(34)+" chooses the "
-			txt = txt + "next track at random."
+			txt = scpLang_GetPhrase$("tooltips.usertrackmode1") + " "+Chr(34)+scpLang_GetPhrase$("tooltips.usertrackmode2")+Chr(34)+" " + scpLang_GetPhrase$("tooltips.usertrackmode3") + " "+Chr(34)+scpLang_GetPhrase$("tooltips.usertrackmode4")+Chr(34)+" " + scpLang_GetPhrase$("tooltips.usertrackmode5")
 			R = 255
 			G = 255
-			txt2 = "Note that the random mode does not prevent previously played tracks from repeating."
+			txt2 = scpLang_GetPhrase$("tooltips.usertrackmode6")
 		Case "usertrackscan"
-			txt = "Re-checks the user tracks directory for any new or removed sound files."
+			txt = scpLang_GetPhrase$("tooltips.usertrackrescan")
 			;[End Block]
 		;Control options	
 			;[Block]
 		Case "mousesensitivity"
-			txt = "Adjusts the speed of the mouse pointer."
+			txt = scpLang_GetPhrase$("tooltips.mousesens")
 			R = 255
 			G = 255
 			B = 255
-			txt2 = "Current value: "+Int((0.5+value)*100)+"% (default is 50%)"			
+			txt2 = scpLang_GetPhrase$("tooltips.currentval")+" "+Int((0.5+value)*100)+"% (" + scpLang_GetPhrase$("tooltips.defaultis") + " 50%)"			
 		Case "mouseinvert"
-			txt = Chr(34)+"Invert mouse Y-axis"+Chr(34)+" is self-explanatory."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.mouseinvert")+Chr(34)+" " + scpLang_GetPhrase$("tooltips.selfexplan")
 		Case "mousesmoothing"
-			txt = "Adjusts the amount of smoothing of the mouse pointer."
-			R = 255
-			G = 255
-			B = 255
-			txt2 = "Current value: "+Int(value*100)+"% (default is 100%)"			
+			txt = scpLang_GetPhrase$("tooltips.mousesmoothing")
 		Case "controls"
-			txt = "Configure the in-game control scheme."
+			txt = scpLang_GetPhrase$("tooltips.controls")
 			;[End Block]
 		;Advanced options	
 			;[Block]
 		Case "hud"
-			txt = "Display the blink and stamina meters."
+			txt = scpLang_GetPhrase$("tooltips.hud")
 		Case "consoleenable"
-			txt = "Toggles the use of the developer console. Can be used in-game by pressing " + KeyName(KEY_CONSOLE) + "."
+			txt = scpLang_GetPhrase$("tooltips.devconsole") + " " + KeyName(KEY_CONSOLE) + "."
 		Case "consoleerror"
-			txt = Chr(34)+"Open console on error"+Chr(34)+" is self-explanatory."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.consoleonerror")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.selfexplan")
 		Case "achpopup"
-			txt = "This is replaced with steam's achievement system and will show steam achievement popups instead."
+			txt = scpLang_GetPhrase$("tooltips.achievements")
 		Case "showfps"
-			txt = "Displays the frames per second counter at the top left-hand corner."
+			txt = scpLang_GetPhrase$("tooltips.showfps")
 		Case "framelimit"
-			txt = "Limits the frame rate that the game can run at to a desired value."
+			txt = scpLang_GetPhrase$("tooltips.limitfps")
 			If value > 0 And value < 60
 				R = 255
 				G = 255
-				txt2 = "Usually, 60 FPS or higher is preferred. If you are noticing excessive stuttering at this setting, try lowering it to make your framerate more consistent."
+				txt2 = scpLang_GetPhrase$("tooltips.limitfps2")
 			EndIf
 		Case "antialiastext"
-			txt = Chr(34)+"Antialiased text"+Chr(34)+" smooths out the text before displaying. Makes text easier to read at high resolutions."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.antialiasedtext")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.antialiasedtext2")
 			;[End Block]
 			
 		;{~--<MOD>--~}
 		
 		    ;[Block]
-		Case "Apollyon" ;WIP
-			txt = "This difficulty is unlocked after completing the game in one of the first 3 difficulties. It is advisable to play consciously. This mode will be nerfed and upgraded in the future versions."
+		Case "thaumiel" ;WIP
+			txt = scpLang_GetPhrase$("tooltips.apollyon")
 		Case "consoleversion"
-		    txt = "This function changes your console to Old Version or New Version."
+		    txt = scpLang_GetPhrase$("tooltips.consoleversion")
 		Case "fov"
-			txt = Chr(34)+"Field of view"+Chr(34)+" (FOV) is the amount of game view that is on display during a game."
+			txt = Chr(34)+scpLang_GetPhrase$("tooltips.fov")+Chr(34)+" "+scpLang_GetPhrase$("tooltips.fov2")
 			R = 255
 			G = 255
 			B = 255
-			txt2 = "Current value: "+Int(FOV)+" (default is 74%)"
+			txt2 = scpLang_GetPhrase$("tooltips.currentval")+" "+Int(FOV)+" (" + scpLang_GetPhrase$("tooltips.defaultis") + " 74%)"
 			;[End Block]
 			
         ;{~--<END>--~}
@@ -2387,28 +2509,28 @@ Function DrawMapCreatorTooltip(x%,y%,width%,height%,mapname$)
 		CloseFile f%
 	Else
 		txt[0] = Left(mapname$,Len(mapname$)-6)
-		author$ = "[Unknown]"
-		descr$ = "[No description]"
+		author$ = scpLang_GetPhrase$("tooltips.mapauthorunknown")
+		descr$ = scpLang_GetPhrase$("tooltips.mapdescnone")
 		ramount% = 0
 		hasForest% = False
 		hasMT% = False
 	EndIf
-	txt[1] = "Made by: "+author$
-	txt[2] = "Description: "+descr$
+	txt[1] = scpLang_GetPhrase$("tooltips.mapmadeby")+" "+author$
+	txt[2] = scpLang_GetPhrase$("tooltips.mapdesc")+" "+descr$
 	If ramount > 0 Then
-		txt[3] = "Room amount: "+ramount
+		txt[3] = scpLang_GetPhrase$("tooltips.maproomamm")+" "+ramount
 	Else
-		txt[3] = "Room amount: [Unknown]"
+		txt[3] = scpLang_GetPhrase$("tooltips.maproomammunknown")
 	EndIf
 	If hasForest Then
-		txt[4] = "Has custom forest: Yes"
+		txt[4] = scpLang_GetPhrase$("tooltips.mapforest")+" "+scpLang_GetPhrase$("menu.yes")
 	Else
-		txt[4] = "Has custom forest: No"
+		txt[4] = scpLang_GetPhrase$("tooltips.mapforest")+" "+scpLang_GetPhrase$("menu.no")
 	EndIf
 	If hasMT Then
-		txt[5] = "Has custom maintenance tunnel: Yes"
+		txt[5] = scpLang_GetPhrase$("tooltips.mapmaintenance")+" "+scpLang_GetPhrase$("menu.yes")
 	Else
-		txt[5] = "Has custom maintenance tunnel: No"
+		txt[5] = scpLang_GetPhrase$("tooltips.mapmaintenance")+" "+scpLang_GetPhrase$("menu.no")
 	EndIf
 	
 	lines% = GetLineAmount(txt[2],fw,fh)

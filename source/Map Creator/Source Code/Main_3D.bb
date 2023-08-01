@@ -604,7 +604,7 @@ Type RoomTemplates
 	Field obj%, id%
 	Field objPath$
 	
-	Field zone%[5]
+	Field zone%[6]
 	
 	Field Shape%, Name$
 	Field Commonness%, Large%
@@ -718,7 +718,7 @@ Function LoadRoomTemplateMeshes()
 		EndIf
 	Next
 	
-	Local hmap[ROOM4], mask[ROOM4]
+	Local hmap[ROOM4 + 1], mask[ROOM4 + 1]
 	Local GroundTexture = LoadTexture("GFX\map\forest\forestfloor.jpg")
 	Local PathTexture = LoadTexture("GFX\map\forest\forestpath.jpg")
 	hmap[ROOM1]=LoadImage("GFX\map\forest\forest1h.png")
@@ -916,8 +916,8 @@ Type Rooms
 	Field event$
 	Field eventchance#
 	
-	Field Adjacent.Rooms[4]
-	Field AdjDoor.Doors[4]
+	Field Adjacent.Rooms[5]
+	Field AdjDoor.Doors[5]
 	
 	Field GridX%,GridZ%
 	
@@ -1231,7 +1231,7 @@ Function LoadRMesh(file$,rt.RoomTemplates)
 	
 	count = ReadInt(f)
 	Local childMesh%
-	Local surf%,tex%[2],brush%
+	Local surf%,tex%[2 + 1],brush%
 	
 	Local isAlpha%
 	
@@ -1823,7 +1823,7 @@ Function MilliSecs2()
 End Function
 
 Function WrapAngle#(angle#)
-	;If angle = INFINITY Then Return 0.0
+	;If angle = Infinity Then Return 0.0
 	While angle < 0
 		angle = angle + 360
 	Wend 

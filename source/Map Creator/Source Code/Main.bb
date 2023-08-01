@@ -1623,7 +1623,7 @@ Type RoomTemplates
 	Field Large%
 	Field id
 	
-	Field events$[5]
+	Field events$[6]
 	
 	Field MapGrid% = 0
 End Type 
@@ -1763,7 +1763,7 @@ Const MaxEvents = 9
 Type Event
 	Field Name$
 	Field Description$
-	Field Room$[MaxEvents]
+	Field Room$[MaxEvents + 1]
 End Type
 
 Function InitEvents(file$)

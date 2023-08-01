@@ -536,11 +536,11 @@ Function SaveGame(file$)
 	
 	If Not ms\MenuOpen Then
         If SelectedDifficulty\saveType = SAVEONSCREENS Then
-			PlaySound_Strict(LoadTempSound(SFXPath$+"General\Save2.ogg"))
+			PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\Save2.ogg")))
 		Else
-			PlaySound_Strict(LoadTempSound(SFXPath$+"General\Save1.ogg"))
+			PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\Save1.ogg")))
 		EndIf
-		Msg = "Game progress saved."
+		Msg = scpLang_GetPhrase("ingame.save5")
 		MsgTimer = 70 * 4
 	EndIf
 End Function
@@ -2199,14 +2199,14 @@ Function LoadGameQuick(file$)
 				xtemp# = EntityX(r\Objects[13],True)
 				ztemp# = EntityZ(r\Objects[13],True)
 				FreeEntity r\Objects[13]
-				r\Objects[13]=LoadMesh_Strict(MapPath$+"gateawall1.b3d",r\obj)
+				r\Objects[13]=LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"gateawall1.b3d"),r\obj)
 				PositionEntity(r\Objects[13], xtemp#, r\y-1045.0*RoomScale, ztemp#, True)
 				EntityColor r\Objects[13], 25,25,25
 				EntityType r\Objects[13],HIT_MAP
 				xtemp# = EntityX(r\Objects[14],True)
 				ztemp# = EntityZ(r\Objects[14],True)
 				FreeEntity r\Objects[14]
-				r\Objects[14]=LoadMesh_Strict(MapPath$+"gateawall2.b3d",r\obj)
+				r\Objects[14]=LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"gateawall2.b3d"),r\obj)
 				PositionEntity(r\Objects[14], xtemp#, r\y-1045.0*RoomScale, ztemp#, True)	
 				EntityColor r\Objects[14], 25,25,25
 				EntityType r\Objects[14],HIT_MAP

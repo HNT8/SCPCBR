@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -30,28 +30,28 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>ClangCL</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>ClangCL</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -72,16 +72,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\source</OutDir>
+    <OutDir>..\source\</OutDir>
+    <IncludePath>$(ProjectDir)Console;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\source</OutDir>
+    <OutDir>..\source\</OutDir>
+    <IncludePath>$(ProjectDir)Console;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\source</OutDir>
+    <OutDir>..\source\</OutDir>
+    <IncludePath>$(ProjectDir)Console;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\source</OutDir>
+    <OutDir>..\source\</OutDir>
+    <IncludePath>$(ProjectDir)Console;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -89,14 +96,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <CompileAsManaged>false</CompileAsManaged>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>steam_api.lib;discord_rpc.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;steam_api.lib;discord_rpc.lib;d3d9.lib;lua54.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -107,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <CompileAsManaged>false</CompileAsManaged>
     </ClCompile>
@@ -116,7 +123,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>steam_api.lib;discord_rpc.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;steam_api.lib;discord_rpc.lib;d3d9.lib;lua54.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -125,14 +132,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <CompileAsManaged>false</CompileAsManaged>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>steam_api.lib;discord_rpc.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;steam_api.lib;discord_rpc.lib;d3d9.lib;lua54.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,7 +150,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <CompileAsManaged>false</CompileAsManaged>
     </ClCompile>
@@ -152,29 +159,63 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>steam_api.lib;discord_rpc.lib;d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;steam_api.lib;discord_rpc.lib;d3d9.lib;lua54.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Library Include="discord_rpc.lib" />
+    <Library Include="glew32s.lib" />
+    <Library Include="glfw3.lib" />
+    <Library Include="lua54.lib" />
     <Library Include="SteamAPI\lib\win32\sdkencryptedappticket.lib" />
     <Library Include="steam_api.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\Globals.hpp" />
-    <ClInclude Include="Application\Utilities\ImGui\imconfig.h" />
-    <ClInclude Include="Application\Utilities\ImGui\imgui.h" />
-    <ClInclude Include="Application\Utilities\ImGui\imgui_impl_dx9.h" />
-    <ClInclude Include="Application\Utilities\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="Application\Utilities\ImGui\imgui_internal.h" />
-    <ClInclude Include="Application\Utilities\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Application\Utilities\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Application\Utilities\ImGui\imstb_truetype.h" />
-    <ClInclude Include="Application\Utilities\UI.h" />
-    <ClInclude Include="Application\Utilities\Window\Window.hpp" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="Console\Console.hpp" />
+    <ClInclude Include="Console\GLFW\glfw3.h" />
+    <ClInclude Include="Console\GLFW\glfw3native.h" />
+    <ClInclude Include="Console\IMGUI\imconfig.h" />
+    <ClInclude Include="Console\IMGUI\imgui.h" />
+    <ClInclude Include="Console\IMGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="Console\IMGUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="Console\IMGUI\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Console\IMGUI\imgui_internal.h" />
+    <ClInclude Include="Console\IMGUI\imstb_rectpack.h" />
+    <ClInclude Include="Console\IMGUI\imstb_textedit.h" />
+    <ClInclude Include="Console\IMGUI\imstb_truetype.h" />
+    <ClInclude Include="Console\STBI\stb_image.h" />
+    <ClInclude Include="Game.hpp" />
     <ClInclude Include="Discord.h" />
     <ClInclude Include="DiscordAPI\discord_register.h" />
     <ClInclude Include="DiscordAPI\discord_rpc.h" />
+    <ClInclude Include="Localization\Language.h" />
+    <ClInclude Include="Lua\Engine\LuaState.hpp" />
+    <ClInclude Include="Lua\Engine\LuaTBoolean.hpp" />
+    <ClInclude Include="Lua\Engine\LuaTNil.hpp" />
+    <ClInclude Include="Lua\Engine\LuaTNumber.hpp" />
+    <ClInclude Include="Lua\Engine\LuaTString.hpp" />
+    <ClInclude Include="Lua\Engine\LuaTTable.hpp" />
+    <ClInclude Include="Lua\Engine\LuaTUserData.hpp" />
+    <ClInclude Include="Lua\Engine\LuaType.hpp" />
+    <ClInclude Include="Lua\lauxlib.h" />
+    <ClInclude Include="Lua\lua.h" />
+    <ClInclude Include="Lua\Lua.hpp" />
+    <ClInclude Include="Lua\luaconf.h" />
+    <ClInclude Include="Lua\LuaContext.hpp" />
+    <ClInclude Include="Lua\LuaCpp.hpp" />
+    <ClInclude Include="Lua\lualib.h" />
+    <ClInclude Include="Lua\LuaMetaObject.hpp" />
+    <ClInclude Include="Lua\LuaVersion.hpp" />
+    <ClInclude Include="Lua\Registry\LuaCFunction.hpp" />
+    <ClInclude Include="Lua\Registry\LuaCodeSnippet.hpp" />
+    <ClInclude Include="Lua\Registry\LuaCompiler.hpp" />
+    <ClInclude Include="Lua\Registry\LuaLibrary.hpp" />
+    <ClInclude Include="Lua\Registry\LuaRegistry.hpp" />
+    <ClInclude Include="Modding\Libraries\console.h" />
+    <ClInclude Include="Modding\Libraries\game.h" />
+    <ClInclude Include="Modding\Mod.h" />
+    <ClInclude Include="Modding\Print.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="SteamAPI\isteamapplist.h" />
     <ClInclude Include="SteamAPI\isteamapps.h" />
@@ -221,25 +262,41 @@
     <ClInclude Include="SteamAPI\steam_api_flat.h" />
     <ClInclude Include="SteamAPI\steam_api_internal.h" />
     <ClInclude Include="SteamAPI\steam_gameserver.h" />
+    <ClInclude Include="Toml\toml.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
     <None Include="discord-rpc.dll" />
+    <None Include="SCPSDK.decls" />
     <None Include="SteamAPI\lib\win32\sdkencryptedappticket.dll" />
     <None Include="SteamAPI\steam_api.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application\UI.cpp" />
-    <ClCompile Include="Application\Utilities\ImGui\imgui.cpp" />
-    <ClCompile Include="Application\Utilities\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Application\Utilities\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Application\Utilities\ImGui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="Application\Utilities\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Application\Utilities\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="Application\Utilities\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Application\Utilities\Window\Window.cpp" />
+    <ClCompile Include="Console\IMGUI\imgui.cpp" />
+    <ClCompile Include="Console\IMGUI\imgui_demo.cpp" />
+    <ClCompile Include="Console\IMGUI\imgui_draw.cpp" />
+    <ClCompile Include="Console\IMGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Console\IMGUI\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Console\IMGUI\imgui_tables.cpp" />
+    <ClCompile Include="Console\IMGUI\imgui_widgets.cpp" />
     <ClCompile Include="Discord.cpp" />
     <ClCompile Include="API.cpp" />
+    <ClCompile Include="Lua\Engine\LuaState.cpp" />
+    <ClCompile Include="Lua\Engine\LuaTBoolean.cpp" />
+    <ClCompile Include="Lua\Engine\LuaTNil.cpp" />
+    <ClCompile Include="Lua\Engine\LuaTNumber.cpp" />
+    <ClCompile Include="Lua\Engine\LuaTString.cpp" />
+    <ClCompile Include="Lua\Engine\LuaTTable.cpp" />
+    <ClCompile Include="Lua\Engine\LuaTUserData.cpp" />
+    <ClCompile Include="Lua\Engine\LuaType.cpp" />
+    <ClCompile Include="Lua\LuaContext.cpp" />
+    <ClCompile Include="Lua\LuaMetaObject.cpp" />
+    <ClCompile Include="Lua\LuaVersion.cpp" />
+    <ClCompile Include="Lua\Registry\LuaCFunction.cpp" />
+    <ClCompile Include="Lua\Registry\LuaCodeSnippet.cpp" />
+    <ClCompile Include="Lua\Registry\LuaCompiler.cpp" />
+    <ClCompile Include="Lua\Registry\LuaLibrary.cpp" />
+    <ClCompile Include="Lua\Registry\LuaRegistry.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

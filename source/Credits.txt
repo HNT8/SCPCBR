@@ -9,7 +9,6 @@
 		Ryan Stillings ("Risingstar64")
 		Sam Lynch ("InnocentSam")
 		Shaun Gaylard ("ENDSHN")
-		Hunter Pollock ("hunterp")
 
 
 *3D Modellers
@@ -82,7 +81,6 @@
 		Shadowscale48
 		Shaun Gaylard ("ENDSHN")
 		Vladislav Borisevich ("Vane Brain")
-		Hunter Pollock ("hunterp")
 
 
 *Writers
@@ -141,7 +139,7 @@
 		purseit
 		Levi The Boss#1360
 		Seth Smith ("Faust")
-		I SˆNHOR PaORUSSO I
+		I Sï¿½NHOR PaORUSSO I
 		Leonard Blackmore ("UnknownDev")
 		Ivan Mikhailov ("Redbull.Ivan")
 		Elan S.
@@ -152,6 +150,10 @@
 		Alexey Krasnov("TaskeWSH")
 		LoneWolf
 		[dataexpunded]
+		Vortex422
+		Platratio34
+		mcHAMR ("Jed")
+		EGGROLL ("Cooper")
 	
 *The Content Taken From:
 
@@ -261,8 +263,23 @@
 
 *Ultimate Edition
 		
-		
-		Jabka
+	
+		Nikita Sidorov ("Jabka")
+		Andre Pari("ADMClef")
+		Dawid Mleczko ("Mleczyk75")
+		Yuri Novikov ("BayanForce")
+		slend
+		Samuel ("Ayylien/Soylien")
+		Egor Oleynik ("Chumaya Karkusa")
+		EpicDasherFR
+
+*Remastered
+
+
+		Hunter Pollock ("hunterp")
+		Jonathan G. ("JonyTron")
+		Mia Ozerai
+		Jan UrbaÅ„czyk ("queeuq")
 
 *Some Materials Taken From:
 

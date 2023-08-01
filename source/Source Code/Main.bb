@@ -171,7 +171,7 @@ Global GameSaved%
 
 Global CanSave% = True
 
-AppTitle "SCP: Containment Breach Remastered"
+AppTitle "SCP: Containment Breach Remastered " + scpModding_Version()
 
 PlayStartupVideos()
 
@@ -179,28 +179,28 @@ PlayStartupVideos()
 
 ;[Block]
 
-Global CursorIMG% = LoadImage_Strict(GFXPath$+"cursor.png")
+Global CursorIMG% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"cursor.png"))
 
 Global SelectedLoadingScreen.LoadingScreens, LoadingScreenAmount%, LoadingScreenText%
-Global LoadingBack% = LoadImage_Strict("Loadingscreens\loadingback.png")
-InitLoadingScreens("Loadingscreens\loadingscreens.ini")
+Global LoadingBack% = LoadImage_Strict(scpModding_ProcessFilePath$("Loadingscreens\loadingback.png"))
+InitLoadingScreens(scpModding_ProcessFilePath$("Loadingscreens\loadingscreens.ini"))
 
 InitAAFont()
 ;For some reason, Blitz3D doesn't load fonts that have filenames that
 ;don't match their "internal name" (i.e. their display name in applications
 ;like Word and such). As a workaround, I moved the files and renamed them so they
 ;can load without FastText.
-fo\Font[0] = AALoadFont(FontPath$+"font\cour\Courier New.ttf", Int(19 * (GraphicHeight / 1024.0)), 0,0,0)
-fo\Font[1] = AALoadFont(FontPath$+"courbd\Courier New.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
-fo\Font[2] = AALoadFont(FontPath$+"DS-DIGI\DS-Digital.ttf", Int(22 * (GraphicHeight / 1024.0)), 0,0,0)
-fo\Font[3] = AALoadFont(FontPath$+"DS-DIGI\DS-Digital.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0) ;60
-fo\Font[4] = AALoadFont(FontPath$+"Journal\Journal.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
+fo\Font[0] = AALoadFont("GFX\font\cour\Courier New.ttf", Int(19 * (GraphicHeight / 1024.0)), 0,0,0)
+fo\Font[1] = AALoadFont("GFX\font\courbd\Courier New.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
+fo\Font[2] = AALoadFont("GFX\font\DS-DIGI\DS-Digital.ttf", Int(22 * (GraphicHeight / 1024.0)), 0,0,0)
+fo\Font[3] = AALoadFont("GFX\font\DS-DIGI\DS-Digital.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0) ;60
+fo\Font[4] = AALoadFont("GFX\font\Journal\Journal.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
 
 fo\ConsoleFont% = AALoadFont("Blitz", Int(20 * (GraphicHeight / 1024.0)), 0,0,0,1)
 
 AASetFont fo\Font[1]
 
-Global BlinkMeterIMG% = LoadImage_Strict(GFXPath$+"blinkmeter.png")
+Global BlinkMeterIMG% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"blinkmeter.png"))
 
 DrawLoading(0, True)
 
@@ -214,6 +214,8 @@ Global mouselook_y_inc# = 0.3 ; This sets both the sensitivity and direction (+/
 Global mouse_left_limit% = 250, mouse_right_limit% = GraphicsWidth () - 250
 Global mouse_top_limit% = 150, mouse_bottom_limit% = GraphicsHeight () - 150 ; As above.
 Global mouse_x_speed_1#, mouse_y_speed_1#
+Global mouse_smooth% = GetINIInt(OptionFile, "options", "mouse smoothing", True)
+Global mouse_x_leverTurn# = 0 : Global mouse_y_leverTurn# = 0
 
 Global Mesh_MinX#, Mesh_MinY#, Mesh_MinZ#
 Global Mesh_MaxX#, Mesh_MaxY#, Mesh_MaxZ#
@@ -378,8 +380,6 @@ Function CreateConsoleMsg(txt$,r%=-1,g%=-1,b%=-1,isCommand%=False)
 	c\txt = txt
 	c\isCommand = isCommand
 	
-	scpSDK_SendConsoleMsg(txt)
-	
 	c\r = r
 	c\g = g
 	c\b = b
@@ -388,1501 +388,6 @@ Function CreateConsoleMsg(txt$,r%=-1,g%=-1,b%=-1,isCommand%=False)
 	If (c\g<0) Then c\g = ConsoleG
 	If (c\b<0) Then c\b = ConsoleB
 End Function
-
-Function UpdateDevConsole()
-	Local ConsoleInput$ = scpSDK_GetCommand()
-	If ConsoleInput <> "" Then
-			ConsoleReissue = Null
-			ConsoleScroll = 0
-			CreateConsoleMsg(ConsoleInput,255,255,0,True)
-			If Instr(ConsoleInput, " ") > 0 Then
-				StrTemp$ = Lower(Left(ConsoleInput, Instr(ConsoleInput, " ") - 1))
-			Else
-				StrTemp$ = Lower(ConsoleInput)
-			EndIf
-			
-			Select Lower(StrTemp)
-				Case "help"
-					;[Block]
-					If Instr(ConsoleInput, " ")<>0 Then
-						StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					Else
-						StrTemp$ = ""
-					EndIf
-					ConsoleR = 0 : ConsoleG = 255 : ConsoleB = 255
-					
-					Select Lower(StrTemp)
-						Case "1",""
-							CreateConsoleMsg("LIST OF COMMANDS - PAGE 1/3")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("- asd")
-							CreateConsoleMsg("- status")
-							CreateConsoleMsg("- camerapick")
-							CreateConsoleMsg("- ending")
-							CreateConsoleMsg("- noclipspeed")
-							CreateConsoleMsg("- noclip")
-							CreateConsoleMsg("- injure [value]")
-							CreateConsoleMsg("- infect [value]")
-							CreateConsoleMsg("- heal")
-							CreateConsoleMsg("- teleport [room name]")
-							CreateConsoleMsg("- rooms")
-							CreateConsoleMsg("- npcs")
-							CreateConsoleMsg("- spawnitem [item name]")
-							CreateConsoleMsg("- wireframe")
-							CreateConsoleMsg("- 173speed")
-							CreateConsoleMsg("- 106speed")
-							CreateConsoleMsg("- 173state")
-							CreateConsoleMsg("- 106state")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Use "+Chr(34)+"help 2/3"+Chr(34)+" to find more commands.")
-							CreateConsoleMsg("Use "+Chr(34)+"help [command name]"+Chr(34)+" to get more information about a command.")
-							CreateConsoleMsg("******************************")
-						Case "2"
-							CreateConsoleMsg("LIST OF COMMANDS - PAGE 2/3")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("- spawn [npc type] [state]")
-							CreateConsoleMsg("- reset096")
-							CreateConsoleMsg("- disable173")
-							CreateConsoleMsg("- enable173")
-							CreateConsoleMsg("- disable106")
-							CreateConsoleMsg("- enable106")
-							CreateConsoleMsg("- halloween")
-							CreateConsoleMsg("- sanic")
-							CreateConsoleMsg("- scp-420-j")
-							CreateConsoleMsg("- godmode")
-							CreateConsoleMsg("- revive")
-							CreateConsoleMsg("- showfps")
-							CreateConsoleMsg("- 096state")
-							CreateConsoleMsg("- debughud")
-							CreateConsoleMsg("- camerafog [near] [far]")
-							CreateConsoleMsg("- gamma [value]")
-							CreateConsoleMsg("- infinitestamina")
-							CreateConsoleMsg("- playmusic [clip + .wav/.ogg]")
-							CreateConsoleMsg("- notarget")
-							CreateConsoleMsg("- unlockexits")
-							CreateConsoleMsg("- disablenuke")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Use "+Chr(34)+"help [command name]"+Chr(34)+" to get more information about a command.")
-							CreateConsoleMsg("******************************")
-							
-						;{~--<MOD>--~}
-						
-						Case "3"
-						    CreateConsoleMsg("LIST OF COMMANDS - PAGE 3/3")
-						    CreateConsoleMsg("******************************")
-						    CreateConsoleMsg("MODS COMMANDS")
-						    CreateConsoleMsg("******************************")
-						    CreateConsoleMsg("- newyear") 
-						    CreateConsoleMsg("- cheats") 
-						    CreateConsoleMsg("- fov [value]") 
-						    CreateConsoleMsg("- reset372") 
-							CreateConsoleMsg("- reset650") 
-							CreateConsoleMsg("- reset1033ru") 
-							CreateConsoleMsg("- money") 
-							CreateConsoleMsg("- crystal [value]") 
-							CreateConsoleMsg("- unlockachievements") 
-							CreateConsoleMsg("- disable049") 
-							CreateConsoleMsg("- enable049") 
-							CreateConsoleMsg("- enablecontrol") 
-							CreateConsoleMsg("- disablecontrol") 
-							CreateConsoleMsg("- unlockcheckpoints") 
-							CreateConsoleMsg("- disable966") 
-							CreateConsoleMsg("- enable966") 
-							CreateConsoleMsg("- noblinking")
-						    CreateConsoleMsg("******************************")
-						
-						;{~--<END>--~}
-						
-						Case "asd"
-							CreateConsoleMsg("HELP - asd")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Actives godmode, noclip, wireframe and")
-							CreateConsoleMsg("sets fog distance to 20 near, 30 far")
-							CreateConsoleMsg("******************************")
-						Case "rooms"
-							CreateConsoleMsg("HELP - rooms")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Sends a list of all room IDs")
-							CreateConsoleMsg("******************************")
-						Case "npcs"
-							CreateConsoleMsg("HELP - npcs")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Sends a list of all npc IDs")
-							CreateConsoleMsg("******************************")
-						Case "camerafog"
-							CreateConsoleMsg("HELP - camerafog")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Sets the draw distance of the fog.")
-							CreateConsoleMsg("The fog begins generating at 'CameraFogNear' units")
-							CreateConsoleMsg("away from the camera and becomes completely opaque")
-							CreateConsoleMsg("at 'CameraFogFar' units away from the camera.")
-							CreateConsoleMsg("Example: camerafog 20 40")
-							CreateConsoleMsg("******************************")
-						Case "gamma"
-							CreateConsoleMsg("HELP - gamma")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Sets the gamma correction.")
-							CreateConsoleMsg("Should be set to a value between 0.0 and 2.0.")
-							CreateConsoleMsg("Default is 1.0.")
-							CreateConsoleMsg("******************************")
-						Case "noclip","fly"
-							CreateConsoleMsg("HELP - noclip")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Toggles noclip, unless a valid parameter")
-							CreateConsoleMsg("is specified (on/off).")
-							CreateConsoleMsg("Allows the camera to move in any direction while")
-							CreateConsoleMsg("bypassing collision.")
-							CreateConsoleMsg("******************************")
-						Case "godmode","god"
-							CreateConsoleMsg("HELP - godmode")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Toggles godmode, unless a valid parameter")
-							CreateConsoleMsg("is specified (on/off).")
-							CreateConsoleMsg("Prevents player death under normal circumstances.")
-							CreateConsoleMsg("******************************")
-						Case "wireframe"
-							CreateConsoleMsg("HELP - wireframe")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Toggles wireframe, unless a valid parameter")
-							CreateConsoleMsg("is specified (on/off).")
-							CreateConsoleMsg("Allows only the edges of geometry to be rendered,")
-							CreateConsoleMsg("making everything else transparent.")
-							CreateConsoleMsg("******************************")
-						Case "spawnitem"
-							CreateConsoleMsg("HELP - spawnitem")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Spawns an item at the player's location.")
-							CreateConsoleMsg("Any name that can appear in your inventory")
-							CreateConsoleMsg("is a valid parameter.")
-							CreateConsoleMsg("Example: spawnitem Key Card Omni")
-							CreateConsoleMsg("******************************")
-						Case "spawn"
-							CreateConsoleMsg("HELP - spawn")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Spawns an NPC at the player's location.")
-							CreateConsoleMsg("Valid parameters are:")
-							CreateConsoleMsg("008zombie / 049 / 049-2 / 066 / 096 / 106 / 173")
-							CreateConsoleMsg("/ 178-1 / 372 / 513-1 / 966 / 1499-1 / class-d")
-							CreateConsoleMsg("/ guard / mtf / apache / tentacle / 939 / 008-2")
-							CreateConsoleMsg("/ 049-3 / 650 / ci / mtf2 / 0081 / 457 / vehicle")
-							CreateConsoleMsg("******************************")
-						Case "revive","undead","resurrect"
-							CreateConsoleMsg("HELP - revive")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Resets the player's death timer after the dying")
-							CreateConsoleMsg("animation triggers.")
-							CreateConsoleMsg("Does not affect injury, blood loss,")
-							CreateConsoleMsg("008 infection values")
-							CreateConsoleMsg("or 409 crystalization values and others.")
-							CreateConsoleMsg("******************************")
-						Case "teleport"
-							CreateConsoleMsg("HELP - teleport")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Teleports the player to the first instance")
-							CreateConsoleMsg("of the specified room. Any room that appears")
-							CreateConsoleMsg("in rooms.ini is a valid parameter.")
-							CreateConsoleMsg("******************************")
-						Case "stopsound", "stfu"
-							CreateConsoleMsg("HELP - stopsound")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Stops all currently playing sounds.")
-							CreateConsoleMsg("Also skips the intro scene (after breach)")
-							CreateConsoleMsg("******************************")
-						Case "camerapick"
-							CreateConsoleMsg("HELP - camerapick")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Prints the texture name and coordinates of")
-							CreateConsoleMsg("the model the camera is pointing at.")
-							CreateConsoleMsg("******************************")
-						Case "status"
-							CreateConsoleMsg("HELP - status")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Prints player, camera, and others.")
-							CreateConsoleMsg("******************************")
-						Case "weed","scp-420-j","420j"
-							CreateConsoleMsg("HELP - 420j")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Generates dank memes.")
-							CreateConsoleMsg("******************************")
-						Case "playmusic"
-							CreateConsoleMsg("HELP - playmusic")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Will play tracks in .ogg/.wav format")
-							CreateConsoleMsg("from "+Chr(34)+MusicPath+"Custom\"+Chr(34)+".")
-							CreateConsoleMsg("******************************")
-						Case "disable106"
-						   	CreateConsoleMsg("HELP - disable106")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Removes SCP-106 from the map.")
-							CreateConsoleMsg("******************************")	
-						Case "enable106"
-						   	CreateConsoleMsg("HELP - enable106")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Returns SCP-106 to the map.")
-							CreateConsoleMsg("******************************")
-						Case "disable173"
-						   	CreateConsoleMsg("HELP - disable173")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Removes SCP-173 from the map.")
-							CreateConsoleMsg("******************************")	
-						Case "enable173"
-						   	CreateConsoleMsg("HELP - enable173")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Returns SCP-173 to the map.")
-							CreateConsoleMsg("******************************")
-						Case "reset096" 
-						    CreateConsoleMsg("HELP - reset096")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Returns SCP-096 to idle state.")
-							CreateConsoleMsg("******************************")
-							
-						;{~--<MOD>--~}
-						
-						Case "newyear" 
-						    CreateConsoleMsg("HELP - newyear")
-							CreateConsoleMsg("******************************")
-                            CreateConsoleMsg("Makes SCP-173 a cookie.")
-                            CreateConsoleMsg("******************************")
-                        Case "cheats" 
-							CreateConsoleMsg("HELP - cheats")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Actives godmode, noclip, notarget")
-							CreateConsoleMsg("and infinitestamina.")
-							CreateConsoleMsg("Is specified (on/off).")
-							CreateConsoleMsg("******************************")
-						 Case "fov" 
-							CreateConsoleMsg("HELP - fov")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Field of view (FOV) is the amount of game view")
-							CreateConsoleMsg("that is on display during a game.")
-							CreateConsoleMsg("******************************")
-						Case "reset372" 
-						    CreateConsoleMsg("HELP - reset372")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Returns SCP-372 to inactive state.")
-							CreateConsoleMsg("******************************")
-						Case "reset650" 
-						    CreateConsoleMsg("HELP - reset650")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Returns SCP-650 to inactive state.")
-							CreateConsoleMsg("******************************")
-						Case "money" 
-							CreateConsoleMsg("HELP - money")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Generates a lot of money.")
-							CreateConsoleMsg("******************************")
-						Case "crystal" 
-							CreateConsoleMsg("HELP - crystal")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("SCP-409 crystallizes player.")
-							CreateConsoleMsg("Example: crystal 52")
-							CreateConsoleMsg("******************************")
-						Case "reset1033ru"
-						    CreateConsoleMsg("HELP - reset1033ru")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Reset states of SCP-1033-RU.")
-							CreateConsoleMsg("******************************")
-						Case "enablecontrol" 
-							CreateConsoleMsg("HELP - enablecontrol")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Remote door control on.")
-							CreateConsoleMsg("******************************")
-						Case "disablecontrol" 
-							CreateConsoleMsg("HELP - disablecontrol")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Remote door control off.")
-							CreateConsoleMsg("******************************")
-						Case "unlockcheckpoints" 
-							CreateConsoleMsg("HELP - unlockcheckpoints")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Unlocks all checkpoints.")
-							CreateConsoleMsg("******************************")	
-						Case "disable049"
-						   	CreateConsoleMsg("HELP - disable049")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Removes SCP-049 from the map.")
-							CreateConsoleMsg("******************************")	
-						Case "enable049"
-						   	CreateConsoleMsg("HELP - enable049")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Returns SCP-049 to the map.")
-							CreateConsoleMsg("******************************")
-						Case "disable966"
-						   	CreateConsoleMsg("HELP - disable966")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Removes SCP-966 from the map.")
-							CreateConsoleMsg("******************************")	
-						Case "enable966"
-						   	CreateConsoleMsg("HELP - enable966")
-							CreateConsoleMsg("******************************")
-							CreateConsoleMsg("Returns SCP-966 to the map.")
-							CreateConsoleMsg("******************************")
-							
-                        ;{~--<END>--~}	
-
-						Default
-							CreateConsoleMsg("There is no help available for that command.",255,150,0)
-					End Select
-					
-					;[End Block]
-				Case "asd"
-					;[Block]
-					WireFrame 1
-					WireframeState=1
-					chs\GodMode = 1
-					chs\NoClip = 1
-					CameraFogNear = 15
-					CameraFogFar = 20
-					;[End Block]
-				Case "status"
-					;[Block]
-					ConsoleR = 0 : ConsoleG = 255 : ConsoleB = 0
-					CreateConsoleMsg("*******************************")
-					CreateConsoleMsg("Status: ")
-					CreateConsoleMsg("Coordinates: ")
-					CreateConsoleMsg("    - collider: "+EntityX(Collider)+", "+EntityY(Collider)+", "+EntityZ(Collider))
-					CreateConsoleMsg("    - camera: "+EntityX(Camera)+", "+EntityY(Camera)+", "+EntityZ(Camera))
-					
-					CreateConsoleMsg("Rotation: ")
-					CreateConsoleMsg("    - collider: "+EntityPitch(Collider)+", "+EntityYaw(Collider)+", "+EntityRoll(Collider))
-					CreateConsoleMsg("    - camera: "+EntityPitch(Camera)+", "+EntityYaw(Camera)+", "+EntityRoll(Camera))
-					
-					CreateConsoleMsg("Room: "+PlayerRoom\RoomTemplate\Name)
-					For ev.Events = Each Events
-						If ev\room = PlayerRoom Then
-							CreateConsoleMsg("Room event: "+ev\EventName)	
-							CreateConsoleMsg("-    state: "+ev\EventState)
-							CreateConsoleMsg("-    state2: "+ev\EventState2)	
-							CreateConsoleMsg("-    state3: "+ev\EventState3)
-							CreateConsoleMsg("-    state4: "+ev\EventState4)
-							Exit
-						EndIf
-					Next
-					
-					CreateConsoleMsg("Room coordinates: "+Floor(EntityX(PlayerRoom\obj) / 8.0 + 0.5)+", "+ Floor(EntityZ(PlayerRoom\obj) / 8.0 + 0.5))
-					CreateConsoleMsg("Stamina: "+Stamina)
-					CreateConsoleMsg("Death timer: "+KillTimer)					
-					CreateConsoleMsg("Blinktimer: "+BlinkTimer)
-					CreateConsoleMsg("Injuries: "+Injuries)
-					CreateConsoleMsg("Blood Loss: "+Bloodloss)
-					CreateConsoleMsg("Vomit Timer: "+VomitTimer)
-					CreateConsoleMsg("Blur Timer: "+BlurTimer)
-					CreateConsoleMsg("Light Blink: "+LightBlink)
-					CreateConsoleMsg("Light Flash: "+LightFlash)
-					CreateConsoleMsg("Sanity: "+Sanity)
-					CreateConsoleMsg("Blink Effect Timer: "+BlinkEffectTimer)
-					CreateConsoleMsg("Stamina Effect Timer: "+StaminaEffectTimer)
-					CreateConsoleMsg("MTF Timer: "+MTFTimer)
-					CreateConsoleMsg("SCP-008 Infection: "+I_008\Timer)
-					CreateConsoleMsg("SCP-427 State (secs): "+Int(I_427\Timer/70.0))
-					For i = 0 To 5
-                        CreateConsoleMsg("SCP-1025 State "+i+": "+SCP1025state[i])
-                    Next
-
-					;{~--<MOD>--~}
-					
-					CreateConsoleMsg("********** MOD STATS **********")
-					CreateConsoleMsg("BubbleFoam: "+I_1079\Foam)
-					CreateConsoleMsg("BubbleTrigger: "+I_1079\Trigger)
-					CreateConsoleMsg("MTF2 Timer: "+MTF2Timer)
-					CreateConsoleMsg("SCP-409 Crystallization: "+I_409\Timer)
-					CreateConsoleMsg("SCP-215 Idle State: "+I_215\IdleTimer)
-					CreateConsoleMsg("SCP-215 State: "+I_215\Timer)
-					CreateConsoleMsg("SCP-207 State: "+I_207\Timer)
-					CreateConsoleMsg("SCP-402 State: "+I_402\Timer)
-					CreateConsoleMsg("SCP-357 State: "+I_357\Timer)
-					If I_1033RU\Using = 1
-					    CreateConsoleMsg("HP of SCP-1033-RU: "+I_1033RU\HP+"/100")
-					    CreateConsoleMsg("Lost HP of SCP-1033-RU: "+I_1033RU\DHP+"/100")
-			        ElseIf I_1033RU\Using = 2
-			            CreateConsoleMsg("HP of SCP-1033-RU: "+I_1033RU\HP+"/200")
-					    CreateConsoleMsg("Lost HP of SCP-1033-RU: "+I_1033RU\DHP+"/200")
-			        Else
-			            ;nothing
-                    EndIf
-   					CreateConsoleMsg("*******************************")
-					;[End Block]
-				Case "camerapick"
-					;[Block]
-					ConsoleR = 0 : ConsoleG = 255 : ConsoleB = 0
-					c = CameraPick(Camera,GraphicWidth/2, GraphicHeight/2)
-					If c = 0 Then
-						CreateConsoleMsg("******************************")
-						CreateConsoleMsg("No entity  picked")
-						CreateConsoleMsg("******************************")								
-					Else
-						CreateConsoleMsg("******************************")
-						CreateConsoleMsg("Picked entity:")
-						sf = GetSurface(c,1)
-						b = GetSurfaceBrush( sf )
-						t = GetBrushTexture(b,0)
-						texname$ =  StripPath(TextureName(t))
-						CreateConsoleMsg("Texture name: "+texname)
-						CreateConsoleMsg("Coordinates: "+EntityX(c)+", "+EntityY(c)+", "+EntityZ(c))
-						CreateConsoleMsg("******************************")							
-					EndIf
-					;[End Block]
-				Case "hidedistance"
-					;[Block]
-					HideDistance = Float(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					CreateConsoleMsg("Hidedistance set to "+HideDistance)
-					;[End Block]
-				Case "ending"
-					;[Block]
-					I_END\SelectedEnding = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					KillTimer = -0.1
-					;I_END\Timer = -0.1
-					;[End Block]
-				Case "noclipspeed"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					NoClipSpeed = Float(StrTemp)
-					;[End Block]
-				Case "injure"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Injuries = Float(StrTemp)
-					;[End Block]
-				Case "infect"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					I_008\Timer = Float(StrTemp)
-					;[End Block]
-				Case "heal"
-					;[Block]
-					Injuries = 0
-					Bloodloss = 0
-					
-					I_008\Timer = 0
-					LightFlash = 0
-					LightBlink = 0
-					Stamina = 100
-					BlurTimer = 0
-					I_427\Timer = 0
-					I_409\Timer = 0
-					I_1079\Foam = 0
-	                I_1079\Trigger = 0
-	                I_207\Timer = 0
-	                I_402\Timer = 0
-	                I_357\Timer = 0
-	                I_215\Timer = 0
-	                I_215\IdleTimer = 0
-	                GasMaskBlurTimer = 0
-	                I_447\UsingEyeDropsTimer = -1.0
-	                I_447\UsingFirstAidTimer = -1.0
-	
-	                If StaminaEffect > 1.0 Then
-	                    StaminaEffect = 1.0
-	                    StaminaEffectTimer = 0.0
-	                EndIf
-					
-					If BlinkEffect > 1.0 Then
-	                    BlinkEffect = 1.0
-	                    BlinkEffectTimer = 0.0
-	                EndIf
-
-					For e.Events = Each Events
-						If e\EventName = "room009" Then e\EventState = 0.0 : e\EventState3 = 0.0
-					Next
-					
-					For i = 0 To 5
-						SCP1025state[i]=0
-					Next
-
-					;[End Block]
-				Case "teleport"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "895", "scp-895"
-							StrTemp = "room895"
-						Case "scp-914"
-							StrTemp = "room914"
-						Case "offices", "office"
-							StrTemp = "room2offices"
-					End Select
-					
-					For r.Rooms = Each Rooms
-						If r\RoomTemplate\Name = StrTemp Then
-							;PositionEntity (Collider, EntityX(r\obj), 0.7, EntityZ(r\obj))
-							PositionEntity (Collider, EntityX(r\obj), EntityY(r\obj)+0.7, EntityZ(r\obj))
-							ResetEntity(Collider)
-							UpdateDoors()
-							UpdateRooms()
-							For it.Items = Each Items
-								it\disttimer = 0
-							Next
-							PlayerRoom = r
-							Exit
-						EndIf
-					Next
-					
-					If PlayerRoom\RoomTemplate\Name <> StrTemp Then CreateConsoleMsg("Room not found.",255,150,0)
-					;[End Block]
-				Case "rooms"
-					CreateConsoleMsg("ROOMS LIST")
-					CreateConsoleMsg("*************")
-					CreateConsoleMsg("dimension1499")
-					CreateConsoleMsg("pocketdimension")
-					CreateConsoleMsg("room173intro")
-					CreateConsoleMsg("endroom")
-					CreateConsoleMsg("room1archive")
-					CreateConsoleMsg("room005")
-					CreateConsoleMsg("room173")
-					CreateConsoleMsg("room205")
-					CreateConsoleMsg("room372")
-					CreateConsoleMsg("room914")
-					CreateConsoleMsg("medibay2")
-					CreateConsoleMsg("room2closets")
-					CreateConsoleMsg("room2")
-					CreateConsoleMsg("room2_2")
-					CreateConsoleMsg("room2_3")
-					CreateConsoleMsg("room2_4")
-					CreateConsoleMsg("room2_5")
-					CreateConsoleMsg("room2doors")
-					CreateConsoleMsg("room2elevator")
-					CreateConsoleMsg("room2gw")
-					CreateConsoleMsg("room2gw_b")
-					CreateConsoleMsg("room2posters")
-					CreateConsoleMsg("room2scps")
-					CreateConsoleMsg("room2scps2")
-					CreateConsoleMsg("room2scps3")
-					CreateConsoleMsg("room2sl")
-					CreateConsoleMsg("room2storage")
-					CreateConsoleMsg("room2tesla_lcz")
-					CreateConsoleMsg("room2testroom2")
-					CreateConsoleMsg("room012")
-					CreateConsoleMsg("room447")
-					CreateConsoleMsg("room1123")
-					CreateConsoleMsg("lockroom")
-					CreateConsoleMsg("lockroom3")
-					CreateConsoleMsg("room2C")
-					CreateConsoleMsg("room2C2")
-					CreateConsoleMsg("room066")
-					CreateConsoleMsg("room1162")
-					CreateConsoleMsg("room3")
-					CreateConsoleMsg("room3_2")
-					CreateConsoleMsg("room3_3")
-					CreateConsoleMsg("room3scps")
-					CreateConsoleMsg("room3storage")
-					CreateConsoleMsg("room4")
-					CreateConsoleMsg("room4_2")
-					CreateConsoleMsg("room4info")
-					CreateConsoleMsg("checkpoint1")
-					CreateConsoleMsg("endroom2")
-					CreateConsoleMsg("room035")
-					CreateConsoleMsg("room079")
-					CreateConsoleMsg("room096")
-					CreateConsoleMsg("room106")
-					CreateConsoleMsg("room895")
-					CreateConsoleMsg("tunnel")
-					CreateConsoleMsg("tunnel2")
-					CreateConsoleMsg("room2catwalk")
-					CreateConsoleMsg("room2nuke")
-					CreateConsoleMsg("room2pipes")
-					CreateConsoleMsg("room2pipes2")
-					CreateConsoleMsg("room2pit")
-					CreateConsoleMsg("room2servers")
-					CreateConsoleMsg("room2shaft")
-					CreateConsoleMsg("room2tesla_hcz")
-					CreateConsoleMsg("room2testroom")
-					CreateConsoleMsg("room2tunnel")
-					CreateConsoleMsg("room008")
-					CreateConsoleMsg("room049")
-					CreateConsoleMsg("room409")
-					CreateConsoleMsg("room457")
-					CreateConsoleMsg("room2Cpit")
-					CreateConsoleMsg("room2Ctunnel")
-					CreateConsoleMsg("room650")
-					CreateConsoleMsg("room3pit")
-					CreateConsoleMsg("room3tunnel")
-					CreateConsoleMsg("room3z2")
-					CreateConsoleMsg("room009")
-					CreateConsoleMsg("room513")
-					CreateConsoleMsg("room966")
-					CreateConsoleMsg("room4pit")
-					CreateConsoleMsg("room4tunnels")
-					CreateConsoleMsg("checkpoint2")
-					CreateConsoleMsg("endroom3")
-					CreateConsoleMsg("gatea")
-					CreateConsoleMsg("gateaentrance")
-					CreateConsoleMsg("gateb")
-					CreateConsoleMsg("room1office")
-					CreateConsoleMsg("room1lifts")
-					CreateConsoleMsg("medibay")
-					CreateConsoleMsg("room2bio")
-					CreateConsoleMsg("room2cafeteria")
-					CreateConsoleMsg("room2offices")
-					CreateConsoleMsg("room2offices2")
-					CreateConsoleMsg("room2offices3")
-					CreateConsoleMsg("room2offices4")
-					CreateConsoleMsg("room2offices5")
-					CreateConsoleMsg("room2poffices")
-					CreateConsoleMsg("room2poffices2")
-					CreateConsoleMsg("room2servers2")
-					CreateConsoleMsg("room2sroom")
-					CreateConsoleMsg("room2tesla")
-					CreateConsoleMsg("room2toilets")
-					CreateConsoleMsg("room2z3")
-					CreateConsoleMsg("room2z3_2")
-					CreateConsoleMsg("room860")
-					CreateConsoleMsg("lockroom2")
-					CreateConsoleMsg("room2Ccont")
-					CreateConsoleMsg("room2Coffices")
-					CreateConsoleMsg("room2Cz3")
-					CreateConsoleMsg("room3servers")
-					CreateConsoleMsg("room3servers2")
-					CreateConsoleMsg("room3offices")
-					CreateConsoleMsg("room3offices2")
-					CreateConsoleMsg("room3z3")
-					CreateConsoleMsg("room4z3")
-				Case "npcs"
-					CreateConsoleMsg("NPCS LIST")
-					CreateConsoleMsg("*************")
-					CreateConsoleMsg("SCP-173")
-					CreateConsoleMsg("SCP-106")
-					CreateConsoleMsg("SCP-096")
-					CreateConsoleMsg("SCP-049")
-					CreateConsoleMsg("SCP-049-2")
-					CreateConsoleMsg("Guard")
-					CreateConsoleMsg("MTF")
-					CreateConsoleMsg("SCP-860-2")
-					CreateConsoleMsg("SCP-939")
-					CreateConsoleMsg("SCP-066")
-					CreateConsoleMsg("SCP-966")
-					CreateConsoleMsg("SCP-1499-1")
-					CreateConsoleMsg("SCP-650")
-					CreateConsoleMsg("SCP-457")
-					CreateConsoleMsg("MTF2")
-					CreateConsoleMsg("SCP-008-2")
-					CreateConsoleMsg("SCP-049-3")
-				Case "spawnitem"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					temp = False 
-					For itt.Itemtemplates = Each ItemTemplates
-						If (Lower(itt\name) = StrTemp) Then
-							temp = True
-							CreateConsoleMsg(itt\name + " spawned.")
-							it.Items = CreateItem(itt\name, itt\tempname, EntityX(Collider), EntityY(Camera,True), EntityZ(Collider))
-							EntityType(it\collider, HIT_ITEM)
-							Exit
-						Else If (Lower(itt\tempname) = StrTemp) Then
-							temp = True
-							CreateConsoleMsg(itt\name + " spawned.")
-							it.Items = CreateItem(itt\name, itt\tempname, EntityX(Collider), EntityY(Camera,True), EntityZ(Collider))
-							EntityType(it\collider, HIT_ITEM)
-							Exit
-						End If
-					Next
-					
-					If temp = False Then CreateConsoleMsg("Item not found.",255,150,0)
-					;[End Block]
-				Case "wireframe"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "on", "1", "true"
-							WireframeState = True							
-						Case "off", "0", "false"
-							WireframeState = False
-						Default
-							WireframeState = Not WireframeState
-					End Select
-					
-					If WireframeState Then
-						CreateConsoleMsg("WIREFRAME ON")
-					Else
-						CreateConsoleMsg("WIREFRAME OFF")	
-					EndIf
-					
-					WireFrame WireframeState
-					;[End Block]
-				Case "173speed"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					Curr173\Speed = Float(StrTemp)
-					CreateConsoleMsg("173's speed set to " + StrTemp)
-					;[End Block]
-				Case "106speed"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					Curr106\Speed = Float(StrTemp)
-					CreateConsoleMsg("106's speed set to " + StrTemp)
-					;[End Block]
-				Case "173state"
-					;[Block]
-					CreateConsoleMsg("SCP-173")
-					CreateConsoleMsg("Position: " + EntityX(Curr173\obj) + ", " + EntityY(Curr173\obj) + ", " + EntityZ(Curr173\obj))
-					CreateConsoleMsg("Idle: " + Curr173\Idle)
-					CreateConsoleMsg("State: " + Curr173\State)
-					;[End Block]
-				Case "106state"
-					;[Block]
-					CreateConsoleMsg("SCP-106")
-					CreateConsoleMsg("Position: " + EntityX(Curr106\obj) + ", " + EntityY(Curr106\obj) + ", " + EntityZ(Curr106\obj))
-					CreateConsoleMsg("Idle: " + Curr106\Idle)
-					CreateConsoleMsg("State: " + Curr106\State)
-					;[End Block]
-				Case "reset096"
-					;[Block]
-					For n.NPCs = Each NPCs
-						If n\NPCtype = NPCtype096 Then
-							n\State = 0
-							StopStream_Strict(n\SoundChn) : n\SoundChn=0
-							If n\SoundChn2<>0
-								StopStream_Strict(n\SoundChn2) : n\SoundChn2=0
-							EndIf
-							Exit
-						EndIf
-					Next
-					;[End Block]
-				Case "disable173"
-					;[Block]
-					Curr173\Idle = 3 ;This phenominal comment is brought to you by PolyFox. His absolute wisdom in this fatigue of knowledge brought about a new era of 173 state checks.
-					HideEntity Curr173\obj
-					HideEntity Curr173\Collider
-					;[End Block]
-				Case "enable173"
-					;[Block]
-					Curr173\Idle = False
-					ShowEntity Curr173\obj
-					ShowEntity Curr173\Collider
-					;[End Block]
-				Case "disable106"
-					;[Block]
-					Curr106\Idle = True
-					Curr106\State = 200000
-					Contained106 = True
-					;[End Block]
-				Case "enable106"
-					;[Block]
-					Curr106\Idle = False
-					Contained106 = False
-					ShowEntity Curr106\Collider
-					ShowEntity Curr106\obj
-					;[End Block]
-				Case "halloween"
-					;[Block]
-					at\OtherTextureID[0] = Not at\OtherTextureID[0]
-					If at\OtherTextureID[0] Then
-						Local tex = LoadTexture_Strict(NPCsPath$+"scp_173_h.pt", 1)
-						EntityTexture Curr173\obj, tex, 0, 0
-						FreeTexture tex
-						CreateConsoleMsg("173 JACK-O-LANTERN ON")
-					Else
-						Local tex2 = LoadTexture_Strict(NPCsPath$+"scp_173.png", 1)
-						EntityTexture Curr173\obj, tex2, 0, 0
-						FreeTexture tex2
-						CreateConsoleMsg("173 JACK-O-LANTERN OFF")
-					EndIf
-					;[End Block]
-				Case "sanic"
-					;[Block]
-					SuperMan = Not SuperMan
-					If SuperMan = True Then
-						CreateConsoleMsg("GOTTA GO FAST")
-					Else
-						CreateConsoleMsg("WHOA SLOW DOWN")
-					EndIf
-					;[End Block]
-				Case "scp-420-j","420j","weed"
-					;[Block]
-					For i = 1 To 20
-						If Rand(2)=1 Then
-							it.Items = CreateItem("Some SCP-420-J","scp420j", EntityX(Collider,True)+Cos((360.0/20.0)*i)*Rnd(0.3,0.5), EntityY(Camera,True), EntityZ(Collider,True)+Sin((360.0/20.0)*i)*Rnd(0.3,0.5))
-						Else
-							it.Items = CreateItem("Joint","scp420s", EntityX(Collider,True)+Cos((360.0/20.0)*i)*Rnd(0.3,0.5), EntityY(Camera,True), EntityZ(Collider,True)+Sin((360.0/20.0)*i)*Rnd(0.3,0.5))
-						EndIf
-						EntityType (it\collider, HIT_ITEM)
-					Next
-					PlaySound_Strict LoadTempSound(MusicPath +"Using420J.ogg")
-					;[End Block]
-				Case "godmode", "god"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "on", "1", "true"
-							chs\GodMode = True						
-						Case "off", "0", "false"
-							chs\GodMode = False
-						Default
-							chs\GodMode = Not chs\GodMode
-					End Select	
-					If chs\GodMode Then
-						CreateConsoleMsg("GODMODE ON")
-					Else
-						CreateConsoleMsg("GODMODE OFF")	
-					EndIf
-					;[End Block]
-				Case "revive","undead","resurrect"
-					;[Block]
-					DropSpeed = -0.1
-					HeadDropSpeed = 0.0
-					Shake = 0
-					CurrSpeed = 0
-					
-					HeartBeatVolume = 0
-					
-					CameraShake = 0
-					Shake = 0
-					LightFlash = 0
-					BlurTimer = 0
-					I_427\Timer = 0
-					I_008\Timer = 0
-					I_1079\Foam = 0
-	                I_1079\Trigger = 0
-                    Bloodloss = 0
-                    Injuries = 0
-                    I_207\Timer = 0
-                    I_402\Timer = 0
-                    I_357\Timer = 0
-					
-					FallTimer = 0
-					ms\MenuOpen = False
-					
-					chs\GodMode = 0
-					chs\NoClip = 0
-					chs\Cheats = 0
-					
-					ResetEntity Collider
-					PositionEntity Collider, EntityX(Collider, True), EntityY(Collider, True) + 1.3, EntityZ(Collider, True), True
-					ShowEntity Collider
-					HideEntity at\OverlayID[5]
-					HideEntity at\OverlayID[8]
-					
-					KillTimer = 0
-					KillAnim = 0
-					
-					For e.Events = Each Events
-						If e\EventName = "room009" Then e\EventState = 0.0 : e\EventState3 = 0.0
-					Next
-
-					;[End Block]
-				Case "noclip","fly"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "on", "1", "true"
-							chs\NoClip = True
-							Playable = True
-						Case "off", "0", "false"
-							chs\NoClip = False	
-							RotateEntity Collider, 0, EntityYaw(Collider), 0
-						Default
-							chs\NoClip = Not chs\NoClip
-							If chs\NoClip = False Then		
-								RotateEntity Collider, 0, EntityYaw(Collider), 0
-							Else
-								Playable = True
-							EndIf
-					End Select
-					
-					If chs\NoClip Then
-						CreateConsoleMsg("NOCLIP ON")
-					Else
-						CreateConsoleMsg("NOCLIP OFF")
-					EndIf
-					
-					DropSpeed = 0
-					;[End Block]
-				Case "showfps"
-					;[Block]
-					ShowFPS = Not ShowFPS
-					CreateConsoleMsg("ShowFPS: "+Str(ShowFPS))
-					;[End Block]
-				Case "096state"
-					;[Block]
-					For n.NPCs = Each NPCs
-						If n\NPCtype = NPCtype096 Then
-							CreateConsoleMsg("SCP-096")
-							CreateConsoleMsg("Position: " + EntityX(n\obj) + ", " + EntityY(n\obj) + ", " + EntityZ(n\obj))
-							CreateConsoleMsg("Idle: " + n\Idle)
-							CreateConsoleMsg("State: " + n\State)
-							Exit
-						EndIf
-					Next
-					CreateConsoleMsg("SCP-096 has not spawned.")
-					;[End Block]
-				Case "debughud"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					Select StrTemp
-						Case "on", "1", "true"
-							DebugHUD = True
-						Case "off", "0", "false"
-							DebugHUD = False
-						Default
-							DebugHUD = Not DebugHUD
-					End Select
-					
-					If DebugHUD Then
-						CreateConsoleMsg("Debug Mode On")
-					Else
-						CreateConsoleMsg("Debug Mode Off")
-					EndIf
-					;[End Block]
-				Case "stopsound", "stfu"
-					;[Block]
-					For snd.Sound = Each Sound
-						For i = 0 To 31
-							If snd\channels[i]<>0 Then
-								StopChannel snd\channels[i]
-							EndIf
-						Next
-					Next
-					
-					For e.Events = Each Events
-						If e\EventName = "room173" Then 
-							If e\room\NPC[0] <> Null Then RemoveNPC(e\room\NPC[0])
-							If e\room\NPC[1] <> Null Then RemoveNPC(e\room\NPC[1])
-							If e\room\NPC[2] <> Null Then RemoveNPC(e\room\NPC[2])
-							
-							FreeEntity e\room\Objects[0] : e\room\Objects[0]=0
-							FreeEntity e\room\Objects[1] : e\room\Objects[1]=0
-							PositionEntity Curr173\Collider, 0,0,0
-							ResetEntity Curr173\Collider
-							ShowEntity Curr173\obj
-							RemoveEvent(e)
-							Exit
-						EndIf
-					Next
-					CreateConsoleMsg("Stopped all sounds.")
-					;[End Block]
-				Case "camerafog"
-					;[Block]
-					args$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					CameraFogNear = Float(Left(args, Len(args) - Instr(args, " ")))
-					CameraFogFar = Float(Right(args, Len(args) - Instr(args, " ")))
-					CreateConsoleMsg("Near set to: " + CameraFogNear + ", far set to: " + CameraFogFar)
-					;[End Block]
-				Case "gamma"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					ScreenGamma = Int(StrTemp)
-					CreateConsoleMsg("Gamma set to " + ScreenGamma)
-					;[End Block]
-				Case "spawn"
-					;[Block]
-					args$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					StrTemp$ = Piece$(args$, 1)
-					StrTemp2$ = Piece$(args$, 2)
-					
-					;Hacky fix for when the user doesn't input a second parameter.
-					If (StrTemp <> StrTemp2) Then
-						Console_SpawnNPC(StrTemp, StrTemp2)
-					Else
-						Console_SpawnNPC(StrTemp)
-					EndIf
-					;[End Block]
-				Case "infinitestamina","infstam", "is"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "on", "1", "true"
-							chs\InfiniteStamina% = True						
-						Case "off", "0", "false"
-							chs\InfiniteStamina% = False
-						Default
-							chs\InfiniteStamina% = Not chs\InfiniteStamina%
-					End Select
-					
-					If chs\InfiniteStamina
-						CreateConsoleMsg("INFINITE STAMINA ON")
-					Else
-						CreateConsoleMsg("INFINITE STAMINA OFF")	
-					EndIf
-					;[End Block]
-				Case "asd2"
-					;[Block]
-					chs\GodMode = 1
-					chs\InfiniteStamina = 1
-					Curr173\Idle = 3
-					Curr106\Idle = True
-					Curr106\State = 200000
-					Contained106 = True
-					;[End Block]
-				Case "disablenuke"
-					;[Block]
-					For e2.Events = Each Events
-				        If e2\EventName = "room2nuke"
-							e2\EventState = 0
-							UpdateLever(e2\room\Objects[1])
-							UpdateLever(e2\room\Objects[3])
-							RotateEntity e2\room\Objects[1], 0, EntityYaw(e2\room\Objects[1]), 30
-							RotateEntity e2\room\Objects[3], 0, EntityYaw(e2\room\Objects[3]), 30
-							Exit
-						EndIf
-				    Next
-					;[End Block]
-				Case "unlockexits"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "a"
-							For e.Events = Each Events
-								If e\EventName = "gateaentrance" Then
-									e\EventState3 = 1
-									e\room\RoomDoors[1]\open = True
-									Exit
-								EndIf
-							Next
-							CreateConsoleMsg("Gate A is now unlocked.")	
-						Case "b"
-							For e.Events = Each Events
-								If e\EventName = "gateb" Then
-									e\EventState3 = 1
-									e\room\RoomDoors[4]\open = True
-									Exit
-								EndIf
-							Next	
-							CreateConsoleMsg("Gate B is now unlocked.")	
-						Default
-							For e.Events = Each Events
-								If e\EventName = "gateaentrance" Then
-									e\EventState3 = 1
-									e\room\RoomDoors[1]\open = True
-								ElseIf e\EventName = "gateb" Then
-									e\EventState3 = 1
-									e\room\RoomDoors[4]\open = True
-								EndIf
-							Next
-							CreateConsoleMsg("Gate A and B are now unlocked.")	
-					End Select
-					
-					RemoteDoorOn = True
-					;[End Block]
-				Case "kill","suicide"
-					;[Block]
-					KillTimer = -1
-					Select Rand(4)
-						Case 1
-							DeathMSG = "[DATA REDACTED]"
-						Case 2
-							DeathMSG = SubjectName$+" found dead in Sector [DATA REDACTED]. "
-							DeathMSG = DeathMSG + "The subject appears to have attained no physical damage, and there is no visible indication as to what killed him. "
-							DeathMSG = DeathMSG + "Body was sent for autopsy."
-						Case 3
-							DeathMSG = "EXCP_ACCESS_VIOLATION"
-						Case 4
-							DeathMSG = SubjectName$+" found dead in Sector [DATA REDACTED]. "
-							DeathMSG = DeathMSG + "The subject appears to have scribbled the letters "+Chr(34)+"kys"+Chr(34)+" in his own blood beside him. "
-							DeathMSG = DeathMSG + "No other signs of physical trauma or struggle can be observed. Body was sent for autopsy."
-					End Select
-					;[End Block]
-				Case "playmusic"
-					;[Block]
-					; I think this might be broken since the FMod library streaming was added. -Mark
-					If Instr(ConsoleInput, " ")<>0 Then
-						StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					Else
-						StrTemp$ = ""
-					EndIf
-					
-					If StrTemp$ <> ""
-						PlayCustomMusic% = True
-						If CustomMusic <> 0 Then FreeSound_Strict CustomMusic : CustomMusic = 0
-						If MusicCHN <> 0 Then StopChannel MusicCHN
-						CustomMusic = LoadSound_Strict(MusicPath + "Custom\"+StrTemp$)
-						If CustomMusic = 0
-							PlayCustomMusic% = False
-						EndIf
-					Else
-						PlayCustomMusic% = False
-						If CustomMusic <> 0 Then FreeSound_Strict CustomMusic : CustomMusic = 0
-						If MusicCHN <> 0 Then StopChannel MusicCHN
-					EndIf
-					;[End Block]
-				Case "tp"
-					;[Block]
-					For n.NPCs = Each NPCs
-						If n\NPCtype = NPCtypeMTF
-							If n\MTFLeader = Null
-								PositionEntity Collider,EntityX(n\Collider),EntityY(n\Collider)+5,EntityZ(n\Collider)
-								ResetEntity Collider
-								Exit
-							EndIf
-						ElseIf n\NPCtype = NPCtypeMTF2
-							If n\MTF2Leader = Null
-								PositionEntity Collider,EntityX(n\Collider),EntityY(n\Collider)+5,EntityZ(n\Collider)
-								ResetEntity Collider
-								Exit
-							EndIf
-						EndIf
-					Next
-					
-					;[End Block]
-				Case "tele"
-					;[Block]
-					args$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					StrTemp$ = Piece$(args$,1," ")
-					StrTemp2$ = Piece$(args$,2," ")
-					StrTemp3$ = Piece$(args$,3," ")
-					PositionEntity Collider,Float(StrTemp$),Float(StrTemp2$),Float(StrTemp3$)
-					PositionEntity Camera,Float(StrTemp$),Float(StrTemp2$),Float(StrTemp3$)
-					ResetEntity Collider
-					ResetEntity Camera
-					CreateConsoleMsg("Teleported to coordinates (X|Y|Z): "+EntityX(Collider)+"|"+EntityY(Collider)+"|"+EntityZ(Collider))
-					;[End Block]
-				Case "notarget", "nt"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "on", "1", "true"
-							chs\NoTarget = True						
-						Case "off", "0", "false"
-							chs\NoTarget = False	
-						Default
-							chs\NoTarget = Not chs\NoTarget
-					End Select
-					
-					If chs\NoTarget = False Then
-						CreateConsoleMsg("NOTARGET OFF")
-					Else
-						CreateConsoleMsg("NOTARGET ON")	
-					EndIf
-					;[End Block]
-				Case "spawnradio"
-					;[Block]
-					it.Items = CreateItem("Radio Transceiver", "fineradio", EntityX(Collider), EntityY(Camera,True), EntityZ(Collider))
-					EntityType(it\collider, HIT_ITEM)
-					it\state = 101
-					;[End Block]
-				Case "spawnnvg"
-					;[Block]
-					it.Items = CreateItem("Night Vision Goggles", "nvgoggles", EntityX(Collider), EntityY(Camera,True), EntityZ(Collider))
-					EntityType(it\collider, HIT_ITEM)
-					it\state = 1000
-					;[End Block]
-				Case "spawnpumpkin","pumpkin"
-					;[Block]
-					CreateConsoleMsg("What pumpkin?")
-					;[End Block]
-				Case "spawnnav"
-					;[Block]
-					it.Items = CreateItem("S-NAV Navigator Ultimate", "nav", EntityX(Collider), EntityY(Camera,True), EntityZ(Collider))
-					EntityType(it\collider, HIT_ITEM)
-					it\state = 101
-					;[End Block]
-				Case "teleport173"
-					;[Block]
-					PositionEntity Curr173\Collider,EntityX(Collider),EntityY(Collider)+0.2,EntityZ(Collider)
-					ResetEntity Curr173\Collider
-					;[End Block]
-				Case "seteventstate"
-					;[Block]
-					args$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					StrTemp$ = Piece$(args$,1," ")
-					StrTemp2$ = Piece$(args$,2," ")
-					StrTemp3$ = Piece$(args$,3," ")
-					StrTemp4$ = Piece$(args$,4," ")
-					Local pl_room_found% = False
-					If StrTemp="" Or StrTemp2="" Or StrTemp3="" Or StrTemp4=""
-						CreateConsoleMsg("Too few parameters. This command requires 4.",255,150,0)
-					Else
-						For e.Events = Each Events
-							If e\room = PlayerRoom
-								If Lower(StrTemp)<>"keep"
-									e\EventState = Float(StrTemp)
-								EndIf
-								If Lower(StrTemp2)<>"keep"
-									e\EventState2 = Float(StrTemp2)
-								EndIf
-								If Lower(StrTemp3)<>"keep"
-									e\EventState3 = Float(StrTemp3)
-								EndIf
-								If Lower(StrTemp4)<>"keep"
-									e\EventState4 = Float(StrTemp4)
-								EndIf
-								CreateConsoleMsg("Changed event states from current player room to: "+e\EventState+"|"+e\EventState2+"|"+e\EventState3+"|"+e\EventState4)
-								pl_room_found = True
-								Exit
-							EndIf
-						Next
-						If (Not pl_room_found)
-							CreateConsoleMsg("The current room doesn't has any event applied.",255,150,0)
-						EndIf
-					EndIf
-					;[End Block]
-				Case "spawnparticles"
-					;[Block]
-					If Instr(ConsoleInput, " ")<>0 Then
-						StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					Else
-						StrTemp$ = ""
-					EndIf
-					
-					If Int(StrTemp) > -1 And Int(StrTemp) <= 1 ;<--- This is the maximum ID of particles by Devil Particle system, will be increased after time - ENDSHN
-						SetEmitter(Collider,ParticleEffect[Int(StrTemp)])
-						CreateConsoleMsg("Spawned particle emitter with ID "+Int(StrTemp)+" at player's position.")
-					Else
-						CreateConsoleMsg("Particle emitter with ID "+Int(StrTemp)+" not found.",255,150,0)
-					EndIf
-					;[End Block]
-				Case "giveachievement"
-					;[Block]
-					If Instr(ConsoleInput, " ")<>0 Then
-						StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					Else
-						StrTemp$ = ""
-					EndIf
-					
-					If Int(StrTemp)>=0 And Int(StrTemp)<MAXACHIEVEMENTS
-						Achievements(Int(StrTemp))=True
-						CreateConsoleMsg("Achievemt "+AchievementStrings(Int(StrTemp))+" unlocked.")
-					Else
-						CreateConsoleMsg("Achievement with ID "+Int(StrTemp)+" doesn't exist.",255,150,0)
-					EndIf
-					;[End Block]
-				Case "427state"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					I_427\Timer = Float(StrTemp)*70.0
-					;[End Block]
-				Case "teleport106"
-					;[Block]
-					Curr106\State = 0
-					Curr106\Idle = False
-					;[End Block]
-				Case "setblinkeffect"
-					;[Block]
-					args$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					BlinkEffect = Float(Left(args, Len(args) - Instr(args, " ")))
-					BlinkEffectTimer = Float(Right(args, Len(args) - Instr(args, " ")))
-					CreateConsoleMsg("Set BlinkEffect to: " + BlinkEffect + "and BlinkEffect timer: " + BlinkEffectTimer)
-					;[End Block]
-				Case "jorge"
-					;[Block]	
-					CreateConsoleMsg(Chr(74)+Chr(79)+Chr(82)+Chr(71)+Chr(69)+Chr(32)+Chr(72)+Chr(65)+Chr(83)+Chr(32)+Chr(66)+Chr(69)+Chr(69)+Chr(78)+Chr(32)+Chr(69)+Chr(88)+Chr(80)+Chr(69)+Chr(67)+Chr(84)+Chr(73)+Chr(78)+Chr(71)+Chr(32)+Chr(89)+Chr(79)+Chr(85)+Chr(46))
-					;[End Block]
-					
-				;{~--<MOD>--~}
-				
-			    Case "newyear" 
-					;[Block]
-					at\OtherTextureID[1] = Not at\OtherTextureID[1]
-					If at\OtherTextureID[1] Then
-						tex = LoadTexture_Strict(NPCsPath$+"scp_173_ny.pt", 1)
-						EntityTexture Curr173\obj, tex, 0, 0
-						FreeTexture tex
-						CreateConsoleMsg("173 COOKIE ON")
-					Else
-						tex2 = LoadTexture_Strict(NPCsPath$+"scp_173.png", 1)
-						EntityTexture Curr173\obj, tex2, 0, 0
-						FreeTexture tex2
-						CreateConsoleMsg("173 COOKIE OFF")
-					EndIf
-					;[End Block]
-				Case "cheats" 
-					;[Block]
-	
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "on", "1", "true"
-							chs\Cheats = True			
-						Case "off", "0", "false"
-	                        chs\Cheats = False
-						Default
-							chs\Cheats = Not chs\Cheats
-						End Select	
-					If chs\Cheats = True Then
-                        chs\Godmode = True
-                        chs\NoTarget = True
-                        chs\NoClip = True
-                        chs\InfiniteStamina = True
-                        chs\NoBlinking = True
-						CreateConsoleMsg("CHEATS ON")
-					Else
-					    chs\Godmode = False
-                        chs\NoTarget = False
-                        chs\NoClip = False
-                        chs\InfiniteStamina = False
-                        chs\NoBlinking = False
-						CreateConsoleMsg("CHEATS OFF")	
-					EndIf
-					;[End Block]
-				Case "fov" 
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					FOV# = Float(StrTemp)
-                    ;[End Block]
-                 Case "reset650" 
-					;[Block]				
-					For n.NPCs = Each NPCs
-						If n\NPCtype = NPCtype650 Then
-							RemoveNPC(n)
-							CreateEvent("room650", "room650", 0, 0)   
-							Exit
-						EndIf
-					Next
-					;[End Block]
-				Case "reset372" 
-					;[Block]				
-					For n.NPCs = Each NPCs
-						If n\NPCtype = NPCtype372 Then
-							RemoveNPC(n)
-							CreateEvent("room372", "room372", 0, 0)   
-							Exit
-						EndIf
-				    Next
-					;[End Block]
-				Case "crystal" 
-					;[Block]				
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					I_409\Timer = Float(StrTemp)	
-					;[End Block]
-				Case "reset1033ru" 
-				    ;[Block]
-				    I_1033RU\HP = 200
-				    I_1033RU\DHP = 0
-				    ;[End Block]
-				Case "unlockachievements" 
-					;[Block]
-					Local achievementsUnlocked = 0
-					For i = 0 To MAXACHIEVEMENTS - 1
-						achievementsUnlocked = achievementsUnlocked + Achievements(i)
-					Next
-					
-					If achievementsUnlocked =< MAXACHIEVEMENTS - 1 Then 
-					    For i = 0 To MAXACHIEVEMENTS - 1
-				            Achievements(i)=True
-				        Next
-				        CreateConsoleMsg("All achievements unlocked!", 255, 255, 255)
-					Else					
-					    CreateConsoleMsg("You are already unlocked all achievements.", 255, 0, 0)
-                    EndIf
-											
-				    ;[End Block]
-			    Case "disable049" 
-			        ;[Block]
-			        For n.NPCs = Each NPCs
-			            If n\NPCtype = NPCtype049
-			                n\State = 0
-			                HideEntity n\Collider
-			                HideEntity n\obj
-			            EndIf
-			        Next
-			        ;[End Block]
-			    Case "enable049"
-			        ;[Block]
-			        For n.NPCs = Each NPCs
-			            If n\NPCtype = NPCtype049
-			                n\State = 1
-			                ShowEntity n\Collider
-			                ShowEntity n\obj
-			            EndIf
-			        Next
-					;[End Block]
-				Case "money", "rich"
-					;[Block]
-					For i = 1 To 20
-					    If Rand(2) = 1 Then
-						    it.Items = CreateItem("Quarter","25ct", EntityX(Collider,True)+Cos((360.0/20.0)*i)*Rnd(0.3,0.5), EntityY(Camera,True), EntityZ(Collider,True)+Sin((360.0/20.0)*i)*Rnd(0.3,0.5))
-					    Else
-					        it.Items = CreateItem("Coin","coin", EntityX(Collider,True)+Cos((360.0/20.0)*i)*Rnd(0.3,0.5), EntityY(Camera,True), EntityZ(Collider,True)+Sin((360.0/20.0)*i)*Rnd(0.3,0.5))
-					    EndIf
-					    EntityType (it\collider, HIT_ITEM)
-					Next
-					;[End Block]
-				Case "disablecontrol"
-				    ;[Block]
-				    RemoteDoorOn = False
-				    CreateConsoleMsg("Remote door control disabled.", 255, 255, 255)
-				    ;[End Block]
-				Case "enablecontrol"
-				    ;[Block]
-				    RemoteDoorOn = True
-				    CreateConsoleMsg("Remote door control enabled.", 255, 255, 255)
-				    ;[End Block]
-			    Case "unlockcheckpoints"
-			        ;[Block]
-			        For e2.Events = Each Events
-				        If e2\EventName = "room2sl"
-							e2\EventState3 = 0
-							UpdateLever(e2\room\Levers[0])
-							RotateEntity e2\room\Levers[0], 0, EntityYaw(e2\room\Levers[0]), 0
-							TurnCheckpointMonitorsOff(0)
-						EndIf
-					Next
-					
-					For e2.Events = Each Events
-				        If e2\EventName = "room008"
-							e2\EventState = 2
-							UpdateLever(e2\room\Levers[0])
-							RotateEntity e2\room\Levers[0], 0, EntityYaw(e2\room\Levers[0]), 30
-							TurnCheckpointMonitorsOff(1)
-							Exit
-						EndIf
-				    Next
-				 
-				    CreateConsoleMsg("Checkpoints unlocked.", 255, 255, 255)								
-					;[End Block]
-				Case "disable966"
-				    ;[Block]
-			        For n.NPCs = Each NPCs
-			            If n\NPCtype = NPCtype966
-			                n\State = -1
-			                HideEntity n\Collider
-                            HideEntity n\obj
-			            EndIf
-			        Next
-			        ;[End Block]
-			    Case "enable966"
-			        ;[Block]
-			        For n.NPCs = Each NPCs
-			            If n\NPCtype = NPCtype966
-			                n\State = 0
-			                ShowEntity n\Collider
-			                If WearinNightVision > 0 Then ShowEntity n\obj
-			            EndIf
-			        Next
-					;[End Block]
-				Case "noblinking", "nb"
-					;[Block]
-					StrTemp$ = Lower(Right(ConsoleInput, Len(ConsoleInput) - Instr(ConsoleInput, " ")))
-					
-					Select StrTemp
-						Case "on", "1", "true"
-							chs\NoBlinking = True						
-						Case "off", "0", "false"
-							chs\NoBlinking = False
-						Default
-							chs\NoBlinking = Not chs\NoBlinking
-					End Select	
-					If chs\NoBlinking Then
-						CreateConsoleMsg("NO BLINKING MODE ON")
-					Else
-						CreateConsoleMsg("NO BLINKING MODE OFF")	
-					EndIf
-					;[End Block]
-					
-                ;{~--<END>--~}
-
-				Default
-					;[Block]
-					CreateConsoleMsg("Command not found.", 255, 0, 0)
-					;[End Block]
-			End Select
-			
-			ConsoleInput = ""
-		End If	
-	
-End Function
-
 
 Function UpdateConsole()
    	Local fo.Fonts = First Fonts
@@ -2290,7 +795,7 @@ Function UpdateConsole()
 							CreateConsoleMsg("HELP - playmusic")
 							CreateConsoleMsg("******************************")
 							CreateConsoleMsg("Will play tracks in .ogg/.wav format")
-							CreateConsoleMsg("from "+Chr(34)+MusicPath+"Custom\"+Chr(34)+".")
+							CreateConsoleMsg("from "+Chr(34)+"SFX\"+"Music\"+"Custom\"+Chr(34)+".")
 							CreateConsoleMsg("******************************")
 						Case "disable106"
 						   	CreateConsoleMsg("HELP - disable106")
@@ -2853,12 +1358,12 @@ Function UpdateConsole()
 					;[Block]
 					at\OtherTextureID[0] = Not at\OtherTextureID[0]
 					If at\OtherTextureID[0] Then
-						Local tex = LoadTexture_Strict(NPCsPath$+"scp_173_h.pt", 1)
+						Local tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173_h.pt"), 1)
 						EntityTexture Curr173\obj, tex, 0, 0
 						FreeTexture tex
 						CreateConsoleMsg("173 JACK-O-LANTERN ON")
 					Else
-						Local tex2 = LoadTexture_Strict(NPCsPath$+"scp_173.png", 1)
+						Local tex2 = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173.png"), 1)
 						EntityTexture Curr173\obj, tex2, 0, 0
 						FreeTexture tex2
 						CreateConsoleMsg("173 JACK-O-LANTERN OFF")
@@ -2883,7 +1388,7 @@ Function UpdateConsole()
 						EndIf
 						EntityType (it\collider, HIT_ITEM)
 					Next
-					PlaySound_Strict LoadTempSound(MusicPath +"Using420J.ogg")
+					PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Music\" +"Using420J.ogg"))
 					;[End Block]
 				Case "godmode", "god"
 					;[Block]
@@ -3174,7 +1679,7 @@ Function UpdateConsole()
 						PlayCustomMusic% = True
 						If CustomMusic <> 0 Then FreeSound_Strict CustomMusic : CustomMusic = 0
 						If MusicCHN <> 0 Then StopChannel MusicCHN
-						CustomMusic = LoadSound_Strict(MusicPath + "Custom\"+StrTemp$)
+						CustomMusic = LoadSound_Strict("SFX\"+"Music\" + "Custom\"+StrTemp$)
 						If CustomMusic = 0
 							PlayCustomMusic% = False
 						EndIf
@@ -3355,12 +1860,12 @@ Function UpdateConsole()
 					;[Block]
 					at\OtherTextureID[1] = Not at\OtherTextureID[1]
 					If at\OtherTextureID[1] Then
-						tex = LoadTexture_Strict(NPCsPath$+"scp_173_ny.pt", 1)
+						tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173_ny.pt"), 1)
 						EntityTexture Curr173\obj, tex, 0, 0
 						FreeTexture tex
 						CreateConsoleMsg("173 COOKIE ON")
 					Else
-						tex2 = LoadTexture_Strict(NPCsPath$+"scp_173.png", 1)
+						tex2 = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173.png"), 1)
 						EntityTexture Curr173\obj, tex2, 0, 0
 						FreeTexture tex2
 						CreateConsoleMsg("173 COOKIE OFF")
@@ -3689,7 +2194,7 @@ Music(33) = "Room106"
 ;{~--<END>--~}
 
 Global CurrMusicStream, MusicCHN
-MusicCHN = StreamSound_Strict(MusicPath+Music(2)+".ogg",MusicVolume,Mode)
+MusicCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\Music"+Music(2)+".ogg"),MusicVolume,Mode)
 
 Global CurrMusicVolume# = 1.0, NowPlaying%=2, ShouldPlay%=11
 Global CurrMusic% = 1
@@ -3846,7 +2351,7 @@ Global MonitorTimer# = 0.0, MonitorTimer2# = 0.0, UpdateCheckpoint1%, UpdateChec
 Global PlayerDetected%
 Global PrevInjuries#, PrevBloodloss#
 
-Global NVGImages = LoadAnimImage(GFXPath$+"battery.png",64,64,0,2)
+Global NVGImages = LoadAnimImage(scpModding_ProcessFilePath$("GFX\"+"battery.png"),64,64,0,2)
 MaskImage NVGImages,255,0,255
 
 Global AmbientLightRoomTex%, AmbientLightRoomVal%
@@ -3876,10 +2381,10 @@ Global CurrMenu_TestIMG$ = ""
 
 Dim NavImages(5)
 For i = 0 To 3
-	NavImages(i) = LoadImage_Strict(ItemsPath$+"navigator\room_border"+i+".png")
+	NavImages(i) = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\items\"+"navigator\room_border"+i+".png"))
 	MaskImage NavImages(i),255,0,255
 Next
-NavImages(4) = LoadImage_Strict(ItemsPath$+"navigator\battery_meter.png")
+NavImages(4) = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\items\"+"navigator\battery_meter.png"))
 
 Global NavBG = CreateImage(GraphicWidth,GraphicHeight)
 
@@ -4372,8 +2877,8 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 	If d\KeyCard > 0 Then
 		If SelectedItem = Null Then
 			If showmsg = True Then
-				If (Instr(Msg,"The keycard")=0 And Instr(Msg,"A keycard with")=0) Or (MsgTimer<70*3) Then
-					Msg = "A keycard is required to operate this door."
+				If (Instr(Msg,scpLang_GetPhrase("ingame.thekey"))=0 And Instr(Msg,scpLang_GetPhrase("ingame.withkey"))=0) Or (MsgTimer<70*3) Then
+					Msg = scpLang_GetPhrase("ingame.keyrequired")
 					MsgTimer = 70 * 7
 				EndIf
 			EndIf
@@ -4424,8 +2929,8 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 	          
 			If temp =-1 Then 
 				If showmsg = True Then
-					If (Instr(Msg,"The keycard")=0 And Instr(Msg,"A keycard with")=0) Or (MsgTimer<70*3) Then
-						Msg = "A keycard is required to operate this door."
+					If (Instr(Msg,scpLang_GetPhrase("ingame.thekey"))=0 And Instr(Msg,scpLang_GetPhrase("ingame.withkey"))=0) Or (MsgTimer<70*3) Then
+						Msg = scpLang_GetPhrase("ingame.keyrequired")
 						MsgTimer = 70 * 7
 					EndIf
 				EndIf
@@ -4436,21 +2941,21 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 					If d\locked Then
 						PlaySound_Strict KeyCardSFX2
 						If temp = 9 Then 
-						    Msg = "You hold the key close to the slot but nothing happened."
+						    Msg = scpLang_GetPhrase("ingame.nothingh")
 						ElseIf temp = 1 Then 
-		                    Msg = "The keycard was inserted into the slot but nothing happened. The keycard says: " +Chr(34)+ "Does the Black Moon Howl???? Yes. No. Yes. No." +Chr(34)
+		                    Msg = scpLang_GetPhrase("ingame.nothingh2") + " " +Chr(34)+ scpLang_GetPhrase("ingame.l6err") +Chr(34)
 						Else
-						    Msg = "The keycard was inserted into the slot but nothing happened."
+						    Msg = scpLang_GetPhrase("ingame.nothingh3")
 						EndIf
 						MsgTimer = 70 * 7
 						Return
 					ElseIf temp = 9 Then 					
 					    PlaySound_Strict KeyCardSFX1					
-						Msg = "You hold the key close to the slot"
+						Msg = scpLang_GetPhrase("ingame.keys")
 						MsgTimer = 70 * 5				
 					Else
 						PlaySound_Strict KeyCardSFX1
-						Msg = "The keycard was inserted into the slot."
+						Msg = scpLang_GetPhrase("ingame.cards")
 						MsgTimer = 70 * 7	
 					EndIf
 				EndIf
@@ -4460,17 +2965,17 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 					PlaySound_Strict KeyCardSFX2					
 					If d\locked Then
 					    If temp = 9 Then 
-						    Msg = "You hold the key close to the slot but nothing happened."
+						    Msg = scpLang_GetPhrase("ingame.nothingh")
 						ElseIf temp = 1 Then 
-		                    Msg = "The keycard was inserted into the slot but nothing happened. The keycard says: " +Chr(34)+ "Does the Black Moon Howl???? Yes. No. Yes. No." +Chr(34)
+		                    Msg = scpLang_GetPhrase("ingame.nothingh2") + " " +Chr(34)+ scpLang_GetPhrase("ingame.l6err") +Chr(34)
 						Else					
-						    Msg = "The keycard was inserted into the slot but nothing happened."
+						    Msg = scpLang_GetPhrase("ingame.nothingh3")
 						EndIf						
 					Else
 					    If temp = 1 Then 
-					        Msg = "The keycard was inserted into the slot but nothing happened. The keycard says: " +Chr(34)+ "Does the Black Moon Howl???? Yes. No. Yes. No." +Chr(34)
+					        Msg = scpLang_GetPhrase("ingame.nothingh2") + " " +Chr(34)+ scpLang_GetPhrase("ingame.l6err") +Chr(34)
                         Else
-					 	    Msg = "A keycard with security clearance "+(d\KeyCard-2)+" or higher is required to operate this door."
+					 	    Msg = scpLang_GetPhrase("ingame.carderr1") + " "+(d\KeyCard-2)+" " + scpLang_GetPhrase("ingame.carderr2")
 					    EndIf
 				    EndIf
 				    MsgTimer = 70 * 7
@@ -4486,8 +2991,8 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 	    ;SelectedItem = Null
 		If temp <> 0 Then
 			PlaySound_Strict ScannerSFX1
-			If (Instr(Msg,"You placed your")=0) Or (MsgTimer < 70*3) Then
-				Msg = "You place the palm of the hand onto the scanner. The scanner reads: "+Chr(34)+"DNA verified. Access granted."+Chr(34)
+			If (Instr(Msg,scpLang_GetPhrase("ingame.placedyour"))=0) Or (MsgTimer < 70*3) Then
+				Msg = scpLang_GetPhrase("ingame.scannergoodhand")
 			EndIf
 			MsgTimer = 70 * 7
 		Else
@@ -4499,16 +3004,16 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
             If temp = 0
                 If showmsg = True Then 
                     PlaySound_Strict ScannerSFX2
-                    Msg = "You placed your palm onto the scanner. The scanner reads: "+Chr(34)+"DNA does not match known sample. Access denied."+Chr(34)
+                    Msg = scpLang_GetPhrase("ingame.scannerbad")
                     MsgTimer = 70 * 7
                     Return
                 EndIf
             ElseIf temp = 1
                 PlaySound_Strict ScannerSFX1
-                Msg = "You hold the key onto the scanner. The scanner reads: "+Chr(34)+"Unknown DNA verified. ERROR! Access granted."+Chr(34)
+                Msg = scpLang_GetPhrase("ingame.scannerwtf")
                 MsgTimer = 70 * 7 
             ElseIf temp = 2
-                Msg = "The type of this slot doesn't require keycards."
+                Msg = scpLang_GetPhrase("ingame.scannererr")
                 MsgTimer = 70 * 7
                 Return
             EndIf
@@ -4520,51 +3025,54 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 					PlaySound_Strict ButtonSFX2
 					If PlayerRoom\RoomTemplate\Name <> "room2elevator" Then
                         If d\open Then
-                            Msg = "You pushed the button but nothing happened."
+                            Msg = scpLang_GetPhrase("ingame.doorend1")
                         Else    
-                            Msg = "The door appears to be locked."
+                            Msg = scpLang_GetPhrase("ingame.doorend2")
                         EndIf    
                     Else
-                        Msg = "The elevator appears to be broken."
+                        Msg = scpLang_GetPhrase("ingame.elevator1")
                     EndIf
 					MsgTimer = 70 * 5
 				Else
 					If d\IsElevatorDoor = 1 Then
-						Msg = "You called the elevator."
+						Msg = scpLang_GetPhrase("ingame.elevator2")
 						MsgTimer = 70 * 5
 					ElseIf d\IsElevatorDoor = 3 Then
-						Msg = "The elevator is already on this floor."
+						Msg = scpLang_GetPhrase("ingame.elevator3")
 						MsgTimer = 70 * 5
-					ElseIf (Msg<>"You called the elevator.")
-						If (Msg="You already called the elevator.") Or (MsgTimer<70*3)	
+					ElseIf (Msg<>scpLang_GetPhrase("ingame.elevator2"))
+						If (Msg=scpLang_GetPhrase("ingame.elevator4")) Or (MsgTimer<70*3)	
 							Select Rand(10)
 								Case 1
 								    ;[Block]
-									Msg = "Stop spamming the button."
+									Msg = scpLang_GetPhrase("ingame.elevator5")
 									MsgTimer = 70 * 7
 									;[End Block]
 								Case 2
 								    ;[Block]
-									Msg = "Pressing it harder does not make the elevator come faster."
+									Msg = scpLang_GetPhrase("ingame.elevator6")
 									MsgTimer = 70 * 7
 									;[End Block]
 								Case 3
 								    ;[Block]
-									Msg = "Stop pressing the fucking button."
+									Msg = scpLang_GetPhrase("ingame.elevator7")
 									MsgTimer = 70 * 7
 									;[End Block]
 								Case 4
-									Msg = "If you keep pressing this button I will spawn SCP-106 underneath you."
+									Msg = scpLang_GetPhrase("ingame.elevator8")
+									MsgTimer = 70 * 7
+								Case 5
+									Msg = scpLang_GetPhrase("ingame.elevator9")
 									MsgTimer = 70 * 7
 								Default
 								    ;[Block]
-									Msg = "You already called the elevator."
+									Msg = scpLang_GetPhrase("ingame.elevator4")
 									MsgTimer = 70 * 7
 									;[End Block]
 							End Select
 						EndIf
 					Else
-						Msg = "You already called the elevator."
+						Msg = scpLang_GetPhrase("ingame.elevator4")
 						MsgTimer = 70 * 7
 					EndIf
 				EndIf
@@ -4837,7 +3345,8 @@ Global I_500.SCP500 = New SCP500
 
 Repeat
     
-    	;If KeyHit(KEY_SCREENSHOT) Then 
+    If KeyHit(KEY_SCREENSHOT) Then 
+		scpSDK_TakeScreenshot()
 	;	n% = 0
 	;	While True
 	;		If FileSize("Screenshots\screenshot_" + Str(n) + ".png") = 0 Then
@@ -4849,7 +3358,7 @@ Repeat
 	;			n = n + 1
 	;		EndIf
 	;	Wend
-	;EndIf
+	EndIf
 		
 	Cls
 	
@@ -4902,7 +3411,7 @@ Repeat
 	
 	If ms\MainMenuOpen Then
 		If ShouldPlay = 21 Then
-			EndBreathSFX = LoadSound(SFXPath$+"Ending\MenuBreath.ogg")
+			EndBreathSFX = LoadSound(scpModding_ProcessFilePath$("SFX\"+"Ending\MenuBreath.ogg"))
 			EndBreathCHN = PlaySound(EndBreathSFX)
 			ShouldPlay = 66
 		ElseIf ShouldPlay = 66
@@ -5020,22 +3529,22 @@ Function MainLoop()
 			
 			Select PlayerZone
 				Case 0
-					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(SFXPath$+"Ambient\Zone"+(PlayerZone+1)+"\ambient"+(CurrAmbientSFX+1)+".ogg")
+					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ambient\Zone"+(PlayerZone+1)+"\ambient"+(CurrAmbientSFX+1)+".ogg"))
 				Case 1
-					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(SFXPath$+"Ambient\Zone"+(PlayerZone+1)+"\ambient"+(CurrAmbientSFX+1)+".ogg")
+					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ambient\Zone"+(PlayerZone+1)+"\ambient"+(CurrAmbientSFX+1)+".ogg"))
 				Case 2
-					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(SFXPath$+"Ambient\Zone"+(PlayerZone+1)+"\ambient"+(CurrAmbientSFX+1)+".ogg")
+					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ambient\Zone"+(PlayerZone+1)+"\ambient"+(CurrAmbientSFX+1)+".ogg"))
 				Case 3
 				    ;[Block]
-					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(SFXPath$+"Ambient\General\ambient"+(CurrAmbientSFX+1)+".ogg")
+					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ambient\General\ambient"+(CurrAmbientSFX+1)+".ogg"))
 					;[End Block]
 				Case 4
 				    ;[Block]
-					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(SFXPath$+"Ambient\Pre-breach\ambient"+(CurrAmbientSFX+1)+".ogg")
+					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ambient\Pre-breach\ambient"+(CurrAmbientSFX+1)+".ogg"))
 					;[End Block]
 				Case 5
 				    ;[Block]
-					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(SFXPath$+"Ambient\Forest\ambient"+(CurrAmbientSFX+1)+".ogg")
+					If AmbientSFX(PlayerZone,CurrAmbientSFX)=0 Then AmbientSFX(PlayerZone,CurrAmbientSFX)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Ambient\Forest\ambient"+(CurrAmbientSFX+1)+".ogg"))
 					;[End Block]
 			End Select
 				
@@ -5047,7 +3556,7 @@ Function MainLoop()
 			Local RN$ = PlayerRoom\RoomTemplate\Name$
 			If RN$ <> "room860" And RN$ <> "room1123" And RN$ <> "room173intro" And RN$ <> "dimension1499" Then
 				If fs\FPSfactor[0] > 0 Then LightBlink = Rnd(1.0,2.0)
-				PlaySound_Strict  LoadTempSound(SFXPath$+"SCP\079\Broadcast"+Rand(1, 8)+".ogg")
+				PlaySound_Strict  LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\079\Broadcast"+Rand(1, 8)+".ogg"))
 			EndIf 
 		EndIf
 	EndIf
@@ -5159,7 +3668,7 @@ Function MainLoop()
 			If EyeStuck < 9000 Then BlurTimer = Max(BlurTimer, (9000-EyeStuck)*0.5)
 			If EyeStuck < 6000 Then darkA = Min(Max(darkA, (6000-EyeStuck)/5000.0),1.0)
 			If EyeStuck < 9000 And EyeStuck+fs\FPSfactor[0] =>9000 Then 
-				Msg = "The eyedrops are causing your eyes to tear up."
+				Msg = scpLang_GetPhrase("ingame.eyedropstear")
 				MsgTimer = 70*6
 			EndIf
 		EndIf
@@ -5277,7 +3786,9 @@ Function MainLoop()
 			If (W<>"vest" And W<>"finevest" And W<>"hazmatsuit" And W<>"hazmatsuit2" And W<>"hazmatsuit3") Or V=0 Or V=100
 				If InvOpen Then
 					ResumeSounds()
-					MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+					MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+					mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+					mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 				Else
 					PauseSounds()
 				EndIf
@@ -5292,31 +3803,31 @@ Function MainLoop()
 		If SelectedDifficulty\saveType = SAVEANYWHERE Then
 			RN$ = PlayerRoom\RoomTemplate\Name$
 			If RN$ = "room173intro" Or (RN$ = "gateb" And EntityY(Collider)>1040.0*RoomScale) Or RN$ = "gatea"
-				Msg = "You cannot save in this location."
+				Msg = scpLang_GetPhrase("ingame.save1")
 				MsgTimer = 70 * 4
 			ElseIf (Not CanSave) Or QuickLoadPercent > -1
-				Msg = "You cannot save at this moment."
+				Msg = scpLang_GetPhrase("ingame.save2")
 				MsgTimer = 70 * 4
 				If QuickLoadPercent > -1
-					Msg = Msg + " (game is loading)"
+					Msg = Msg + " " + scpLang_GetPhrase("ingame.save3")
 				EndIf
 			Else
 				SaveGame(SavePath + CurrSave + "\")
 			EndIf
 		ElseIf SelectedDifficulty\saveType = SAVEONSCREENS
 			If SelectedScreen=Null And SelectedMonitor=Null Then
-				Msg = "Saving is only permitted on clickable monitors scattered throughout the facility."
+				Msg = scpLang_GetPhrase("ingame.save4")
 				MsgTimer = 70 * 4
 			Else
 				RN$ = PlayerRoom\RoomTemplate\Name$
 				If RN$ = "room173intro" Or (RN$ = "gateb" And EntityY(Collider)>1040.0*RoomScale) Or RN$ = "gatea"
-					Msg = "You cannot save in this location."
+					Msg = scpLang_GetPhrase("ingame.save1")
 					MsgTimer = 70 * 4
 				ElseIf (Not CanSave) Or QuickLoadPercent > -1
-					Msg = "You cannot save at this moment."
+					Msg = scpLang_GetPhrase("ingame.save2")
 					MsgTimer = 70 * 4
 					If QuickLoadPercent > -1
-						Msg = Msg + " (game is loading)"
+						Msg = Msg + " " + scpLang_GetPhrase("ingame.save3")
 					EndIf
 				Else
 					If SelectedScreen<>Null
@@ -5328,12 +3839,12 @@ Function MainLoop()
 				EndIf
 			EndIf
 		Else
-			Msg = "Quick saving is disabled."
+			Msg = scpLang_GetPhrase("ingame.save6")
 			MsgTimer = 70 * 4
 		EndIf
 	Else If SelectedDifficulty\saveType = SAVEONSCREENS And (SelectedScreen<>Null Or SelectedMonitor<>Null)
-		If (Msg<>"Game progress saved." And Msg<>"You cannot save in this location."And Msg<>"You cannot save at this moment.") Or MsgTimer<=0 Then
-			Msg = "Press "+KeyName(KEY_SAVE)+" to save."
+		If (Msg<>scpLang_GetPhrase("ingame.save5") And Msg<>scpLang_GetPhrase("ingame.save1")And Msg<>scpLang_GetPhrase("ingame.save2")) Or MsgTimer<=0 Then
+			Msg = scpLang_GetPhrase("events.press") + " "+KeyName(KEY_SAVE)+" " + scpLang_GetPhrase("ingame.save7")
 			MsgTimer = 70*4
 		EndIf
 			
@@ -5345,7 +3856,9 @@ Function MainLoop()
 			If ConsoleOpen Then
 				UsedConsole = True
 				ResumeSounds()
-				MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+				MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+				mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+				mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 			Else
 				PauseSounds()
 			EndIf
@@ -5363,7 +3876,6 @@ Function MainLoop()
 	EndIf
 		
 	UpdateConsole()
-	UpdateDevConsole()
 		
 	If PlayerRoom <> Null Then
 		If PlayerRoom\RoomTemplate\Name = "room173intro" Then
@@ -5371,7 +3883,7 @@ Function MainLoop()
 				If e\EventName = "room173intro" Then
 					If e\EventState3 => 40 And e\EventState3 < 50 Then
 						If InvOpen Then
-							Msg = "Double click on the document to view it."
+							Msg = scpLang_GetPhrase("ingame.doubledoc")
 							MsgTimer=70*7
 							e\EventState3 = 50
 						EndIf
@@ -5508,14 +4020,14 @@ Function DrawEnding()
 		EndIf
 
 		If I_END\Screen = 0 Then
-			I_END\Screen = LoadImage_Strict(GFXPath$+"endingscreen.pt")
+			I_END\Screen = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"endingscreen.pt"))
 			
 			ShouldPlay = 23
 			CurrMusicVolume = MusicVolume
 			
 			CurrMusicVolume = MusicVolume
 			StopStream_Strict(MusicCHN)
-			MusicCHN = StreamSound_Strict(MusicPath+Music(23)+".ogg",CurrMusicVolume,0)
+			MusicCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\Music"+Music(23)+".ogg"),CurrMusicVolume,0)
 			NowPlaying = ShouldPlay
 			
 			PlaySound_Strict LightSFX
@@ -5537,11 +4049,11 @@ Function DrawEnding()
 				Select Lower(I_END\SelectedEnding)
 					Case "a1", "a2"
 					    ;[Block]
-						PlaySound_Strict LoadTempSound(SFXPath$+"Ending\GateA\Ending"+I_END\SelectedEnding+".ogg")
+						PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateA\Ending"+I_END\SelectedEnding+".ogg"))
 						;[End Block]
 					Case "b1", "b2", "b3"
 					    ;[Block]
-						PlaySound_Strict LoadTempSound(SFXPath$+"Ending\GateB\Ending"+I_END\SelectedEnding+".ogg")
+						PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Ending\GateB\Ending"+I_END\SelectedEnding+".ogg"))
 						;[End Block]
 				End Select
 			EndIf			
@@ -5561,7 +4073,7 @@ Function DrawEnding()
 				
 				Color(255, 255, 255)
 				AASetFont fo\Font[1]
-				AAText(x + width / 2 + 40*MenuScale, y + 20*MenuScale, "THE END", True)
+				AAText(x + width / 2 + 40*MenuScale, y + 20*MenuScale, scpLang_GetPhrase("ingame.theend"), True)
 				AASetFont fo\Font[0]
 				
 				If AchievementsMenu=0 Then 
@@ -5592,14 +4104,14 @@ Function DrawEnding()
 						achievementsUnlocked = achievementsUnlocked + Achievements(i)
 					Next
 					
-					AAText x, y, "SCPs encountered: " +scpsEncountered
-					AAText x, y+20*MenuScale, "Achievements unlocked: " + achievementsUnlocked+"/"+(MAXACHIEVEMENTS)
-					AAText x, y+40*MenuScale, "Rooms found: " + roomsfound+"/"+roomamount
-					AAText x, y+60*MenuScale, "Documents discovered: " +docsfound+"/"+docamount
-					AAText x, y+80*MenuScale, "Items refined in SCP-914: " +RefinedItems
+					AAText x, y, scpLang_GetPhrase("ingame.scpsencountered") + " " +scpsEncountered
+					AAText x, y+20*MenuScale, scpLang_GetPhrase("ingame.achunlocked") + " " + achievementsUnlocked+"/"+(MAXACHIEVEMENTS)
+					AAText x, y+40*MenuScale, scpLang_GetPhrase("ingame.roomsfound") + " " + roomsfound+"/"+roomamount
+					AAText x, y+60*MenuScale, scpLang_GetPhrase("ingame.docsdiscovered") + " " +docsfound+"/"+docamount
+					AAText x, y+80*MenuScale, scpLang_GetPhrase("ingame.itemsrefined") + " " +RefinedItems
 					
 					If UnlockThaumiel = 0 And (Not UsedConsole)
-					    AAText x, y+120*MenuScale, "You unlocked the Thaumiel Difficulty!"
+					    AAText x, y+120*MenuScale, scpLang_GetPhrase("ingame.apollyonunlock")
 					EndIf							
 					
 					x = GraphicWidth / 2 - width / 2
@@ -5607,18 +4119,18 @@ Function DrawEnding()
 					x = x+width/2
 					y = y+height-100*MenuScale
 					
-					If DrawButton(x-170*MenuScale,y-200*MenuScale,430*MenuScale,60*MenuScale,"ACHIEVEMENTS", True) Then  
+					If DrawButton(x-170*MenuScale,y-200*MenuScale,430*MenuScale,60*MenuScale,scpLang_GetPhrase("menu.achievements"), True) Then  
 						AchievementsMenu = 1
 					EndIf
 					
-					If DrawButton(x-170*MenuScale,y-100*MenuScale,430*MenuScale,60*MenuScale,"MAIN MENU", True)
+					If DrawButton(x-170*MenuScale,y-100*MenuScale,430*MenuScale,60*MenuScale,scpLang_GetPhrase("menu.mainmenu"), True)
 						ShouldPlay = 24
 						NowPlaying = ShouldPlay
 						For i=0 To 9
 							If TempSounds[i]<>0 Then FreeSound_Strict TempSounds[i] : TempSounds[i]=0
 						Next
 						StopStream_Strict(MusicCHN)
-						MusicCHN = StreamSound_Strict(MusicPath+Music(NowPlaying)+".ogg",0.0,Mode)
+						MusicCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Music\"+Music(NowPlaying)+".ogg"),0.0,Mode)
 						SetStreamVolume_Strict(MusicCHN,1.0*MusicVolume)
 						FlushKeys()
 						I_END\Timer = -2000
@@ -5658,11 +4170,11 @@ Function InitCredits()
 	Local file% = OpenFile("Credits.txt")
 	Local l$
 	
-	fo\CreditsFont[0] = LoadFont_Strict(FontPath$+"cour\Courier New.ttf", Int(21 * (GraphicHeight / 1024.0)), 0,0,0)
-	fo\CreditsFont[1] = LoadFont_Strict(FontPath$+"courbd\Courier New.ttf", Int(35 * (GraphicHeight / 1024.0)), 0,0,0)
+	fo\CreditsFont[0] = LoadFont_Strict("GFX\font\"+"cour\Courier New.ttf", Int(21 * (GraphicHeight / 1024.0)), 0,0,0)
+	fo\CreditsFont[1] = LoadFont_Strict("GFX\font\"+"courbd\Courier New.ttf", Int(35 * (GraphicHeight / 1024.0)), 0,0,0)
 	
 	If CreditsScreen = 0
-		CreditsScreen = LoadImage_Strict(GFXPath$+"creditsscreen.pt")
+		CreditsScreen = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"creditsscreen.pt"))
 	EndIf
 	
 	Repeat
@@ -5785,8 +4297,7 @@ Function MovePlayer()
 		CameraShake = Sin(SuperManTimer / 5.0) * (SuperManTimer / 1500.0)
 		
 		If SuperManTimer > 70 * 50 Then
-			DeathMSG = "A Class D jumpsuit found in [DATA REDACTED]. Upon further examination, the jumpsuit was found to be filled with 12.5 kilograms of blue ash-like substance. "
-			DeathMSG = DeathMSG + "Chemical analysis of the substance remains non-conclusive. Most likely related to SCP-914."
+			DeathMSG = scpLang_GetPhrase("ingame.superdeath")
 			Kill(True)
 			ShowEntity at\OverlayID[0]
 		Else
@@ -5884,9 +4395,7 @@ Function MovePlayer()
 	EndIf
 	
 	If I_447\UsingEyeDrops = True Or I_447\UsingFirstAid = True Or I_447\UsingPill = True
-		DeathMSG = "Site compromised by [DATA REDACTED]. Situation successfully contained after [DATA REDACTRED] hours. "
-		DeathMSG = DeathMSG + "Further investigation reveals " + SubjectName$ + " in possession of an instance of SCP-447-2 through unknown means. " 
-		DeathMSG = DeathMSG + SubjectName$ + " died while in possession SCP-447-2 and proceeded to cause [DATA REDACTED]."
+		DeathMSG = scpLang_GetPhrase("ingame.scp447death")
 	EndIf
 
 	If Injuries > (4-MorphineHealAmount) Then
@@ -6102,12 +4611,12 @@ Function MovePlayer()
 		EndIf
 
 		If temp2 <= 60 And Bloodloss > 60 Then
-			Msg = "You are feeling faint from the amount of blood you have lost."
+			Msg = scpLang_GetPhrase("ingame.bloodloss")
 			MsgTimer = 70*4
 		EndIf
 		
 		If temp2 <= 60 And I_1079\Foam > 60 Then
-			Msg = "You are feeling faint from the amount of blood you have lost."
+			Msg = scpLang_GetPhrase("ingame.bloodloss")
 			MsgTimer = 70*4	
 		EndIf	
 	EndIf
@@ -6237,18 +4746,15 @@ Function MouseLook()
 		Local up# = (Sin(Shake) / (20.0+CrouchState*20.0))*0.6;, side# = Cos(Shake / 2.0) / 35.0		
 		Local roll# = Max(Min(Sin(Shake/2)*2.5*Min(Injuries+0.25,3.0),8.0),-8.0)
 		
-		;k?¤?¤nnet?¤?¤n kameraa sivulle jos pelaaja on vammautunut
+		;k?ï¿½?ï¿½nnet?ï¿½?ï¿½n kameraa sivulle jos pelaaja on vammautunut
 		;RotateEntity Collider, EntityPitch(Collider), EntityYaw(Collider), Max(Min(up*30*Injuries,50),-50)
 		PositionEntity Camera, EntityX(Collider), EntityY(Collider), EntityZ(Collider)
 		RotateEntity Camera, 0, EntityYaw(Collider), roll*0.5
 		
 		MoveEntity Camera, side, up + 0.6 + CrouchState * -0.3, 0
 		
-		;RotateEntity Collider, EntityPitch(Collider), EntityYaw(Collider), 0
-		;moveentity player, side, up, 0	
-		; -- Update the smoothing que To smooth the movement of the mouse.
-		mouse_x_speed_1# = CurveValue(MouseXSpeed() * (MouseSensitivity + 0.6) , mouse_x_speed_1, (6.0 / (MouseSensitivity + 1.0))*MouseSmooth) 
-		If Int(mouse_x_speed_1) = Int(Nan1) Then mouse_x_speed_1 = 0
+		Local mouse_x_acc#=(MouseXSpeed()*(MouseSens+0.5)*mouselook_x_inc / (1.0+WearingVest))
+		Local mouse_y_acc#=(MouseYSpeed()*(MouseSens+0.5)*mouselook_y_inc / (1.0+WearingVest))
 		If fs\PrevFPSFactor>0 Then
             If Abs(fs\FPSfactor[0]/fs\PrevFPSFactor-1.0)>1.0 Then
                 ;lag spike detected - stop all camera movement
@@ -6256,21 +4762,30 @@ Function MouseLook()
                 mouse_y_speed_1 = 0.0
             EndIf
         EndIf
-		If InvertMouse Then
-			mouse_y_speed_1# = CurveValue(-MouseYSpeed() * (MouseSensitivity + 0.6), mouse_y_speed_1, (6.0/(MouseSensitivity+1.0))*MouseSmooth) 
+
+		If mouse_smooth Then
+			mouse_x_speed_1=mouse_x_speed_1-mouse_x_acc
+			mouse_y_speed_1=mouse_y_speed_1+mouse_y_acc
 		Else
-			mouse_y_speed_1# = CurveValue(MouseYSpeed () * (MouseSensitivity + 0.6), mouse_y_speed_1, (6.0/(MouseSensitivity+1.0))*MouseSmooth) 
+			RotateEntity Collider,0.0,EntityYaw(Collider)-mouse_x_acc,0.0
+			user_camera_pitch#=user_camera_pitch#+mouse_y_acc
 		EndIf
-		If Int(mouse_y_speed_1) = Int(Nan1) Then mouse_y_speed_1 = 0
+		Local oldYaw# = EntityYaw(Collider)
+		RotateEntity Collider, 0.0, CurveAngle(EntityYaw(Collider) + mouse_x_speed_1,EntityYaw(Collider),12.0), 0.0 ; Turn the user on the Y (yaw) axis.
+		mouse_x_speed_1=mouse_x_speed_1-WrapAngle180(EntityYaw(Collider)-oldYaw)
+		Local oldPitch# = user_camera_pitch
+		user_camera_pitch# = CurveValue(user_camera_pitch + mouse_y_speed_1,user_camera_pitch,12.0)
+		mouse_y_speed_1=mouse_y_speed_1-WrapAngle180(user_camera_pitch-oldPitch)
 		
-		Local the_yaw# = ((mouse_x_speed_1#)) * mouselook_x_inc# / (1.0+WearingVest)
-		Local the_pitch# = ((mouse_y_speed_1#)) * mouselook_y_inc# / (1.0+WearingVest)
+		mouse_x_leverTurn=CurveValue(0.0,mouse_x_leverTurn,8.0)+mouse_x_acc
+		mouse_y_leverTurn=CurveValue(0.0,mouse_y_leverTurn,8.0)+mouse_y_acc
 		
-		TurnEntity Collider, 0.0, -the_yaw#, 0.0 ; Turn the user on the Y (yaw) axis.
-		user_camera_pitch# = user_camera_pitch# + the_pitch#
-		; -- Limit the user;s camera To within 180 degrees of pitch rotation. ;EntityPitch(); returns useless values so we need To use a variable To keep track of the camera pitch.
-		If user_camera_pitch# > 70.0 Then user_camera_pitch# = 70.0
-		If user_camera_pitch# < - 70.0 Then user_camera_pitch# = -70.0
+		If user_camera_pitch# > 70.0 Then
+			user_camera_pitch# = 70.0
+		EndIf
+		If user_camera_pitch# < -70.0 Then
+			user_camera_pitch# = -70.0
+		EndIf
 		
 		RotateEntity Camera, WrapAngle(user_camera_pitch + Rnd(-CameraShake, CameraShake)), WrapAngle(EntityYaw(Collider) + Rnd(-CameraShake, CameraShake)), roll ; Pitch the user;s camera up And down.
 		
@@ -6314,7 +4829,7 @@ Function MouseLook()
 		
 	EndIf
 	
-	;p?¶lyhiukkasia
+	;p?ï¿½lyhiukkasia
 	If ParticleAmount=2
 		If Rand(35) = 1 Then
 			Local pvt% = CreatePivot()
@@ -6500,7 +5015,7 @@ Function MouseLook()
 				Case 1 ;chicken pox
 				    ;[Block]
 					If Rand(9000)=1 And Msg="" Then
-						Msg="Your skin is feeling itchy."
+						Msg=scpLang_GetPhrase("ingame.itchy")
 						MsgTimer =70*4
 					EndIf
 					;[End Block]
@@ -6524,10 +5039,10 @@ Function MouseLook()
 						SCP1025state[i]=SCP1025state[i]+fs\FPSfactor[0]*0.0005
 					EndIf
 					If SCP1025state[i]>20.0 Then
-						If SCP1025state[i]-fs\FPSfactor[0]<=20.0 Then Msg="The pain in your stomach is becoming unbearable."
+						If SCP1025state[i]-fs\FPSfactor[0]<=20.0 Then Msg=scpLang_GetPhrase("ingame.stomach1")
 						Stamina = Stamina - fs\FPSfactor[0] * 0.3
 					ElseIf SCP1025state[i]>10.0
-						If SCP1025state[i]-fs\FPSfactor[0]<=10.0 Then Msg="Your stomach is aching."
+						If SCP1025state[i]-fs\FPSfactor[0]<=10.0 Then Msg=scpLang_GetPhrase("ingame.stomach2")
 					EndIf
 					;[End Block]
 				Case 4 ;asthma
@@ -6553,8 +5068,7 @@ Function MouseLook()
 						HeartBeatRate=0
 						BlurTimer = Max(BlurTimer, 500)
 						If SCP1025state[i]>140 Then 
-							DeathMSG = Chr(34)+"He died of a cardiac arrest after reading SCP-1025, that's for sure. Is there such a thing as psychosomatic cardiac arrest, or does SCP-1025 have some "
-							DeathMSG = DeathMSG + "anomalous properties we are not yet aware of?"+Chr(34)
+							DeathMSG = scpLang_GetPhrase("ingame.cardiacarrest")
 							Kill()
 						EndIf
 					Else
@@ -6595,7 +5109,7 @@ Function DrawGUI()
 							If e\img = 0 Then
 								If BlinkTimer > -5 And Rand(30)=1 Then
 									PlaySound_Strict(DripSFX(Rand(0, 5)))
-									If e\img = 0 Then e\img = LoadImage_Strict(NPCsPath$+"scp_106_face.png")
+									If e\img = 0 Then e\img = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_106_face.png"))
 								EndIf
 							Else
 								DrawImage e\img, GraphicWidth/2-Rand(390,310), GraphicHeight/2-Rand(290,310)
@@ -6611,7 +5125,7 @@ Function DrawGUI()
 						If e\img = 0 Then
 							If BlinkTimer > -5 Then
 								If e\img = 0 Then
-									e\img = LoadImage_Strict(GFXPath$+"kneelmortal.pd")
+									e\img = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"kneelmortal.pd"))
 									If (ChannelPlaying(e\SoundCHN)) Then
 										StopChannel(e\SoundCHN)
 									EndIf
@@ -6704,8 +5218,8 @@ Function DrawGUI()
 					;[End Block]
 			End Select
 			DrawImage(HandIcon, x, y)
-			Color 0, 0, 0
-			Rect(x + 4, y + 4, 64 - 8, 64 - 8)
+			;Color 0, 0, 0
+			;Rect(x + 4, y + 4, 64 - 8, 64 - 8)
 			DrawImage(ArrowIMG(i), x + 21, y + 21)
 			DrawArrowIcon(i) = False
 		End If
@@ -6940,12 +5454,12 @@ Function DrawGUI()
 					UseDoor(SelectedDoor,True)
 					SelectedDoor = Null
 					PlaySound_Strict ScannerSFX1
-					Msg = "You hold the key close to the keypad."
+					Msg = scpLang_GetPhrase("ingame.keykeypad")
 					MsgTimer = 70 * 5
 				Else
 					SelectedDoor = Null
 					PlaySound_Strict ScannerSFX2
-					Msg = "You hold the key close to the keypad but nothing happens."
+					Msg = scpLang_GetPhrase("ingame.keykeypaderr")
 					MsgTimer = 70 * 5
 				EndIf
 			EndIf
@@ -6977,10 +5491,12 @@ Function DrawGUI()
 				If KeypadTimer =<0 Then
 					KeypadMSG = ""
 					SelectedDoor = Null
-					MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+					MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+					mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+					mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 				EndIf
 			Else
-				AAText GraphicWidth/2, y+70*scale, "ACCESS CODE: ",True,True	
+				AAText GraphicWidth/2, y+70*scale, scpLang_GetPhrase("ingame.accesscode") + " ",True,True	
 				AASetFont fo\Font[3]
 				AAText GraphicWidth/2, y+124*scale, KeypadInput,True,True	
 			EndIf
@@ -7029,10 +5545,12 @@ Function DrawGUI()
 										SelectedDoor\locked = 0
 										UseDoor(SelectedDoor,True)
 										SelectedDoor = Null
-										MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+										MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+										mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+										mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 									Else
 										PlaySound_Strict ScannerSFX2
-										KeypadMSG = "ACCESS DENIED"
+										KeypadMSG = scpLang_GetPhrase("ingame.accessdenied")
 										KeypadTimer = 210
 										KeypadInput = ""	
 									EndIf
@@ -7061,7 +5579,9 @@ Function DrawGUI()
 			
 			If MouseHit2 Then
 				SelectedDoor = Null
-				MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+				MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+				mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+				mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 			EndIf
 		Else
 			SelectedDoor = Null
@@ -7076,7 +5596,9 @@ Function DrawGUI()
 		If ms\MenuOpen Or InvOpen Then
 			ResumeSounds()
 			If OptionsMenu <> 0 Then SaveOptionsINI()
-			MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+			MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+			mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+			mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 		Else
 			PauseSounds()
 		EndIf
@@ -7294,7 +5816,7 @@ Function DrawGUI()
 					ElseIf PrevOtherOpen\SecondInv[MouseSlot] <> SelectedItem
 						Select SelectedItem\itemtemplate\tempname
 							Default
-								Msg = "You cannot combine these two items."
+								Msg = scpLang_GetPhrase("ingame.cannotcombine")
 								MsgTimer = 70 * 5
 						End Select					
 					EndIf
@@ -7308,7 +5830,9 @@ Function DrawGUI()
 		If (closedInv) And (Not InvOpen) Then 
 			ResumeSounds() 
 			OtherOpen=Null
-			MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+			MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+			mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+			mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 		EndIf
 		;[End Block]
 		
@@ -7467,7 +5991,7 @@ Function DrawGUI()
 							
 							If DoubleClick Then
 								If WearingHazmat > 0 And Instr(SelectedItem\itemtemplate\tempname,"hazmatsuit")=0 Then
-									Msg = "You cannot use any items while wearing a hazmat suit."
+									Msg = scpLang_GetPhrase("items.hazmaterr9")
 									MsgTimer = 70*5
 									SelectedItem = Null
 									Return
@@ -7518,13 +6042,13 @@ Function DrawGUI()
 					Select SelectedItem\itemtemplate\tempname
 						Case "vest","finevest","hazmatsuit","hazmatsuit2","hazmatsuit3"
 						    ;[Block]
-							Msg = "Double click on this item to take it off."
+							Msg = scpLang_GetPhrase("ingame.doubleitem")
 							MsgTimer = 70*5
 						    ;[End Block] 
 						Case "scp1499","super1499"
 						    ;[Block]
 							If I_1499\Using>0 Then
-								Msg = "Double click on this item to take it off."
+								Msg = scpLang_GetPhrase("ingame.doubleitem")
 								MsgTimer = 70*5
 							Else
 								DropItem(SelectedItem)
@@ -7541,7 +6065,7 @@ Function DrawGUI()
                                 If Inventory(i)<>Null Then
                                     If Inventory(i)\itemtemplate\name="SCP-215" Then
                                         If I_215\Timer >= 86.0
-                                            Msg = "You can't drop your glasses."
+                                            Msg = scpLang_GetPhrase("ingame.cantdropglasses")
 			                                MsgTimer = 70*6
 			                                I_215\Using = 1
 			                            Else
@@ -7557,7 +6081,7 @@ Function DrawGUI()
                         Case "gasmask", "gasmask3", "supergasmask"
                             ;[Block]
 							If WearingGasMask > 0 Then
-								Msg = "Double click on this item to take it off."
+								Msg = scpLang_GetPhrase("ingame.doubleitem")
 								MsgTimer = 70*5
 							Else
 								DropItem(SelectedItem)
@@ -7567,14 +6091,14 @@ Function DrawGUI()
 						    ;[End Block] 
 						Case "scp198"
 						    ;[Block]
-						    Msg = "You can't get rid of SCP-198."
+						    Msg = scpLang_GetPhrase("ingame.cant198")
 						    MsgTimer = 70*5
 						    ;[End Block]
 					    Case "scp402"
 					        ;[Block]
 						    If I_402\Timer >= 40.0 Then
 						        I_402\Using = 1
-								Msg = "You can't pull out the stone from your throat."
+								Msg = scpLang_GetPhrase("ingame.cant402")
 								MsgTimer = 70*5
 							Else
 								DropItem(SelectedItem)
@@ -7585,7 +6109,7 @@ Function DrawGUI()
 						Case "scp357"
 						    ;[Block]
 						    If I_357\Timer >= 56.0 Then
-							    Msg = "You can't get rid of SCP-357."
+							    Msg = scpLang_GetPhrase("ingame.cant357")
 								MsgTimer = 70*5
 							Else
 								DropItem(SelectedItem)
@@ -7596,7 +6120,7 @@ Function DrawGUI()
 				        Case "helmet"
                             ;[Block]
 							If WearingHelmet > 0 Then
-								Msg = "Double click on this item to take it off."
+								Msg = scpLang_GetPhrase("ingame.doubleitem")
 								MsgTimer = 70*5
 							Else
 								DropItem(SelectedItem)
@@ -7651,20 +6175,20 @@ Function DrawGUI()
 											EndIf
 										Next
 										If SelectedItem <> Null Then
-											Msg = "The paperclip is not strong enough to hold any more items."
+											Msg = scpLang_GetPhrase("ingame.clipboarderr")
 										Else
 											If added\itemtemplate\tempname = "paper" Or added\itemtemplate\tempname = "oldpaper" Then
-												Msg = "This document was added to the clipboard."
+												Msg = scpLang_GetPhrase("ingame.clipboard1")
 											ElseIf added\itemtemplate\tempname = "badge"
-												Msg = added\itemtemplate\name + " was added to the clipboard."
+												Msg = added\itemtemplate\name + " " + scpLang_GetPhrase("ingame.clipboard2")
 											Else
-												Msg = "The " + added\itemtemplate\name + " was added to the clipboard."
+												Msg = scpLang_GetPhrase("ingame.clipboard3") + " " + added\itemtemplate\name + " " + scpLang_GetPhrase("ingame.clipboard2")
 											EndIf
 											
 										EndIf
 										MsgTimer = 70 * 5
 									Else
-										Msg = "You cannot combine these two items."
+										Msg = scpLang_GetPhrase("ingame.cannotcombine")
 										MsgTimer = 70 * 5
 									EndIf
 								ElseIf Inventory(MouseSlot)\itemtemplate\tempname = "wallet" Then
@@ -7695,18 +6219,18 @@ Function DrawGUI()
 											EndIf
 										Next
 										If SelectedItem <> Null Then
-											Msg = "The wallet is full."
+											Msg = scpLang_GetPhrase("ingame.walleterr")
 										Else
-											Msg = "You put "+added\itemtemplate\name+" into the wallet."
+											Msg = scpLang_GetPhrase("ingame.wallet1") + " "+added\itemtemplate\name+" " + scpLang_GetPhrase("ingame.wallet2")
 										EndIf
 										
 										MsgTimer = 70 * 5
 									Else
-										Msg = "You cannot combine these two items."
+										Msg = scpLang_GetPhrase("ingame.cannotcombine")
 										MsgTimer = 70 * 5
 									EndIf
 								Else
-									Msg = "You cannot combine these two items."
+									Msg = scpLang_GetPhrase("ingame.cannotcombine")
 									MsgTimer = 70 * 5
 								EndIf
 								SelectedItem = Null
@@ -7722,12 +6246,12 @@ Function DrawGUI()
 										RemoveItem (SelectedItem)
 										SelectedItem = Null
 										Inventory(MouseSlot)\state = 100.0
-										Msg = "You replaced the navigator's battery."
+										Msg = scpLang_GetPhrase("ingame.nav1")
 										MsgTimer = 70 * 5
 										;[End Block]
 									Case "S-NAV Navigator Ultimate"
 									    ;[Block]
-										Msg = "There seems to be no place for batteries in this navigator."
+										Msg = scpLang_GetPhrase("ingame.nav2")
 										MsgTimer = 70 * 5
 										;[End Block]
 									Case "Radio Transceiver"
@@ -7735,12 +6259,12 @@ Function DrawGUI()
 										Select Inventory(MouseSlot)\itemtemplate\tempname 
 											Case "fineradio", "veryfineradio"
 											    ;[Block]
-												Msg = "There seems to be no place for batteries in this radio."
+												Msg = scpLang_GetPhrase("ingame.radio1")
 												MsgTimer = 70 * 5
 												;[End Block]
 											Case "18vradio"
 											    ;[Block]
-												Msg = "The battery does not fit inside this radio."
+												Msg = scpLang_GetPhrase("ingame.radio2")
 												MsgTimer = 70 * 5
 												;[End Block]
 											Case "radio"
@@ -7749,7 +6273,7 @@ Function DrawGUI()
 												RemoveItem (SelectedItem)
 												SelectedItem = Null
 												Inventory(MouseSlot)\state = 100.0
-												Msg = "You replaced the radio's battery."
+												Msg = scpLang_GetPhrase("ingame.radio3")
 												MsgTimer = 70 * 5
 												;[End Block]
 										End Select
@@ -7762,16 +6286,16 @@ Function DrawGUI()
 											RemoveItem (SelectedItem)
 											SelectedItem = Null
 											Inventory(MouseSlot)\state = 1000.0
-											Msg = "You replaced the goggles' battery."
+											Msg = scpLang_GetPhrase("ingame.goggles1")
 											MsgTimer = 70 * 5
 										Else
-											Msg = "There seems to be no place for batteries in these night vision goggles."
+											Msg = scpLang_GetPhrase("ingame.goggles2")
 											MsgTimer = 70 * 5
 										EndIf
 										;[End Block]
 									Default
 									    ;[Block]
-										Msg = "You cannot combine these two items."
+										Msg = scpLang_GetPhrase("ingame.cannotcombine")
 										MsgTimer = 70 * 5
 										;[End Block]	
 								End Select
@@ -7781,12 +6305,12 @@ Function DrawGUI()
 								Select Inventory(MouseSlot)\itemtemplate\name
 									Case "S-NAV Navigator", "S-NAV 300 Navigator", "S-NAV 310 Navigator"
 									    ;[Block]
-										Msg = "The battery does not fit inside this navigator."
+										Msg = scpLang_GetPhrase("ingame.nav3")
 										MsgTimer = 70 * 5
 										;[End Block]
 									Case "S-NAV Navigator Ultimate"
 									    ;[Block]
-										Msg = "There seems to be no place for batteries in this navigator."
+										Msg = scpLang_GetPhrase("ingame.nav2")
 										MsgTimer = 70 * 5
 										;[End Block]
 									Case "Radio Transceiver"
@@ -7794,7 +6318,7 @@ Function DrawGUI()
 										Select Inventory(MouseSlot)\itemtemplate\tempname 
 											Case "fineradio", "veryfineradio"
 											    ;[Block]
-												Msg = "There seems to be no place for batteries in this radio."
+												Msg = scpLang_GetPhrase("ingame.radio1")
 												MsgTimer = 70 * 5
 												;[End Block]		
 											Case "18vradio"
@@ -7803,21 +6327,21 @@ Function DrawGUI()
 												RemoveItem (SelectedItem)
 												SelectedItem = Null
 												Inventory(MouseSlot)\state = 100.0
-												Msg = "You replaced the radio's battery."
+												Msg = scpLang_GetPhrase("ingame.radio3")
 												MsgTimer = 70 * 5
 												;[End Block]
 										End Select 
 										;[End Block]
 									Default
 									    ;[Block]
-										Msg = "You cannot combine these two items."
+										Msg = scpLang_GetPhrase("ingame.cannotcombine")
 										MsgTimer = 70 * 5
 										;[End Block]	
 								End Select
 								;[End Block]
 							Default
 								;[Block]
-								Msg = "You cannot combine these two items."
+								Msg = scpLang_GetPhrase("ingame.cannotcombine")
 								MsgTimer = 70 * 5
 								;[End Block]
 						End Select					
@@ -7832,7 +6356,9 @@ Function DrawGUI()
 		
 		If InvOpen = False Then 
 			ResumeSounds() 
-			MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+			MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+			mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+			mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 		EndIf
 	Else ;invopen = False
 		
@@ -7843,7 +6369,7 @@ Function DrawGUI()
 					For i = 0 To MaxItemAmount - 1
                         If Inventory(i) <> Null Then
                             If Inventory(i)\itemtemplate\name = "SCP-215" And I_215\Timer >= 86.0 Then
-                                Msg = "You can't wear the goggles because of the glasses."
+                                Msg = scpLang_GetPhrase("ingame.nvg215")
 						        MsgTimer = 70 * 5
 						        SelectedItem = Null
 						        Return
@@ -7853,37 +6379,37 @@ Function DrawGUI()
                     Next
 
 					If I_215\Using > 0
-						Msg = "You need to take off the SCP-215 in order to put on the goggles."
+						Msg = scpLang_GetPhrase("ingame.nvg2152")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 				    ElseIf WearingGasMask > 0
-				        Msg = "You need to take off the gas mask in order to put on the goggles."
+				        Msg = scpLang_GetPhrase("ingame.nvggas")
 				        MsgTimer = 70 * 5
 				        SelectedItem = Null
 						Return
 					ElseIf I_1499\Using > 0
-                        Msg = "You need to take off the SCP-1499 in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvg1499")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf I_178\Using > 0
-                        Msg = "You need to take off the SCP-178 in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvg178")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf WearingHelmet > 0
-                        Msg = "You need to take off the helmet in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvghelmet")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
                     Else			
 						If WearingNightVision = 1 Then
-							Msg = "You removed the goggles."
+							Msg = scpLang_GetPhrase("ingame.nvgoff")
 							CameraFogFar = StoredCameraFogFar
 							PlaySound_Strict(NVGUse(0))
 						Else
-							Msg = "You put on the goggles."
+							Msg = scpLang_GetPhrase("ingame.nvgon")
 							WearingNightVision = 0
 							StoredCameraFogFar = CameraFogFar
 							CameraFogFar = 30
@@ -7899,7 +6425,7 @@ Function DrawGUI()
 					For i = 0 To MaxItemAmount - 1
                         If Inventory(i) <> Null Then
                             If Inventory(i)\itemtemplate\name = "SCP-215" And I_215\Timer >= 86.0 Then
-                                Msg = "You can't wear the goggles because of the glasses."
+                                Msg = scpLang_GetPhrase("ingame.nvg215")
 						        MsgTimer = 70 * 5
 						        SelectedItem = Null
 						        Return
@@ -7909,37 +6435,37 @@ Function DrawGUI()
                     Next
 
 					If I_215\Using > 0
-						Msg = "You need to take off the SCP-215 in order to put on the goggles."
+						Msg = scpLang_GetPhrase("ingame.nvg2152")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 				    ElseIf WearingGasMask > 0
-				        Msg = "You need to take off the gas mask in order to put on the goggles."
+				        Msg = scpLang_GetPhrase("ingame.nvggas")
 				        MsgTimer = 70 * 5
 				        SelectedItem = Null
 						Return
 					ElseIf I_1499\Using > 0
-                        Msg = "You need to take off the SCP-1499 in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvg1499")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf I_178\Using > 0
-                        Msg = "You need to take off the SCP-178 in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvg178")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf WearingHelmet > 0
-                        Msg = "You need to take off the helmet in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvghelmet")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
                     Else			
 						If WearingNightVision = 2 Then
-							Msg = "You removed the goggles."
+							Msg = scpLang_GetPhrase("ingame.nvgoff")
 							CameraFogFar = StoredCameraFogFar
 							PlaySound_Strict(NVGUse(0))
 						Else
-							Msg = "You put on the goggles."
+							Msg = scpLang_GetPhrase("ingame.nvgon")
 							WearingNightVision = 0
 							StoredCameraFogFar = CameraFogFar
 							CameraFogFar = 30
@@ -7955,7 +6481,7 @@ Function DrawGUI()
 					For i = 0 To MaxItemAmount - 1
                         If Inventory(i) <> Null Then
                             If Inventory(i)\itemtemplate\name = "SCP-215" And I_215\Timer >= 86.0 Then
-                                Msg = "You can't wear the goggles because of the glasses."
+                                Msg = scpLang_GetPhrase("ingame.nvg215")
 						        MsgTimer = 70 * 5
 						        SelectedItem = Null
 						        Return
@@ -7965,37 +6491,37 @@ Function DrawGUI()
                     Next
 
 					If I_215\Using > 0
-						Msg = "You need to take off the SCP-215 in order to put on the goggles."
+						Msg = scpLang_GetPhrase("ingame.nvg2152")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 				    ElseIf WearingGasMask > 0
-				        Msg = "You need to take off the gas mask in order to put on the goggles."
+				        Msg = scpLang_GetPhrase("ingame.nvggas")
 				        MsgTimer = 70 * 5
 				        SelectedItem = Null
 						Return
 					ElseIf I_1499\Using > 0
-                        Msg = "You need to take off the SCP-1499 in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvg1499")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf I_178\Using > 0
-                        Msg = "You need to take off the SCP-178 in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvg178")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf WearingHelmet > 0
-                        Msg = "You need to take off the helmet in order to put on the goggles."
+                        Msg = scpLang_GetPhrase("ingame.nvghelmet")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
                     Else			
 						If WearingNightVision = 3 Then
-							Msg = "You removed the goggles."
+							Msg = scpLang_GetPhrase("ingame.nvgoff")
 							CameraFogFar = StoredCameraFogFar
 							PlaySound_Strict(NVGUse(0))
 						Else
-							Msg = "You put on the goggles."
+							Msg = scpLang_GetPhrase("ingame.nvgon")
 							WearingNightVision = 0
 							StoredCameraFogFar = CameraFogFar
 							CameraFogFar = 30
@@ -8012,12 +6538,9 @@ Function DrawGUI()
 						If PlayerRoom\RoomTemplate\Name <> "room1123" Then
 							ShowEntity at\OverlayID[14]
 							LightFlash = 7
-							PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\1123\Touch.ogg"))
+							PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1123\Touch.ogg")))
 							If I_1033RU\HP = 0		
-							    DeathMSG = SubjectName$+" was shot dead after attempting to attack a member of Nine-Tailed Fox. Surveillance tapes show that the subject had been "
-							    DeathMSG = DeathMSG + "wandering around the site approximately 9 (nine) minutes prior, shouting the phrase " + Chr(34) + "get rid of the four pests" + Chr(34)
-							    DeathMSG = DeathMSG + " in chinese. SCP-1123 was found in [DATA REDACTED] nearby, suggesting the subject had come into physical contact with it. How "
-							    DeathMSG = DeathMSG + "exactly SCP-1123 was removed from its containment chamber is still unknown."
+							    DeathMSG = scpLang_GetPhrase("items.itemscp1123d")
 							    Kill()
 							Else
 							    Damage1033RU(50+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
@@ -8029,7 +6552,7 @@ Function DrawGUI()
 								If e\EventState = 0 Then
 									ShowEntity at\OverlayID[14]
 									LightFlash = 3
-									PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\1123\Touch.ogg"))		
+									PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1123\Touch.ogg")))		
 								EndIf
 								e\EventState = Max(1, e\EventState)
 								Exit
@@ -8043,7 +6566,7 @@ Function DrawGUI()
 					;[End Block]
 				Case "scp513"
 					;[Block]
-					PlaySound_Strict LoadTempSound(SFXPath$+"SCP\513\Bell1.ogg")
+					PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\513\Bell1.ogg"))
 					
 					If Curr5131 = Null
 						Curr5131 = CreateNPC(NPCtype513_1, 0,0,0)
@@ -8053,12 +6576,12 @@ Function DrawGUI()
 				Case "scp500pill"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't swallow the pill while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.pill1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't swallow the pill while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.pillgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -8066,13 +6589,13 @@ Function DrawGUI()
 						GiveAchievement(Achv500)
 						
 						If I_008\Timer > 0 Then
-							Msg = "You swallowed the pill. Your nausea is fading."
+							Msg = scpLang_GetPhrase("ingame.pill008")
 						ElseIf I_409\Timer > 0 Then
-						    Msg = "You swallowed the pill. Your body is getting warmer and the crystals are receding."
+						    Msg = scpLang_GetPhrase("ingame.pill409")
 						ElseIf I_357\Timer > 0 Then
-						    Msg = "You swallowed the pill. Your body is getting warmer and the clay is receding."
+						    Msg = scpLang_GetPhrase("ingame.pill357")
 						Else
-							Msg = "You swallowed the pill."
+							Msg = scpLang_GetPhrase("ingame.pillnone")
 						EndIf
 						MsgTimer = 70*7
 						
@@ -8111,27 +6634,27 @@ Function DrawGUI()
 				Case "veryfinefirstaid"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use that item wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.aid1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use that item while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.aidgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0
-					    Msg = "You can't use that item while wearing the SCP-215."
+					    Msg = scpLang_GetPhrase("ingame.aid215")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf I_178\Using > 0
-					    Msg = "You can't use that item while wearing the SCP-178."
+					    Msg = scpLang_GetPhrase("ingame.aid178")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf WearingNightVision > 0
-					    Msg = "You can't use that item while wearing a goggles."
+					    Msg = scpLang_GetPhrase("ingame.aidnvg")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -8140,30 +6663,30 @@ Function DrawGUI()
 						    Select Rand(5)
 							    Case 1
 								    Injuries = 3.5
-								    Msg = "You started bleeding heavily."
+								    Msg = scpLang_GetPhrase("ingame.bleedheavy")
 								    MsgTimer = 70*7
 							    Case 2
 								    Injuries = 0
 								    Bloodloss = 0
 								    I_1079\Foam = 0
-								    Msg = "Your wounds are healing up rapidly."
+								    Msg = scpLang_GetPhrase("ingame.bleedheal")
 								    MsgTimer = 70*7
 							    Case 3
 								    Injuries = Max(0, Injuries - Rnd(0.5,3.5))
 								    Bloodloss = Max(0, Bloodloss - Rnd(10,100))
-								    Msg = "You feel much better."
+								    Msg = scpLang_GetPhrase("ingame.bleedbetter")
 								    MsgTimer = 70*7
 							    Case 4
 								    BlurTimer = 10000
 								    Bloodloss = 0
-								    Msg = "You feel nauseated."
+								    Msg = scpLang_GetPhrase("ingame.bleednaus")
 								    MsgTimer = 70*7
 							    Case 5
 								    BlinkTimer = -10
 								    Local roomname$ = PlayerRoom\RoomTemplate\Name
 								    If roomname = "dimension1499" Or roomname = "gatea" Or (roomname="gateb" And EntityY(Collider)>1040.0*RoomScale)
 									    Injuries = 2.5
-									    Msg = "You started bleeding heavily."
+									    Msg = scpLang_GetPhrase("ingame.bleedheavy")
 									    MsgTimer = 70*7
 								    Else
 									    For r.Rooms = Each Rooms
@@ -8178,14 +6701,14 @@ Function DrawGUI()
 											    Exit
 										    EndIf
 									    Next
-									    Msg = "For some inexplicable reason. You find yourself inside the pocket dimension."
+									    Msg = scpLang_GetPhrase("ingame.pocketdimensionunknown")
 									    MsgTimer = 70*8
 							        EndIf
 						    End Select
 						
 						    RemoveItem(SelectedItem)
 						Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("ingame.finefirstaiderr")+Chr(34)
                             MsgTimer = 70*5
                             Return
                             SelectedItem = Null
@@ -8195,7 +6718,7 @@ Function DrawGUI()
 				Case "firstaid", "finefirstaid", "firstaid2"
 					;[Block]
 					If Bloodloss = 0 And Injuries = 0 Then
-						Msg = "You do not need to use a first aid right now."
+						Msg = scpLang_GetPhrase("ingame.aidnotnow")
 						MsgTimer = 70*5
 						SelectedItem = Null
 					Else
@@ -8224,33 +6747,33 @@ Function DrawGUI()
 								I_1079\Foam = 0
 								Injuries = Max(0, Injuries - 2.0)
 								If Injuries = 0 Then
-									Msg = "You bandaged the wounds and took a painkiller. You feel fine."
+									Msg = scpLang_GetPhrase("ingame.aidpainfine")
 								ElseIf Injuries > 1.0
-									Msg = "You bandaged the wounds and took a painkiller, but you were not able to stop the bleeding."
+									Msg = scpLang_GetPhrase("ingame.aidpainbleed")
 								Else
-									Msg = "You bandaged the wounds and took a painkiller, but you still feel sore."
+									Msg = scpLang_GetPhrase("ingame.aidpainsore")
 								EndIf
 								MsgTimer = 70*5
 								RemoveItem(SelectedItem)
 							Else
 								Bloodloss = Max(0, Bloodloss - Rand(10,20))
 								If Injuries >= 2.5 Then
-									Msg = "The wounds were way too severe to staunch the bleeding completely."
+									Msg = scpLang_GetPhrase("ingame.aidbleedsev")
 									Injuries = Max(2.5, Injuries-Rnd(0.3,0.7))
 								ElseIf Injuries > 1.0
 									Injuries = Max(0.5, Injuries-Rnd(0.5,1.0))
 									If Injuries > 1.0 Then
-										Msg = "You bandaged the wounds but were unable to staunch the bleeding completely."
+										Msg = scpLang_GetPhrase("ingame.aidbleedun")
 									Else
-										Msg = "You managed to stop the bleeding."
+										Msg = scpLang_GetPhrase("ingame.aidbleedstop")
 									EndIf
 								Else
 									If Injuries > 0.5 Then
 										Injuries = 0.5
-										Msg = "You took a painkiller, easing the pain slightly."
+										Msg = scpLang_GetPhrase("ingame.painease")
 									Else
 										Injuries = 0.5
-										Msg = "You took a painkiller, but it still hurts to walk."
+										Msg = scpLang_GetPhrase("ingame.painhurt")
 									EndIf
 								EndIf
 									
@@ -8258,22 +6781,22 @@ Function DrawGUI()
 									Select Rand(6)
 										Case 1
 											SuperMan = True
-											Msg = "You have becomed overwhelmedwithadrenalineholyshitWOOOOOO~!"
+											Msg = scpLang_GetPhrase("ingame.adrenaline")
 										Case 2
 											InvertMouse = (Not InvertMouse)
-											Msg = "You suddenly find it very difficult to turn your head."
+											Msg = scpLang_GetPhrase("ingame.headdif")
 										Case 3
 											BlurTimer = 5000
-											Msg = "You feel nauseated."
+											Msg = scpLang_GetPhrase("ingame.bleednaus")
 										Case 4
 											BlinkEffect = 0.6
 											BlinkEffectTimer = Rand(20,30)
 										Case 5
 											Bloodloss = 0
 											Injuries = 0
-											Msg = "You bandaged the wounds. The bleeding stopped completely and you feel fine."
+											Msg = scpLang_GetPhrase("ingame.bandfine")
 										Case 6
-											Msg = "You bandaged the wounds and blood started pouring heavily through the bandages."
+											Msg = scpLang_GetPhrase("ingame.bandheavy")
 											Injuries = 3.5
 									End Select
 								EndIf
@@ -8287,40 +6810,40 @@ Function DrawGUI()
 				Case "eyedrops", "eyedrops2"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use the eyedrops wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.drops1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use the eyedrops while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.dropsgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0
-					    Msg = "You can't use the eyedrops while wearing the SCP-215."
+					    Msg = scpLang_GetPhrase("ingame.drops215")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_178\Using > 0
-					    Msg = "You can't use the eyedrops while wearing the SCP-178."
+					    Msg = scpLang_GetPhrase("ingame.drops178")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingNightVision > 0
-					    Msg = "You can't use the eyedrops while wearing a goggles."
+					    Msg = scpLang_GetPhrase("ingame.dropsnvg")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 				        If (Not I_402\Using)
-				            Msg = "You used the eyedrops. Your eyes feel moisturized."
+				            Msg = scpLang_GetPhrase("ingame.dropsgood")
 				            MsgTimer = 70*5
 					        BlinkEffect = 0.6
 							BlinkEffectTimer = Rand(20, 30)
 							BlurTimer = 200
 						    RemoveItem(SelectedItem)
 						Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             SelectedItem = Null
                             Return
@@ -8330,33 +6853,33 @@ Function DrawGUI()
 				Case "fineeyedrops"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use the eyedrops wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.drops1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use the eyedrops while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.dropsgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0
-					    Msg = "You can't use the eyedrops while wearing the SCP-215."
+					    Msg = scpLang_GetPhrase("ingame.drops215")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_178\Using > 0
-					    Msg = "You can't use the eyedrops while wearing the SCP-178."
+					    Msg = scpLang_GetPhrase("ingame.drops178")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingNightVision > 0
-					    Msg = "You can't use the eyedrops while wearing a goggles."
+					    Msg = scpLang_GetPhrase("ingame.dropsnvg")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 					    If (Not I_402\Using)
-					        Msg = "You used the eyedrops. Your eyes feel very moisturized."
+					        Msg = scpLang_GetPhrase("ingame.dropsgood2")
 					        MsgTimer = 70*5
 							BlinkEffect = 0.4
 							BlinkEffectTimer = Rand(30, 40)
@@ -8364,7 +6887,7 @@ Function DrawGUI()
 							BlurTimer = 200
 						    RemoveItem(SelectedItem)
 						Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             SelectedItem = Null
                             Return
@@ -8374,33 +6897,33 @@ Function DrawGUI()
 				Case "supereyedrops"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use the eyedrops wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.drops1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use the eyedrops while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.dropsgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0
-					    Msg = "You can't use the eyedrops while wearing the SCP-215."
+					    Msg = scpLang_GetPhrase("ingame.drops215")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_178\Using > 0
-					    Msg = "You can't use the eyedrops while wearing the SCP-178."
+					    Msg = scpLang_GetPhrase("ingame.drops178")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingNightVision > 0
-					    Msg = "You can't use the eyedrops while wearing a goggles."
+					    Msg = scpLang_GetPhrase("ingame.dropsnvg")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 					    If (Not I_402\Using)
-					        Msg = "You used the eyedrops. Your eyes feel very moisturized."
+					        Msg = scpLang_GetPhrase("ingame.dropsgood2")
 					        MsgTimer = 70*5
 							BlinkEffect = 0.0
 							BlinkEffectTimer = 60
@@ -8408,7 +6931,7 @@ Function DrawGUI()
 						    BlurTimer = 1000
 						    RemoveItem(SelectedItem)
 						Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             Return
                             SelectedItem = Null
@@ -8420,7 +6943,7 @@ Function DrawGUI()
 					If SelectedItem\itemtemplate\img = 0 Then
 						Select SelectedItem\itemtemplate\name
 							Case "Burnt Note" 
-								SelectedItem\itemtemplate\img = LoadImage_Strict(ItemsPath$+"bn.it")
+								SelectedItem\itemtemplate\img = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\items\"+"bn.it"))
 								SetBuffer ImageBuffer(SelectedItem\itemtemplate\img)
 								Color 0,0,0
 								AAText 277, 469, AccessCode, True, True
@@ -8443,18 +6966,18 @@ Function DrawGUI()
 								SelectedItem\itemtemplate\img=LoadImage_Strict(SelectedItem\itemtemplate\imgpath)	
 								
 								If (SelectedItem\state = 0) Then
-									Msg = Chr(34)+"Hey, I remember this movie!"+Chr(34)
+									Msg = scpLang_GetPhrase("ingame.ticket")
 									MsgTimer = 70*10
-									PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\NostalgiaCancer"+Rand(1,5)+".ogg")
+									PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\NostalgiaCancer"+Rand(1,5)+".ogg"))
 									SelectedItem\state = 1
 								EndIf
 							Case "Document SCP-XXX"
 							    SelectedItem\itemtemplate\img = LoadImage_Strict(SelectedItem\itemtemplate\imgpath)	
 								SelectedItem\itemtemplate\img = ResizeImage2(SelectedItem\itemtemplate\img, ImageWidth(SelectedItem\itemtemplate\img) * MenuScale, ImageHeight(SelectedItem\itemtemplate\img) * MenuScale)
 								If (SelectedItem\state = 0) Then
-									Msg = Chr(34)+"How strange, this document is different from the others. I think..."+Chr(34)
+									Msg = scpLang_GetPhrase("ingame.strangedoc")
 									MsgTimer = 70*10
-									PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\NostalgiaCancer"+Rand(1,5)+".ogg")
+									PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\NostalgiaCancer"+Rand(1,5)+".ogg"))
 									SelectedItem\state = 1
 								EndIf
 							Default 
@@ -8472,7 +6995,7 @@ Function DrawGUI()
 					GiveAchievement(Achv1025) 
 					If SelectedItem\itemtemplate\img=0 Then
 						SelectedItem\state = Rand(0,5)
-						SelectedItem\itemtemplate\img=LoadImage_Strict(ItemsPath$+"1025\1025_"+Int(SelectedItem\state)+".png")	
+						SelectedItem\itemtemplate\img=LoadImage_Strict(scpModding_ProcessFilePath$("GFX\items\"+"1025\1025_"+Int(SelectedItem\state)+".png"))	
 						SelectedItem\itemtemplate\img = ResizeImage2(SelectedItem\itemtemplate\img, ImageWidth(SelectedItem\itemtemplate\img) * MenuScale, ImageHeight(SelectedItem\itemtemplate\img) * MenuScale)
 						
 						MaskImage(SelectedItem\itemtemplate\img, 255, 0, 255)
@@ -8485,12 +7008,12 @@ Function DrawGUI()
 				Case "cup"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use that item while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.cup1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use that item while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.cupgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -8506,14 +7029,14 @@ Function DrawGUI()
 						    ;the state of refined items is more than 1.0 (fine setting increases it by 1, very fine doubles it)
 						    x2 = (SelectedItem\state+1.0)
 						
-						    Local iniStr$ = "Data\SCP-294.ini"
+						    Local iniStr$ = scpModding_ProcessFilePath$("Data\SCP-294.ini")
 						
 						    Local loc% = GetINISectionLocation(iniStr, SelectedItem\name)
 						
 						    ;Stop
 						
 						    strtemp = GetINIString2(iniStr, loc, "message")
-						    If strtemp <> "" Then Msg = strtemp : MsgTimer = 70*6
+						    If strtemp <> "" Then Msg = scpLang_GetPhrase(strtemp) : MsgTimer = 70*6
 						    
 						    If GetINIInt2(iniStr, loc, "lethal") Or GetINIInt2(iniStr, loc, "deathtimer") Then 
 							    DeathMSG = GetINIString2(iniStr, loc, "deathmessage")
@@ -8570,7 +7093,7 @@ Function DrawGUI()
 							EndIf						
 						    SelectedItem = Null
 						Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             SelectedItem = Null
                             Return
@@ -8584,12 +7107,12 @@ Function DrawGUI()
 						StaminaEffect = 0.5
 						StaminaEffectTimer = 20
 						
-						Msg = "You injected yourself with the syringe and feel a slight adrenaline rush."
+						Msg = scpLang_GetPhrase("ingame.syringe1")
 						MsgTimer = 70 * 8
 						
 						RemoveItem(SelectedItem)
 					Else
-                        Msg = Chr(34)+"I... Can't..."+Chr(34)
+                        Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                         MsgTimer = 70*5
                         Return
                         SelectedItem = Null
@@ -8602,12 +7125,12 @@ Function DrawGUI()
 						StaminaEffect = Rnd(0.5, 0.8)
 						StaminaEffectTimer = Rnd(20, 30)
 						
-						Msg = "You injected yourself with the syringe and feel an adrenaline rush."
+						Msg = scpLang_GetPhrase("ingame.syringe2")
 						MsgTimer = 70 * 8
 						
 						RemoveItem(SelectedItem)
 					Else
-                        Msg = Chr(34)+"I... Can't..."+Chr(34)
+                        Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                         MsgTimer = 70*5
                         SelectedItem = Null
                         Return
@@ -8621,19 +7144,19 @@ Function DrawGUI()
 								HealTimer = Rnd(40, 60)
 								StaminaEffect = 0.1
 								StaminaEffectTimer = 30
-								Msg = "You injected yourself with the syringe and feel a huge adrenaline rush."
+								Msg = scpLang_GetPhrase("ingame.syringe3")
 							Case 2
 								SuperMan = True
-								Msg = "You injected yourself with the syringe and feel a humongous adrenaline rush."
+								Msg = scpLang_GetPhrase("ingame.syringe4")
 							Case 3
 								VomitTimer = 30
-								Msg = "You injected yourself with the syringe and feel a pain in your stomach."
+								Msg = scpLang_GetPhrase("ingame.syringe5")
 						End Select
 						
 						MsgTimer = 70 * 8
 						RemoveItem(SelectedItem)
 					Else
-                        Msg = Chr(34)+"I... Can't..."+Chr(34)
+                        Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                         MsgTimer = 70*5
                         SelectedItem = Null
                         Return
@@ -8653,7 +7176,7 @@ Function DrawGUI()
 					;RadioState(7) = another timer for the "code channel"
 					
 					If RadioState(5) = 0 Then 
-						Msg = "Use the numbered keys 1 through 5 to cycle between various channels."
+						Msg = scpLang_GetPhrase("ingame.radiokeys")
 						MsgTimer = 70 * 5
 						RadioState(5) = 1
 						RadioState(0) = -1
@@ -8677,13 +7200,13 @@ Function DrawGUI()
 							Select Int(SelectedItem\state2)
 								Case 0 ;randomkanava
 									ResumeChannel(RadioCHN(0))
-									strtemp = "        USER TRACK PLAYER - "
+									strtemp = "        " + scpLang_GetPhrase("ingame.radiouser") + " - "
 									If (Not EnableUserTracks)
 										If ChannelPlaying(RadioCHN(0)) = False Then RadioCHN(0) = PlaySound_Strict(RadioStatic)
-										strtemp = strtemp + "NOT ENABLED     "
+										strtemp = strtemp + scpLang_GetPhrase("ingame.radionot") + "     "
 									ElseIf UserTrackMusicAmount<1
 										If ChannelPlaying(RadioCHN(0)) = False Then RadioCHN(0) = PlaySound_Strict(RadioStatic)
-										strtemp = strtemp + "NO TRACKS FOUND     "
+										strtemp = strtemp + scpLang_GetPhrase("ingame.radionone") + "     "
 									Else
 										If (Not ChannelPlaying(RadioCHN(0)))
 											If (Not UserTrackFlag%)
@@ -8699,7 +7222,7 @@ Function DrawGUI()
 												EndIf
 											EndIf
 											If CurrUserTrack%<>0 Then FreeSound_Strict(CurrUserTrack%) : CurrUserTrack% = 0
-											CurrUserTrack% = LoadSound_Strict(MusicPath2$+UserTrackName$(RadioState(0)))
+											CurrUserTrack% = LoadSound_Strict("SFX\Radio\UserTracks"+UserTrackName$(RadioState(0)))
 											RadioCHN(0) = PlaySound_Strict(CurrUserTrack%)
 										Else
 											strtemp = strtemp + Upper(UserTrackName$(RadioState(0))) + "          "
@@ -8721,14 +7244,14 @@ Function DrawGUI()
 												EndIf
 											EndIf
 											If CurrUserTrack%<>0 Then FreeSound_Strict(CurrUserTrack%) : CurrUserTrack% = 0
-											CurrUserTrack% = LoadSound_Strict(MusicPath2$+UserTrackName$(RadioState(0)))
+											CurrUserTrack% = LoadSound_Strict("SFX\Radio\UserTracks"+UserTrackName$(RadioState(0)))
 											RadioCHN(0) = PlaySound_Strict(CurrUserTrack%)
 										EndIf
 									EndIf
-								Case 1 ;h?¤lytyskanava
+								Case 1 ;h?ï¿½lytyskanava
 									
 									ResumeChannel(RadioCHN(1))
-									strtemp = "        WARNING - CONTAINMENT BREACH          "
+									strtemp = "        " + scpLang_GetPhrase("ingame.radiocon") + "          "
 									If ChannelPlaying(RadioCHN(1)) = False Then
 										
 										If RadioState(1) => 5 Then
@@ -8743,7 +7266,7 @@ Function DrawGUI()
 									
 								Case 2 ;scp-radio
 									ResumeChannel(RadioCHN(2))
-									strtemp = "        SCP Foundation On-Site Radio          "
+									strtemp = "        " + scpLang_GetPhrase("ingame.radiosite") + "          "
 									If ChannelPlaying(RadioCHN(2)) = False Then
 										RadioState(2)=RadioState(2)+1
 										If RadioState(2) = 17 Then RadioState(2) = 1
@@ -8755,7 +7278,7 @@ Function DrawGUI()
 									EndIf 
 								Case 3
 									ResumeChannel(RadioCHN(3))
-									strtemp = "             EMERGENCY CHANNEL - RESERVED FOR COMMUNICATION IN THE EVENT OF A CONTAINMENT BREACH         "
+									strtemp = "             " + scpLang_GetPhrase("ingame.radioem") + "         "
 									If ChannelPlaying(RadioCHN(3)) = False Then RadioCHN(3) = PlaySound_Strict(RadioStatic)
 									
 									If MTFtimer > 0 Then 
@@ -8763,43 +7286,43 @@ Function DrawGUI()
 										Select RadioState(3)
 											Case 40
 												If Not RadioState3(0) Then
-													RadioCHN(3) = PlaySound_Strict(LoadTempSound(SFXPath$+"Character\MTF\Random1.ogg"))
+													RadioCHN(3) = PlaySound_Strict(scpModding_ProcessFilePath$(LoadTempSound("SFX\"+"Character\MTF\Random1.ogg")))
 													RadioState(3) = RadioState(3)+1	
 													RadioState3(0) = True	
 												EndIf											
 											Case 400
 												If Not RadioState3(1) Then
-													RadioCHN(3) = PlaySound_Strict(LoadTempSound(SFXPath$+"Character\MTF\Random2.ogg"))
+													RadioCHN(3) = PlaySound_Strict(scpModding_ProcessFilePath$(LoadTempSound("SFX\"+"Character\MTF\Random2.ogg")))
 													RadioState(3) = RadioState(3)+1	
 													RadioState3(1) = True	
 												EndIf	
 											Case 800
 												If Not RadioState3(2) Then
-													RadioCHN(3) = PlaySound_Strict(LoadTempSound(SFXPath$+"Character\MTF\Random3.ogg"))
+													RadioCHN(3) = PlaySound_Strict(scpModding_ProcessFilePath$(LoadTempSound("SFX\"+"Character\MTF\Random3.ogg")))
 													RadioState(3) = RadioState(3)+1	
 													RadioState3(2) = True
 												EndIf													
 											Case 1200
 												If Not RadioState3(3) Then
-													RadioCHN(3) = PlaySound_Strict(LoadTempSound(SFXPath$+"Character\MTF\Random4.ogg"))	
+													RadioCHN(3) = PlaySound_Strict(scpModding_ProcessFilePath$(LoadTempSound("SFX\"+"Character\MTF\Random4.ogg")))	
 													RadioState(3) = RadioState(3)+1	
 													RadioState3(3) = True
 												EndIf
 											Case 1600
 												If Not RadioState3(4) Then
-													RadioCHN(3) = PlaySound_Strict(LoadTempSound(SFXPath$+"Character\MTF\Random5.ogg"))	
+													RadioCHN(3) = PlaySound_Strict(scpModding_ProcessFilePath$(LoadTempSound("SFX\"+"Character\MTF\Random5.ogg")))	
 													RadioState(3) = RadioState(3)+1
 													RadioState3(4) = True
 												EndIf
 											Case 2000
 												If Not RadioState3(5) Then
-													RadioCHN(3) = PlaySound_Strict(LoadTempSound(SFXPath$+"Character\MTF\Random6.ogg"))	
+													RadioCHN(3) = PlaySound_Strict(scpModding_ProcessFilePath$(LoadTempSound("SFX\"+"Character\MTF\Random6.ogg")))	
 													RadioState(3) = RadioState(3)+1
 													RadioState3(5) = True
 												EndIf
 											Case 2400
 												If Not RadioState3(6) Then
-													RadioCHN(3) = PlaySound_Strict(LoadTempSound(SFXPath$+"Character\MTF\Random7.ogg"))	
+													RadioCHN(3) = PlaySound_Strict(scpModding_ProcessFilePath$(LoadTempSound("SFX\"+"Character\MTF\Random7.ogg")))	
 													RadioState(3) = RadioState(3)+1
 													RadioState3(6) = True
 												EndIf
@@ -8812,7 +7335,7 @@ Function DrawGUI()
 									ResumeChannel(RadioCHN(4))
 									If ChannelPlaying(RadioCHN(4)) = False Then 
 										If RemoteDoorOn = False And RadioState(8) = False Then
-											RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\Chatter3.ogg"))	
+											RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\Chatter3.ogg")))	
 											RadioState(8) = True
 										Else
 											RadioState(4)=RadioState(4)+Max(Rand(-10,1),0)
@@ -8821,62 +7344,62 @@ Function DrawGUI()
 												Case 10
 													If (Not Contained106)
 														If Not RadioState4(0) Then
-															RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\OhGod.ogg"))
+															RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\OhGod.ogg")))
 															RadioState(4) = RadioState(4)+1
 															RadioState4(0) = True
 														EndIf
 													EndIf
 												Case 100
 													If Not RadioState4(1) Then
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\Chatter2.ogg"))
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\Chatter2.ogg")))
 														RadioState(4) = RadioState(4)+1
 														RadioState4(1) = True
 													EndIf		
 												Case 158
 													If MTFtimer = 0 And (Not RadioState4(2)) Then 
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\franklin1.ogg"))
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\franklin1.ogg")))
 														RadioState(4) = RadioState(4)+1
 														RadioState(2) = True
 													EndIf
 												Case 200
 													If Not RadioState4(3) Then
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\Chatter4.ogg"))
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\Chatter4.ogg")))
 														RadioState(4) = RadioState(4)+1
 														RadioState4(3) = True
 													EndIf		
 												Case 260
 													If Not RadioState4(4) Then
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\035\RadioHelp1.ogg"))
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\035\RadioHelp1.ogg")))
 														RadioState(4) = RadioState(4)+1
 														RadioState4(4) = True
 													EndIf		
 												Case 300
 													If Not RadioState4(5) Then
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\Chatter1.ogg"))	
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\Chatter1.ogg")))	
 														RadioState(4) = RadioState(4)+1	
 														RadioState4(5) = True
 													EndIf		
 												Case 350
 													If Not RadioState4(6) Then
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\franklin2.ogg"))
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\franklin2.ogg")))
 														RadioState(4) = RadioState(4)+1
 														RadioState4(6) = True
 													EndIf		
 												Case 400
 													If Not RadioState4(7) Then
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\035\RadioHelp2.ogg"))
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\035\RadioHelp2.ogg")))
 														RadioState(4) = RadioState(4)+1
 														RadioState4(7) = True
 													EndIf		
 												Case 450
 													If Not RadioState4(8) Then
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\franklin3.ogg"))	
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\franklin3.ogg")))	
 														RadioState(4) = RadioState(4)+1		
 														RadioState4(8) = True
 													EndIf		
 												Case 600
 													If Not RadioState4(9) Then
-														RadioCHN(4) = PlaySound_Strict(LoadTempSound(SFXPath$+"Radio\franklin4.ogg"))	
+														RadioCHN(4) = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Radio\franklin4.ogg")))	
 														RadioState(4) = RadioState(4)+1	
 														RadioState4(9) = True
 													EndIf		
@@ -8940,7 +7463,7 @@ Function DrawGUI()
 											If RadioCHN(Int(SelectedItem\state2)) <> 0 Then PauseChannel(RadioCHN(Int(SelectedItem\state2)))
 										EndIf
 										SelectedItem\state2 = i-2
-										;jos nykyist?¤ kanavaa ollaan soitettu, laitetaan jatketaan toistoa samasta kohdasta
+										;jos nykyist?ï¿½ kanavaa ollaan soitettu, laitetaan jatketaan toistoa samasta kohdasta
 										If RadioCHN(SelectedItem\state2)<>0 Then ResumeChannel(RadioCHN(SelectedItem\state2))
 									EndIf
 								Next
@@ -8965,30 +7488,30 @@ Function DrawGUI()
 				Case "cigarette"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use the cigarette while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.cig1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use the cigarette while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.ciggas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 						Select Rand(6)
 							Case 1
-								Msg = Chr(34)+"I don't have anything to light it with. Umm, what about that... Nevermind."+Chr(34)
+								Msg = scpLang_GetPhrase("ingame.cig1")
 							Case 2
-								Msg = "You are unable to get lit."
+								Msg = scpLang_GetPhrase("ingame.cig2")
 							Case 3
-								Msg = Chr(34)+"I quit that a long time ago."+Chr(34)
+								Msg = scpLang_GetPhrase("ingame.cig3")
 								RemoveItem(SelectedItem)
 							Case 4
-								Msg = Chr(34)+"Even if I wanted one, I have nothing to light it with."+Chr(34)
+								Msg = scpLang_GetPhrase("ingame.cig4")
 							Case 5
-								Msg = Chr(34)+"Could really go for one now... Wish I had a lighter."+Chr(34)
+								Msg = scpLang_GetPhrase("ingame.cig5")
 							Case 6
-								Msg = Chr(34)+"Don't plan on starting, even at a time like this."+Chr(34)
+								Msg = scpLang_GetPhrase("ingame.cig6")
 								RemoveItem(SelectedItem)
 						End Select
 						MsgTimer = 70 * 5
@@ -8997,24 +7520,24 @@ Function DrawGUI()
 				Case "scp420j"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use the SCP-420-J while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.weed1")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use the SCP-420-J while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.weed2")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 						If I_714\Using = 1 Or WearingHazmat = 3 Or WearingGasMask = 3 Then
-							Msg = Chr(34) + "DUDE WTF THIS SHIT DOESN'T EVEN WORK" + Chr(34)
+							Msg = Chr(34) + scpLang_GetPhrase("ingame.weed3") + Chr(34)
 						Else
-							Msg = Chr(34) + "MAN DATS SUM GOOD ASS SHIT" + Chr(34)
+							Msg = Chr(34) + scpLang_GetPhrase("ingame.weed4") + Chr(34)
 							Injuries = Max(Injuries-0.5, 0)
 							BlurTimer = 500
 							GiveAchievement(Achv420)
-							PlaySound_Strict LoadTempSound(MusicPath + "Using420J.ogg")
+							PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Music\" + "Using420J.ogg"))
 						EndIf
 						MsgTimer = 70 * 5
 						RemoveItem(SelectedItem)
@@ -9023,23 +7546,21 @@ Function DrawGUI()
 				Case "scp420s"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use that item while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.weed5")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use that item while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.weed6")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 						If I_714\Using=1 Or WearingHazmat = 3 Or WearingGasMask = 3 Then
-							Msg = Chr(34) + "DUDE WTF THIS SHIT DOESN'T EVEN WORK" + Chr(34)
+							Msg = Chr(34) + scpLang_GetPhrase("ingame.weed3") + Chr(34)
 						Else
-							DeathMSG = SubjectName$+" found in a comatose state in [DATA REDACTED]. The subject was holding what appears to be a cigarette while smiling widely. "
-							DeathMSG = DeathMSG+"Chemical analysis of the cigarette has been inconclusive, although it seems to contain a high concentration of an unidentified chemical "
-							DeathMSG = DeathMSG+"whose molecular structure is remarkably similar to that of tetrahydrocannabinol."
-							Msg = Chr(34) + "UH WHERE... WHAT WAS I DOING AGAIN... MAN I NEED TO TAKE A NAP..." + Chr(34)
+							DeathMSG = scpLang_GetPhrase("ingame.weed7")
+							Msg = Chr(34) + scpLang_GetPhrase("ingame.weed8") + Chr(34)
 							KillTimer = -1						
 						EndIf
 						MsgTimer = 70 * 6
@@ -9049,11 +7570,11 @@ Function DrawGUI()
 				Case "scp714"
 					;[Block]
 					If I_714\Using=1 Then
-						Msg = "You removed the ring."
+						Msg = scpLang_GetPhrase("ingame.ringoff")
 						I_714\Using = False
 					Else
 						GiveAchievement(Achv714)
-						Msg = "You put on the ring."
+						Msg = scpLang_GetPhrase("ingame.ringon")
 						I_714\Using = True
 					EndIf
 					MsgTimer = 70 * 5
@@ -9078,7 +7599,7 @@ Function DrawGUI()
 						
 					If SelectedItem\state=100 Then
 						If WearingHazmat>0 Then
-							Msg = "You removed the hazmat suit."
+							Msg = scpLang_GetPhrase("ingame.hazmatoff")
 							WearingHazmat = False
 							DropItem(SelectedItem)
 						Else
@@ -9090,7 +7611,7 @@ Function DrawGUI()
 								WearingHazmat = 3
 							EndIf
 							If SelectedItem\itemtemplate\sound <> 66 Then PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
-							Msg = "You put on the hazmat suit."
+							Msg = scpLang_GetPhrase("ingame.hazmaton")
 							EndIf
 						SelectedItem\state=0
 						MsgTimer = 70 * 5
@@ -9116,15 +7637,15 @@ Function DrawGUI()
 					
 					If SelectedItem\state=100 Then
 						If WearingVest>0 Then
-							Msg = "You removed the vest."
+							Msg = scpLang_GetPhrase("ingame.vestoff")
 							WearingVest = False
 							DropItem(SelectedItem)
 						Else
 							If SelectedItem\itemtemplate\tempname="vest" Then
-								Msg = "You put on the vest and feel slightly encumbered."
+								Msg = scpLang_GetPhrase("ingame.veston1")
 								WearingVest = 1
 							Else
-								Msg = "You put on the vest and feel heavily encumbered."
+								Msg = scpLang_GetPhrase("ingame.veston2")
 								WearingVest = 2
 							EndIf
 							If SelectedItem\itemtemplate\sound <> 66 Then PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
@@ -9139,7 +7660,7 @@ Function DrawGUI()
                     For i = 0 To MaxItemAmount - 1
                         If Inventory(i) <> Null Then
                             If Inventory(i)\itemtemplate\name = "SCP-215" And I_215\Timer >= 86.0 Then
-                                Msg = "You can't wear a gas mask because of the glasses."
+                                Msg = scpLang_GetPhrase("ingame.gasmaskerr1")
 						        MsgTimer = 70 * 5
 						        SelectedItem = Null
 						        Return
@@ -9149,27 +7670,27 @@ Function DrawGUI()
                     Next
 
 					If I_1499\Using > 0
-					    Msg = "You need to take off the SCP-1499 in order to put on a gas mask."	
+					    Msg = scpLang_GetPhrase("ingame.gasmaskerr2")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_178\Using > 0 Then
-					    Msg = "You need to take off the SCP-178 in order to put on a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.gasmaskerr3")
                         MsgTimer = 70 * 5
                         SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0 Then
-					    Msg = "You need to take off the SCP-215 in order to put on a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.gasmaskerr4")
                         MsgTimer = 70 * 5
                         SelectedItem = Null
 					    Return
 					ElseIf WearingNightVision > 0
-					    Msg = "You need to take off the goggles in order to put on a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.gasmaskerr5")
                         MsgTimer = 70 * 5
                         SelectedItem = Null
 					    Return
                     ElseIf WearingHelmet > 0
-                        Msg = "You need to take off the helmet in order to put on a gas mask."
+                        Msg = scpLang_GetPhrase("ingame.gasmaskerr6")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
@@ -9192,17 +7713,17 @@ Function DrawGUI()
 					    If SelectedItem\state = 100 Then
                             If WearingGasMask > 0 Then
                                 WearingGasMask = False
-                                Msg = "You removed the gas mask."
+                                Msg = scpLang_GetPhrase("ingame.gasmaskoff")
                                 If SelectedItem\itemtemplate\sound <> 66 Then PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
                             Else
 						        If SelectedItem\itemtemplate\tempname = "supergasmask"
-							        Msg = "You put on the gas mask and you can breathe easier."
+							        Msg = scpLang_GetPhrase("ingame.gasmaskon1")
 							        WearingGasMask = 2
 						        ElseIf SelectedItem\itemtemplate\tempname = "gasmask3"
-							        Msg = "You put on the gas mask."
+							        Msg = scpLang_GetPhrase("ingame.gasmaskon2")
 							        WearingGasMask = 3
 						        ElseIf SelectedItem\itemtemplate\tempname = "gasmask"
-							        Msg = "You put on the gas mask."
+							        Msg = scpLang_GetPhrase("ingame.gasmaskon2")
 							        WearingGasMask = 1
 						        EndIf
 					            If SelectedItem\itemtemplate\sound <> 66 Then PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
@@ -9251,8 +7772,8 @@ Function DrawGUI()
 					If (Not NavWorks) Then
 						If (MilliSecs2() Mod 1000) > 300 Then
 							Color(200, 0, 0)
-							AAText(x, y + height / 2 - 80, "ERROR 06", True)
-							AAText(x, y + height / 2 - 60, "LOCATION UNKNOWN", True)						
+							AAText(x, y + height / 2 - 80, scpLang_GetPhrase("ingame.naverr1"), True)
+							AAText(x, y + height / 2 - 60, scpLang_GetPhrase("ingame.naverr2"), True)						
 						EndIf
 					Else
 						
@@ -9325,7 +7846,7 @@ Function DrawGUI()
 							EndIf
 							If (MilliSecs2() Mod 1000) > 300 Then
 								If SelectedItem\itemtemplate\name <> "S-NAV 310 Navigator" And SelectedItem\itemtemplate\name <> "S-NAV Navigator Ultimate" Then
-									AAText(x - width/2 + 10, y - height/2 + 10, "MAP DATABASE OFFLINE")
+									AAText(x - width/2 + 10, y - height/2 + 10, scpLang_GetPhrase("ingame.naverr3"))
 								EndIf
 																
 								yawvalue = EntityYaw(Collider)-90
@@ -9431,7 +7952,7 @@ Function DrawGUI()
 					For i = 0 To MaxItemAmount - 1
                         If Inventory(i) <> Null Then
                             If Inventory(i)\itemtemplate\name = "SCP-215" And I_215\Timer >= 86.0 Then
-                                Msg = "You can't wear the SCP-1499 because of the SCP-215."
+                                Msg = scpLang_GetPhrase("ingame.scp1499err1")
 						        MsgTimer = 70 * 5
 						        SelectedItem = Null
 						        Return
@@ -9441,27 +7962,27 @@ Function DrawGUI()
                     Next
 					
 					If WearingNightVision > 0
-						Msg = "You need to take off the goggles in order to put on the SCP-1499."
+						Msg = scpLang_GetPhrase("ingame.scp1499err2")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 				    ElseIf WearingGasMask > 0
-				        Msg = "You need to take off the gas mask in order to put on the SCP-1499."
+				        Msg = scpLang_GetPhrase("ingame.scp1499err3")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf I_178\Using > 0
-                        Msg = "You need to take off the SCP-178 in order to put on the SCP-1499."
+                        Msg = scpLang_GetPhrase("ingame.scp1499err4")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf I_215\Using > 0
-                        Msg = "You need to take off the SCP-215 in order to put on the SCP-1499."
+                        Msg = scpLang_GetPhrase("ingame.scp1499err5")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf WearingHelmet > 0
-                        Msg = "You need to take off the helmet in order to put the SCP-1499."
+                        Msg = scpLang_GetPhrase("ingame.scp1499err6")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 					    Return
@@ -9514,7 +8035,7 @@ Function DrawGUI()
 											it\disttimer = 0
 										Next
 										PlayerRoom = r
-										PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\1499\Enter.ogg"))
+										PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1499\Enter.ogg")))
 										I_1499\X# = 0.0
 										I_1499\Y# = 0.0
 										I_1499\Z# = 0.0
@@ -9554,10 +8075,10 @@ Function DrawGUI()
 					DrawImage(SelectedItem\itemtemplate\img, GraphicWidth / 2 - ImageWidth(SelectedItem\itemtemplate\img) / 2, GraphicHeight / 2 - ImageHeight(SelectedItem\itemtemplate\img) / 2)
 					
 					If SelectedItem\state = 0 Then
-						PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\NostalgiaCancer"+Rand(6,10)+".ogg")
+						PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\NostalgiaCancer"+Rand(6,10)+".ogg"))
 						Select SelectedItem\itemtemplate\name
 							Case "Old Badge"
-								Msg = Chr(34)+"Huh? This guy looks just like me!"+Chr(34)
+								Msg = Chr(34)+scpLang_GetPhrase("ingame.badge")+Chr(34)
 								MsgTimer = 70*10
 						End Select
 						
@@ -9567,9 +8088,9 @@ Function DrawGUI()
 				Case "key"
 					;[Block]
 					If SelectedItem\state = 0 Then
-						PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\NostalgiaCancer"+Rand(6,10)+".ogg")
+						PlaySound_Strict LoadTempSound("SFX\"+"SCP\1162\NostalgiaCancer"+Rand(6,10)+".ogg")
 						
-						Msg = Chr(34)+"Isn't this the key to that old shack? The one where I... No, it can't be."+Chr(34)
+						Msg = Chr(34)+scpLang_GetPhrase("ingame.keyshack")+Chr(34)
 						MsgTimer = 70*10						
 					EndIf
 					
@@ -9592,9 +8113,9 @@ Function DrawGUI()
 							Case "Disciplinary Hearing DH-S-4137-17092"
 								BlurTimer = 1000
 								
-								Msg = Chr(34)+"Why does this seem so familiar?"+Chr(34)
+								Msg = Chr(34)+scpLang_GetPhrase("ingame.oldpaper")+Chr(34)
 								MsgTimer = 70*10
-								PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\NostalgiaCancer"+Rand(6,10)+".ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\NostalgiaCancer"+Rand(6,10)+".ogg"))
 								SelectedItem\state = 1
 						End Select
 					EndIf
@@ -9602,7 +8123,7 @@ Function DrawGUI()
 				Case "coin"
 					;[Block]
 					If SelectedItem\state = 0
-						PlaySound_Strict LoadTempSound(SFXPath$+"SCP\1162\NostalgiaCancer"+Rand(1,5)+".ogg")
+						PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1162\NostalgiaCancer"+Rand(1,5)+".ogg"))
 					EndIf
 					
 					Msg = ""
@@ -9613,11 +8134,11 @@ Function DrawGUI()
 				Case "scp427"
 					;[Block]
 					If I_427\Using=1 Then
-						Msg = "You closed the locket."
+						Msg = scpLang_GetPhrase("ingame.locketoff")
 						I_427\Using = False
 					Else
 						GiveAchievement(Achv427)
-						Msg = "You opened the locket."
+						Msg = scpLang_GetPhrase("ingame.locketon")
 						I_427\Using = True
 					EndIf
 					MsgTimer = 70 * 5
@@ -9626,17 +8147,17 @@ Function DrawGUI()
 				Case "pill"
 					;[Block]
 					If I_1499\Using > 0 
-					    Msg = "You can't swallow the pill while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.pill1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't swallow the pill while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.pillgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
-						Msg = "You swallowed the pill."
+						Msg = scpLang_GetPhrase("ingame.pillnone")
 						MsgTimer = 70*7
 						
 						RemoveItem(SelectedItem)
@@ -9646,17 +8167,17 @@ Function DrawGUI()
 				Case "scp500pilldeath"
 					;[Block]
 					If I_1499\Using > 0 
-					    Msg = "You can't swallow the pill while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.pill1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't swallow the pill while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.pillgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
-						Msg = "You swallowed the pill."
+						Msg = scpLang_GetPhrase("ingame.pillnone")
 						MsgTimer = 70*7
 						
 						If I_427\Timer < 70*360 Then
@@ -9675,13 +8196,13 @@ Function DrawGUI()
 					    StaminaEffect = 0.5
 						StaminaEffectTimer = 20
 						
-						Msg = "You injected yourself the syringe."
+						Msg = scpLang_GetPhrase("ingame.syringe6")
 						MsgTimer = 70 * 8
 	
 					    I_008\Timer = I_008\Timer + (1+(1*SelectedDifficulty\aggressiveNPCs))
 						RemoveItem(SelectedItem)
 					Else
-                        Msg = Chr(34)+"I... Can't..."+Chr(34)
+                        Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                         MsgTimer = 70*5
                         Return
                         SelectedItem = Null
@@ -9690,27 +8211,27 @@ Function DrawGUI()
 				Case "mintveryfinefirstaid"
 			        ;[Block]
 			         If I_1499\Using > 0
-					    Msg = "You can't use that item while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.weed5")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use that item while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.weed6")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0
-					    Msg = "You can't use that item while wearing the SCP-215."
+					    Msg = scpLang_GetPhrase("ingame.aid215")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf I_178\Using > 0
-					    Msg = "You can't use that item while wearing the SCP-178."
+					    Msg = scpLang_GetPhrase("ingame.aid178")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf WearingNightVision > 0
-					    Msg = "You can't use that item while wearing a goggles."
+					    Msg = scpLang_GetPhrase("ingame.aidnvg")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -9721,16 +8242,16 @@ Function DrawGUI()
 							        Injuries = 0
 							        Bloodloss = 0
 							        I_1079\Foam = 0	
-							        Msg = "Your wounds are healing up rapidly and your breath feels minty fresh."
+							        Msg = scpLang_GetPhrase("ingame.aid2heal1")
 							        MsgTimer = 70*7
 						        Case 2
 							        Injuries = Max(0, Injuries - Rnd(1.0,3.5))
 							        Bloodloss = Max(0, Bloodloss - Rnd(25,100))
-							        Msg = "You feel much better and your breath feels minty fresh."
+							        Msg = scpLang_GetPhrase("ingame.aid2heal2")
 							        MsgTimer = 70*7
 						        Case 3
 							        Injuries = 2.5
-							        Msg = "You started bleeding heavily. At least your breath feels minty fresh."
+							        Msg = scpLang_GetPhrase("ingame.aid2heal3")
 							        MsgTimer = 70*7
 					        End Select
 					        I_447\UsingFirstAid = True
@@ -9738,7 +8259,7 @@ Function DrawGUI()
 					
 					        RemoveItem(SelectedItem)
 					    Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             Return
                             SelectedItem = Null
@@ -9748,7 +8269,7 @@ Function DrawGUI()
 				Case "mintfirstaid", "mintfinefirstaid", "mintfirstaid2"
 					;[Block]
 					If Bloodloss = 0 And Injuries = 0 And I_1079\Foam = 0 Then
-						Msg = "You do not need to use a first aid right now."
+						Msg = scpLang_GetPhrase("ingame.aidnotnow")
 						MsgTimer = 70*5
 						SelectedItem = Null
 					Else
@@ -9777,11 +8298,11 @@ Function DrawGUI()
 								I_1079\Foam = 0	
 								Injuries = Max(0, Injuries - 2.5)
 								If Injuries = 0 Then
-									Msg = "You bandaged the wounds and took a painkiller. You feel fine and you notice the smell of mint."
+									Msg = scpLang_GetPhrase("ingame.aid2heal4")
 								ElseIf Injuries > 1.0
-									Msg = "You bandaged the wounds and took a painkiller, but you were not able to stop the bleeding. You notice the smell of mint."
+									Msg = scpLang_GetPhrase("ingame.aid2heal5")
 								Else
-									Msg = "You bandaged the wounds and took a painkiller, but you still feel sore. You notice the smell of mint."
+									Msg = scpLang_GetPhrase("ingame.aid2heal6")
 								EndIf
 								MsgTimer = 70*5
 								
@@ -9789,22 +8310,22 @@ Function DrawGUI()
 							Else
 								Bloodloss = Max(0, Bloodloss - Rand(15,25))
 								If Injuries >= 2.5 Then
-									Msg = "The wounds were way too severe to staunch the bleeding completely. You notice the smell of mint."
+									Msg = scpLang_GetPhrase("ingame.aid2heal7")
 									Injuries = Max(2.5, Injuries-Rnd(0.4,0.8))
 								ElseIf Injuries > 1.0
 									Injuries = Max(0.5, Injuries-Rnd(0.6,1.1))
 									If Injuries > 1.0 Then
-										Msg = "You bandaged the wounds but were unable to staunch the bleeding completely."
+										Msg = scpLang_GetPhrase("ingame.aid2heal8")
 									Else
-										Msg = "You managed to stop the bleeding."
+										Msg = scpLang_GetPhrase("ingame.aid2heal9")
 									EndIf
 								Else
 									If Injuries > 0.5 Then
 										Injuries = 0.5
-										Msg = "You took a painkiller, easing the pain slightly."
+										Msg = scpLang_GetPhrase("ingame.aid2heal10")
 									Else
 										Injuries = 0.5
-										Msg = "You took a painkiller, but it still hurts to walk."
+										Msg = scpLang_GetPhrase("ingame.aid2heal11")
 									EndIf
 								EndIf
 								
@@ -9812,10 +8333,10 @@ Function DrawGUI()
 									Select Rand(5)
 										Case 1
 											SuperMan = True
-											Msg = "You have becomed overwhelmedwithmintyadrenalineholyshitWOOOOOO~!"
+											Msg = scpLang_GetPhrase("ingame.aid2heal12")
 										Case 2
 											InvertMouse = (Not InvertMouse)
-											Msg = "You suddenly find it very difficult to turn your head. You notice the smell of mint."
+											Msg = scpLang_GetPhrase("ingame.aid2heal13")
 										Case 3
 											BlinkEffect = 0.4
 											BlinkEffectTimer = Rand(30,40)
@@ -9823,9 +8344,9 @@ Function DrawGUI()
 											Bloodloss = 0
 											I_1079\Foam = 0	
 											Injuries = 0
-											Msg = "You bandaged the wounds. The bleeding stopped completely and you feel fine. You notice the smell of mint."
+											Msg = scpLang_GetPhrase("ingame.aid2heal14")
 										Case 5
-											Msg = "You bandaged the wounds and blood started pouring heavily through the minty bandages."
+											Msg = scpLang_GetPhrase("ingame.aid2heal15")
 											Injuries = 2.5
 									End Select
 								EndIf
@@ -9841,33 +8362,33 @@ Function DrawGUI()
                 Case "minteyedrops", "minteyedrops2"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use the minty eyedrops wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.drops21499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use the minty eyedrops while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.drops2gas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0
-					    Msg = "You can't use the minty eyedrops while wearing the SCP-215."
+					    Msg = scpLang_GetPhrase("ingame.drops2215")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf I_178\Using > 0
-					    Msg = "You can't use the minty eyedrops while wearing the SCP-178."
+					    Msg = scpLang_GetPhrase("ingame.drops2178")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf WearingNightVision > 0
-					    Msg = "You can't use the minty eyedrops while wearing a goggles."
+					    Msg = scpLang_GetPhrase("ingame.drops2nvg")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 					    If (Not I_402\Using)
-					        Msg = "The eyedrops smell of mint. Your eyes feel very moisturized."
+					        Msg = scpLang_GetPhrase("ingame.drops2good")
 					        MsgTimer = 70*5
 						    BlinkEffect = 0.5
 						    BlinkEffectTimer = Rand(30,40)
@@ -9876,7 +8397,7 @@ Function DrawGUI()
 						    I_447\UsingEyeDropsTimer = 20000
 					        RemoveItem(SelectedItem)
 				        Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             Return
                             SelectedItem = Null
@@ -9886,27 +8407,27 @@ Function DrawGUI()
 				Case "mintfineeyedrops"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use the minty eyedrops wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.drops21499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use the minty eyedrops while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.drops2gas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0
-					    Msg = "You can't use the minty eyedrops while wearing the SCP-215."
+					    Msg = scpLang_GetPhrase("ingame.drops2215")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf I_178\Using > 0
-					    Msg = "You can't use the minty eyedrops while wearing the SCP-178."
+					    Msg = scpLang_GetPhrase("ingame.drops2178")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf WearingNightVision > 0
-					    Msg = "You can't use the minty eyedrops while wearing a goggles."
+					    Msg = scpLang_GetPhrase("ingame.drops2nvg")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -9920,7 +8441,7 @@ Function DrawGUI()
 						    I_447\UsingEyeDropsTimer = 20000
 					        RemoveItem(SelectedItem)
 					    Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             Return
                             SelectedItem = Null
@@ -9930,27 +8451,27 @@ Function DrawGUI()
 				Case "mintsupereyedrops"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't use the minty eyedrops wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.drops21499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use the minty eyedrops while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.drops2gas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf I_215\Using > 0
-					    Msg = "You can't use the minty eyedrops while wearing the SCP-215."
+					    Msg = scpLang_GetPhrase("ingame.drops2215")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf I_178\Using > 0
-					    Msg = "You can't use the minty eyedrops while wearing the SCP-178."
+					    Msg = scpLang_GetPhrase("ingame.drops2178")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     ElseIf WearingNightVision > 0
-					    Msg = "You can't use the minty eyedrops while wearing a goggles."
+					    Msg = scpLang_GetPhrase("ingame.drops2nvg")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -9964,7 +8485,7 @@ Function DrawGUI()
 						    I_447\UsingEyeDropsTimer = 20000
 					        RemoveItem(SelectedItem)
 					    Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             Return
                             SelectedItem = Null
@@ -9975,7 +8496,7 @@ Function DrawGUI()
 					;[Block]
 					If (Not I_402\Using)
 					    If Injuries < 0.5 Then
-						    Msg = "You do not need to use a painkiller right now."
+						    Msg = scpLang_GetPhrase("ingame.morphine1")
 						    MsgTimer = 70*5
 						    SelectedItem = Null
 					    Else
@@ -9986,14 +8507,14 @@ Function DrawGUI()
 							    MorphineHealAmount = Min((Injuries-0.5)+MorphineHealAmount, 4)
 							    Injuries=Max(Injuries-2.5,0.5)
 						    EndIf
-						    Msg = "You injected youself with a strong painkiller, easing the pain."
+						    Msg = scpLang_GetPhrase("ingame.morphine2")
 						    MsgTimer = 70*5							
 						    MorphineTimer=10000
 						    UsedMorphine=True
 						    RemoveItem(SelectedItem)
 						EndIf
 					Else
-                        Msg = Chr(34)+"I... Can't..."+Chr(34)
+                        Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                         MsgTimer = 70*5
                         SelectedItem = Null
                         Return
@@ -10002,12 +8523,12 @@ Function DrawGUI()
 				 Case "mintscp500pill"
 					;[Block]
 					If I_1499\Using > 0
-					    Msg = "You can't swallow the minty pill while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.pillmint1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't swallow the minty pill while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.pillmintgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -10015,13 +8536,13 @@ Function DrawGUI()
 						GiveAchievement(Achv500)
 						
 						If I_008\Timer > 0 Then
-							Msg = "You swallowed the pill. Your nausea is fading."
+							Msg = scpLang_GetPhrase("ingame.pill008")
 						ElseIf I_409\Timer > 0 Then
-						    Msg = "You swallowed the pill. Your body is getting warmer and the crystals are receding."	
+						    Msg = scpLang_GetPhrase("ingame.pill409")
 						ElseIf I_357\Timer > 0 Then
-						    Msg = "You swallowed the pill. Your body is getting warmer and the clay is receding."						
+						    Msg = scpLang_GetPhrase("ingame.pill357")						
 						Else
-							Msg = "You swallowed the pill."
+							Msg = scpLang_GetPhrase("ingame.pillnone")
 						EndIf
 						MsgTimer = 70*7
 						
@@ -10064,26 +8585,26 @@ Function DrawGUI()
 			    Case "scp447"
 			        ;[Block]
 			        If I_1499\Using > 0
-					    Msg = "You can't use that item while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.aid1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't use that item while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.aidgas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 			            If (Not I_402\Using)
 			                If Rand(10) = 1 Then
-			                    Msg = Chr(34) + "What happens if I put it in SCP-914 with something item?" + Chr(34)
+			                    Msg = Chr(34) + scpLang_GetPhrase("ingame.slime1") + Chr(34)
 	                        Else
-	                            Msg = Chr(34) + "I'm not stupid enough to drink this slime." + Chr(34)
+	                            Msg = Chr(34) + scpLang_GetPhrase("ingame.slime2") + Chr(34)
 	                        EndIf
 	                        MsgTimer = 70*5
 	                        SelectedItem = Null
 	                    Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             SelectedItem = Null
                             Return
@@ -10093,37 +8614,37 @@ Function DrawGUI()
                 Case "scp178"
 				    ;[Block]
 				    If WearingNightVision > 0
-						Msg = "You need to take off the goggles in order to put on the SCP-178."
+						Msg = scpLang_GetPhrase("ingame.scp1781")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 				    ElseIf WearingGasMask > 0
-				        Msg = "You need to take off the gas mask in order to put on the SCP-178."
+				        Msg = scpLang_GetPhrase("ingame.scp1782")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf I_1499\Using > 0
-                        Msg = "You need to take off the SCP-1499 in order to put on the SCP-178."
+                        Msg = scpLang_GetPhrase("ingame.scp1783")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf I_215\Using > 0
-                        Msg = "You need to take off the SCP-215 in order to put on the SCP-178."
+                        Msg = scpLang_GetPhrase("ingame.scp1784")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf WearingHelmet > 0
-                        Msg = "You need to take off the helmet in order to put on the SCP-178."
+                        Msg = scpLang_GetPhrase("ingame.scp1785")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
                     Else			
 				        If I_178\Using = 1 Then
-						    Msg = "You removed the SCP-178."
+						    Msg = scpLang_GetPhrase("ingame.scp1786")
 						    I_178\Using = 0
 					    Else
 						    GiveAchievement(Achv178)
-						    Msg = "You put on the SCP-178."
+						    Msg = scpLang_GetPhrase("ingame.scp1787")
 						    I_178\Using = 1
 					    EndIf
                         MsgTimer = 70 * 5
@@ -10134,44 +8655,44 @@ Function DrawGUI()
 					;[Block]
 					If I_215\Timer >= 86.0
 					    I_215\Using = 1
-						Msg = "You can't take your glasses off."
+						Msg = scpLang_GetPhrase("ingame.scp2151")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					EndIf
 
 					If WearingNightVision > 0
-						Msg = "You need to take off the goggles in order to put on the SCP-215."
+						Msg = scpLang_GetPhrase("ingame.scp2152")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 				    ElseIf WearingGasMask > 0
-				        Msg = "You need to take off the gas mask in order to put on the SCP-215."
+				        Msg = scpLang_GetPhrase("ingame.scp2153")
 				        MsgTimer = 70 * 5
 				        SelectedItem = Null
 						Return
 					ElseIf I_1499\Using > 0
-                        Msg = "You need to take off the SCP-1499 in order to put on the SCP-215."
+                        Msg = scpLang_GetPhrase("ingame.scp2154")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf I_178\Using > 0
-                        Msg = "You need to take off the SCP-178 in order to put on the SCP-215."
+                        Msg = scpLang_GetPhrase("ingame.scp2155")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
 					ElseIf WearingHelmet > 0
-                        Msg = "You need to take off the helmet in order to put on the SCP-215."
+                        Msg = scpLang_GetPhrase("ingame.scp2156")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
                     Else			
                         If I_215\Using = 1 Then
-						    Msg = "You removed the SCP-215."
+						    Msg = scpLang_GetPhrase("ingame.scp2157")
 						    I_215\Using = 0
 					    Else
 						    GiveAchievement(Achv215)
-						    Msg = "You put on the SCP-215."
+						    Msg = scpLang_GetPhrase("ingame.scp2158")
 						    I_215\Using = 1					
 					    EndIf
                         MsgTimer = 70 * 5
@@ -10185,7 +8706,7 @@ Function DrawGUI()
 						For n% = 0 To ItemAmount + 0
 						    If Inventory(n) = Null Then
 						        If ItemAmount > MaxItemAmount Then
-								    Msg = "You cannot carry any more items."
+								    Msg = scpLang_GetPhrase("events.moreitems")
 								    MsgTimer = 70*5	
 						        Else
                                     Inventory(n) = CreateItem("SCP-215", "scp215", 1, 1, 1)
@@ -10204,18 +8725,18 @@ Function DrawGUI()
 						    I_215\Limit = 0
 						EndIf
 				    Else
-						Msg = "You cannot carry any more items."
+						Msg = scpLang_GetPhrase("events.moreitems")
 						MsgTimer = 70*5					
 					EndIf																																										
 					;[End Block]
 				Case "scp1033ru", "super1033ru"
 					;[Block]
 					If I_1033RU\Using > 0 Then
-						Msg = "You removed the bracelet."
+						Msg = scpLang_GetPhrase("ingame.scp10331")
 						I_1033RU\Using = False
 					Else
 						GiveAchievement(Achv1033RU)
-						Msg = "You put on the bracelet."
+						Msg = scpLang_GetPhrase("ingame.scp10332")
 						If SelectedItem\itemtemplate\tempname = "scp1033ru" Then
 							I_1033RU\Using = 1
 						Else
@@ -10229,21 +8750,21 @@ Function DrawGUI()
 			    Case "scp1079sweet"
                     ;[Block]
 				     If I_1499\Using > 0
-					    Msg = "You can't swallow the candy while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.scp10791")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't swallow the candy while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.scp10792")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
 				        Select Rand(2)
                             Case 1
-						        Msg = "You swallowed candy. You are bleeding."
+						        Msg = scpLang_GetPhrase("ingame.scp10793")
 				            Case 2
-						        Msg = "You swallowed candy. You feel a good taste."
+						        Msg = scpLang_GetPhrase("ingame.scp10794")
 						End Select
 						MsgTimer = 70*7
                         
@@ -10272,9 +8793,7 @@ Function DrawGUI()
 				    If I_1079\Take >= 4 Then
 				        I_1079\Trigger = 1													
 					    Injuries = Injuries+Rand(2,3)
-					    DeathMSG = "Nine-Tailed Fox found Class D "+SubjectName$+" dead covered with pink bubblegum-scented foam around the body."
-					    DeathMSG = DeathMSG+" Toxic reports identifies the bubblegum-scented foam from Dr. Wondertainment's Bubblebath Bonbons!®,"
-					    DeathMSG = DeathMSG+" known as SCP-1079."
+					    DeathMSG = scpLang_GetPhrase("ingame.scp1079d")
 					EndIf
 					;[End Block]
 				Case "scp1079"
@@ -10284,7 +8803,7 @@ Function DrawGUI()
 						For n% = 0 To ItemAmount
 						    If Inventory(n) = Null Then
 						        If ItemAmount > MaxItemAmount Then
-								    Msg = "You cannot carry any more items."
+								    Msg = scpLang_GetPhrase("events.moreitems")
 								    MsgTimer = 70*5	
 						        Else
                                     Inventory(n) = CreateItem("SCP-1079-01", "scp1079sweet", 1, 1, 1)
@@ -10303,19 +8822,19 @@ Function DrawGUI()
 						    I_1079\Limit = 0
 						EndIf
 				    Else
-						Msg = "You cannot carry any more items."
+						Msg = scpLang_GetPhrase("events.moreitems")
 						MsgTimer = 70*5					
 					EndIf																																									
 					;[End Block]
 				Case "scp207"
 				    ;[Block]
 				    If I_1499\Using > 0
-					    Msg = "You can't drink the cola while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.scp2071499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't drink the cola while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.scp207gas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -10338,7 +8857,7 @@ Function DrawGUI()
 							
 							If SelectedItem\state = 100 Then
 							    If SelectedItem\itemtemplate\tempname = "scp207" Then
-							        PlaySound_Strict LoadTempSound(SFXPath$+"SCP\109\Ahh.ogg")
+							        PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\109\Ahh.ogg"))
 							
 								    BlinkEffect = 0.6
 								    BlinkEffectTimer = 400
@@ -10374,16 +8893,16 @@ Function DrawGUI()
 
 							        Select Rand(1,4)
 							            Case 1
-							                Msg = "You drink cold cola. You feel fine."
+							                Msg = scpLang_GetPhrase("ingame.scp2071")
 							                MsgTimer = 70 * 6
 							            Case 2
-							                Msg = "You drink cold cola. You feel refreshed."
+							                Msg = scpLang_GetPhrase("ingame.scp2072")
 							                MsgTimer = 70 * 6
 							            Case 3
-							                Msg = "You drink cold cola. You quench your thirst."
+							                Msg = scpLang_GetPhrase("ingame.scp2073")
 							                MsgTimer = 70 * 6
 							            Case 4
-							                Msg = "You drink cold cola. You feel good taste."
+							                Msg = scpLang_GetPhrase("ingame.scp2074")
 							                MsgTimer = 70 * 6
 							        End Select
 							        SelectedItem\state = 0
@@ -10391,7 +8910,7 @@ Function DrawGUI()
                                 EndIf
                             EndIf
                         Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             Return
                             SelectedItem = Null
@@ -10400,19 +8919,19 @@ Function DrawGUI()
 					;[End Block]
 				Case "scp198"
 					;[Block]
-				    Msg = Chr(34) + "I feel like the cup is filled with some liquid." + Chr(34)
+				    Msg = Chr(34) + scpLang_GetPhrase("ingame.scp1981") + Chr(34)
 					MsgTimer = 70 * 7
 					SelectedItem = Null
 					;[End Block]
 				Case "scp109"
 				    ;[Block]
 				    If I_1499\Using > 0
-					    Msg = "You can't drink the water while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.scp1091499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't drink the water while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.scp109gas")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
@@ -10439,19 +8958,19 @@ Function DrawGUI()
 							        If Stamina >= -11.0 And Stamina < 25.0 Then
 								        BlurTimer = 10000
 								        VomitTimer = 10
-								        Msg = "You drink a lot of water. You feel nauseated."
+								        Msg = scpLang_GetPhrase("ingame.scp1091")
 							        ElseIf Stamina > 25.0 And Stamina < 60.0
-								        PlaySound_Strict LoadTempSound(SFXPath$+"SCP\109\ahh.ogg")
+								        PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\109\ahh.ogg"))
 							            Injuries = Max(0, Injuries - Rnd(0.09, 0.1))
-								        Msg = "You drink clear water. You feel fine."
+								        Msg = scpLang_GetPhrase("ingame.scp1092")
 							        ElseIf Stamina > 60.0 And Stamina < 100.0
-								        PlaySound_Strict LoadTempSound(SFXPath$+"SCP\109\ahh.ogg")
+								        PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\109\ahh.ogg"))
 							            Injuries = Max(0, Injuries - Rnd(0.1, 0.5))
-								        Msg = "You drink clear water. You quench your thirst."
+								        Msg = scpLang_GetPhrase("ingame.scp1093")
 							        Else
 								        Injuries = Max(0, Injuries - Rnd(0.1, 0.5))
-								        PlaySound_Strict LoadTempSound(SFXPath$+"SCP\109\ahh.ogg")
-								        Msg = "You drink clear water. You feel fine."
+								        PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\109\ahh.ogg"))
+								        Msg = scpLang_GetPhrase("ingame.scp1094")
 							        EndIf
 							        Stamina = Stamina + Rand(40)
                                     MsgTimer = 70 * 5
@@ -10460,7 +8979,7 @@ Function DrawGUI()
                                 EndIf
                             EndIf
                         Else
-                            Msg = Chr(34)+"I... Can't..."+Chr(34)
+                            Msg = Chr(34)+scpLang_GetPhrase("events.room10488")+Chr(34)
                             MsgTimer = 70*5
                             Return
                             SelectedItem = Null
@@ -10473,7 +8992,7 @@ Function DrawGUI()
 						For n% = 0 To ItemAmount+0
 						    If Inventory(n) = Null Then
 						        If ItemAmount > MaxItemAmount Then
-								Msg = "You cannot carry any more items."
+								Msg = scpLang_GetPhrase("events.moreitems")
 								MsgTimer = 70*5	
 						    Else
                                 Inventory(n) = CreateItem("SCP-500-01", "scp500pill", 1, 1, 1)
@@ -10492,7 +9011,7 @@ Function DrawGUI()
 						    I_500\Limit = 0
 						EndIf
 				    Else
-						Msg = "You cannot carry any more items."
+						Msg = scpLang_GetPhrase("events.moreitems")
 						MsgTimer = 70*5					
 					EndIf																																										
 					;[End Block]
@@ -10500,7 +9019,7 @@ Function DrawGUI()
 				    ;[Block]
 				    If I_402\Timer >= 40
 					    I_402\Using = 1
-						Msg = "You can't pull out the stone from your throat."
+						Msg = scpLang_GetPhrase("ingame.scp4021")
 						MsgTimer = 70 * 5
 						SelectedItem = Null
 						Return
@@ -10508,11 +9027,11 @@ Function DrawGUI()
 
 				    If WearingGasmask = 0 And I_1499\Using = 0 Then
 				        If I_402\Using = 1 Then
-						    Msg = "You pull out the SCP-402 from your mouth."
+						    Msg = scpLang_GetPhrase("ingame.scp4022")
 						    I_402\Using = 0
 					    Else
 						    GiveAchievement(Achv402)
-						    Msg = "You put the SCP-402 in your mouth."
+						    Msg = scpLang_GetPhrase("ingame.scp4023")
 						    I_402\Using = 1
 					    EndIf
 					
@@ -10525,7 +9044,7 @@ Function DrawGUI()
 					For i = 0 To MaxItemAmount - 1
                         If Inventory(i) <> Null Then
                             If Inventory(i)\itemtemplate\name = "SCP-215" And I_215\Timer >= 86.0 Then
-                                Msg = "You can't wear the helmet because of the glasses."
+                                Msg = scpLang_GetPhrase("ingame.helmetglasses")
 						        MsgTimer = 70 * 5
 						        SelectedItem = Null
 						        Return
@@ -10535,27 +9054,27 @@ Function DrawGUI()
                     Next
 
 					If I_1499\Using > 0
-					    Msg = "You need to take off the SCP-1499 in order to put on a helmet."	
+					    Msg = scpLang_GetPhrase("ingame.helmet1499")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingNightVision > 0
-					    Msg = "You need to take off the goggles in order to put on a helmet."
+					    Msg = scpLang_GetPhrase("ingame.helmetnvg")
                         MsgTimer = 70 * 5
                         SelectedItem = Null
 					    Return
 				    ElseIf WearingGasMask > 0
-					    Msg = "You need to take off the gas mask in order to put on a helmet."
+					    Msg = scpLang_GetPhrase("ingame.helmetgas")
                         MsgTimer = 70 * 5
                         SelectedItem = Null
 					    Return
 					ElseIf I_178\Using > 0
-					    Msg = "You need to take off the SCP-178 in order to put on a helmet."
+					    Msg = scpLang_GetPhrase("ingame.helmet178")
                         MsgTimer = 70 * 5
                         SelectedItem = Null
 					    Return
                     ElseIf I_215\Using > 0
-					    Msg = "You need to take off the SCP-215 in order to put on a helmet."
+					    Msg = scpLang_GetPhrase("ingame.helmet215")
                         MsgTimer = 70 * 5
                         SelectedItem = Null
 					    Return
@@ -10578,10 +9097,10 @@ Function DrawGUI()
 					    If SelectedItem\state = 100 Then
                             If WearingHelmet > 0 Then
                                 WearingHelmet = False
-                                Msg = "You removed the helmet."
+                                Msg = scpLang_GetPhrase("ingame.helmetoff")
                                 If SelectedItem\itemtemplate\sound <> 66 Then PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
                             Else
-						        Msg = "You put on the helmet."
+						        Msg = scpLang_GetPhrase("ingame.helmeton")
 							    WearingHelmet = 1
 							    If SelectedItem\itemtemplate\sound <> 66 Then PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
                             EndIf
@@ -10594,17 +9113,17 @@ Function DrawGUI()
 				Case "mintpill"
 					;[Block]
 					If I_1499\Using > 0 
-					    Msg = "You can't swallow the minty pill while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.mintpill1")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't swallow the minty pill while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.mintpill2")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
-						Msg = "You swallowed the minty pill."
+						Msg = scpLang_GetPhrase("ingame.mintpill3")
 						MsgTimer = 70*7
 						
 						RemoveItem(SelectedItem)
@@ -10614,17 +9133,17 @@ Function DrawGUI()
 				Case "mintscp500pilldeath"
 					;[Block]
 					If I_1499\Using > 0 
-					    Msg = "You can't swallow the minty pill while wearing the SCP-1499."
+					    Msg = scpLang_GetPhrase("ingame.mintpill1")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
 					ElseIf WearingGasMask > 0
-					    Msg = "You can't swallow the minty pill while wearing a gas mask."
+					    Msg = scpLang_GetPhrase("ingame.mintpill2")
 					    MsgTimer = 70 * 5
 					    SelectedItem = Null
 					    Return
                     Else
-						Msg = "You swallowed the minty pill."
+						Msg = scpLang_GetPhrase("ingame.mintpill3")
 						MsgTimer = 70*7
 						
 						If I_427\Timer < 70*360 Then
@@ -10746,7 +9265,7 @@ Function DrawMenu()
 					
 					If ms\StopHidingTimer => 40 Then
 						PlaySound_Strict(HorrorSFX(15))
-						Msg = "STOP HIDING"
+						Msg = scpLang_GetPhrase("ingame.stophiding")
 						MsgTimer = 6*70
 						ms\MenuOpen = False
 						Return
@@ -10775,23 +9294,23 @@ Function DrawMenu()
 		
 		If AchievementsMenu > 0 Then
 			AASetFont fo\Font[1]
-			AAText(x, y-(122-45)*MenuScale, "ACHIEVEMENTS", False, True)
+			AAText(x, y-(122-45)*MenuScale, scpLang_GetPhrase("menu.achievements"), False, True)
 			AASetFont fo\Font[0]
 		ElseIf OptionsMenu > 0 Then
 			AASetFont fo\Font[1]
-			AAText(x, y-(122-45)*MenuScale, "OPTIONS",False,True)
+			AAText(x, y-(122-45)*MenuScale, scpLang_GetPhrase("menu.options"),False,True)
 			AASetFont fo\Font[0]
 		ElseIf QuitMSG > 0 Then
 			AASetFont fo\Font[1]
-			AAText(x, y-(122-45)*MenuScale, "QUIT?",False,True)
+			AAText(x, y-(122-45)*MenuScale, scpLang_GetPhrase("menu.quit2"),False,True)
 			AASetFont fo\Font[0]
 		ElseIf KillTimer >= 0 Then
 			AASetFont fo\Font[1]
-			AAText(x, y-(122-45)*MenuScale, "PAUSED",False,True)
+			AAText(x, y-(122-45)*MenuScale, scpLang_GetPhrase("menu.paused"),False,True)
 			AASetFont fo\Font[0]
 		Else
 			AASetFont fo\Font[1]
-			AAText(x, y-(122-45)*MenuScale, "YOU DIED",False,True)
+			AAText(x, y-(122-45)*MenuScale, scpLang_GetPhrase("menu.youdied"),False,True)
 			AASetFont fo\Font[0]
 		End If		
 		
@@ -10802,11 +9321,11 @@ Function DrawMenu()
 		
 		If AchievementsMenu <= 0 And OptionsMenu <= 0 And QuitMSG <= 0
 			AASetFont fo\Font[0]
-			AAText x, y, "Difficulty: "+SelectedDifficulty\name
-			AAText x, y+20*MenuScale, "Save: "+CurrSave
-			AAText x, y+40*MenuScale, "Map seed: "+RandomSeed
+			AAText x, y, scpLang_GetPhrase("menu.difficulty") + " "+SelectedDifficulty\name
+			AAText x, y+20*MenuScale, scpLang_GetPhrase("menu.save") + " "+CurrSave
+			AAText x, y+40*MenuScale, scpLang_GetPhrase("menu.seed")+" "+RandomSeed
 		ElseIf AchievementsMenu <= 0 And OptionsMenu > 0 And QuitMSG <= 0 And KillTimer >= 0
-			If DrawButton(x + 101 * MenuScale, y + 410 * MenuScale, 230 * MenuScale, 60 * MenuScale, "Back") Then
+			If DrawButton(x + 101 * MenuScale, y + 410 * MenuScale, 230 * MenuScale, 60 * MenuScale, scpLang_GetPhrase("menu.back2")) Then
 				AchievementsMenu = 0
 				OptionsMenu = 0
 				QuitMSG = 0
@@ -10828,10 +9347,10 @@ Function DrawMenu()
 				Rect(x+320*MenuScale,y-5*MenuScale,110*MenuScale,40*MenuScale,True)
 			EndIf
 			
-			If DrawButton(x-5*MenuScale,y,100*MenuScale,30*MenuScale,"GRAPHICS",False) Then OptionsMenu = 1
-			If DrawButton(x+105*MenuScale,y,100*MenuScale,30*MenuScale,"AUDIO",False) Then OptionsMenu = 2
-			If DrawButton(x+215*MenuScale,y,100*MenuScale,30*MenuScale,"CONTROLS",False) Then OptionsMenu = 3
-			If DrawButton(x+325*MenuScale,y,100*MenuScale,30*MenuScale,"ADVANCED",False) Then OptionsMenu = 4
+			If DrawButton(x-5*MenuScale,y,100*MenuScale,30*MenuScale,scpLang_GetPhrase("menu.graphics"),False) Then OptionsMenu = 1
+			If DrawButton(x+105*MenuScale,y,100*MenuScale,30*MenuScale,scpLang_GetPhrase("menu.audio"),False) Then OptionsMenu = 2
+			If DrawButton(x+215*MenuScale,y,100*MenuScale,30*MenuScale,scpLang_GetPhrase("menu.controls"),False) Then OptionsMenu = 3
+			If DrawButton(x+325*MenuScale,y,100*MenuScale,30*MenuScale,scpLang_GetPhrase("menu.advanced"),False) Then OptionsMenu = 4
 			
 			Local tx# = (GraphicWidth/2)+(width/2)
 			Local ty# = y
@@ -10846,7 +9365,7 @@ Function DrawMenu()
 					y=y+50*MenuScale
 					
 					Color 100,100,100
-					AAText(x, y, "Enable bump mapping:")	
+					AAText(x, y, scpLang_GetPhrase("menu.bumpmapping"))	
 					BumpEnabled = DrawTick(x + 270 * MenuScale, y + MenuScale, BumpEnabled, True)
 					If MouseOn(x + 270 * MenuScale, y + MenuScale, 20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"bump")
@@ -10855,7 +9374,7 @@ Function DrawMenu()
 					y=y+30*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "VSync:")
+					AAText(x, y, scpLang_GetPhrase("menu.vsync"))
 					Vsync% = DrawTick(x + 270 * MenuScale, y + MenuScale, Vsync%)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"vsync")
@@ -10864,7 +9383,7 @@ Function DrawMenu()
 					y=y+30*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "Anti-aliasing:")
+					AAText(x, y, scpLang_GetPhrase("menu.antialiasing"))
 					Opt_AntiAlias = DrawTick(x + 270 * MenuScale, y + MenuScale, Opt_AntiAlias%)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"antialias")
@@ -10873,7 +9392,7 @@ Function DrawMenu()
 					y=y+30*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "Enable room lights:")
+					AAText(x, y, scpLang_GetPhrase("menu.roomlights"))
 					EnableRoomLights = DrawTick(x + 270 * MenuScale, y + MenuScale, EnableRoomLights)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"roomlights")
@@ -10883,7 +9402,7 @@ Function DrawMenu()
 					
 					ScreenGamma = (SlideBar(x + 270*MenuScale, y+6*MenuScale, 100*MenuScale, ScreenGamma*50.0)/50.0)
 					Color 255,255,255
-					AAText(x, y, "Screen gamma")
+					AAText(x, y, scpLang_GetPhrase("menu.gamma"))
 					If MouseOn(x+270*MenuScale,y+6*MenuScale,100*MenuScale+14,20) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"gamma",ScreenGamma)
 					EndIf
@@ -10893,8 +9412,8 @@ Function DrawMenu()
 					y=y+50*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "Particle amount:")
-					ParticleAmount = Slider3(x+270*MenuScale,y+6*MenuScale,100*MenuScale,ParticleAmount,2,"MINIMAL","REDUCED","FULL")
+					AAText(x, y, scpLang_GetPhrase("menu.particleamount"))
+					ParticleAmount = Slider3(x+270*MenuScale,y+6*MenuScale,100*MenuScale,ParticleAmount,2,scpLang_GetPhrase("menu.minimal"),scpLang_GetPhrase("menu.reduced"),scpLang_GetPhrase("menu.full"))
 					If (MouseOn(x + 270 * MenuScale, y-6*MenuScale, 100*MenuScale+14, 20) And OnSliderID=0) Or OnSliderID=2
 						DrawOptionsTooltip(tx,ty,tw,th,"particleamount",ParticleAmount)
 					EndIf
@@ -10902,7 +9421,7 @@ Function DrawMenu()
 					y=y+50*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "Texture LOD Bias:")
+					AAText(x, y, scpLang_GetPhrase("menu.lodbias"))
 					TextureDetails = Slider5(x+270*MenuScale,y+6*MenuScale,100*MenuScale,TextureDetails,3,"0.8","0.4","0.0","-0.4","-0.8")
 					Select TextureDetails%
 						Case 0
@@ -10923,7 +9442,7 @@ Function DrawMenu()
 					
 					y=y+40*MenuScale
 					Color 100,100,100
-					AAText(x, y, "Save textures in the VRAM:")	
+					AAText(x, y, scpLang_GetPhrase("menu.vram"))	
 					SaveTexturesInVRam = DrawTick(x + 270 * MenuScale, y + MenuScale, SaveTexturesInVRam, True)
 					If MouseOn(x + 270 * MenuScale, y + MenuScale, 20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"vram")
@@ -10938,7 +9457,7 @@ Function DrawMenu()
 					SlideBarFOV = (SlideBar(x + 270*MenuScale, y+6*MenuScale,100*MenuScale, SlideBarFOV*2.0)/2.0)
 					FOV = SlideBarFOV+40
 					Color 255,255,255
-					AAText(x, y, "Field of view:")
+					AAText(x, y, scpLang_GetPhrase("menu.fov"))
 					Color 255,255,0
 					AAText(x + 5 * MenuScale, y + 25 * MenuScale, Int(FOV#)+" FOV")
 					If MouseOn(x+270*MenuScale,y+6*MenuScale,100*MenuScale+14,20)
@@ -10957,7 +9476,7 @@ Function DrawMenu()
 					
 					MusicVolume = (SlideBar(x + 250*MenuScale, y-4*MenuScale, 100*MenuScale, MusicVolume*100.0)/100.0)
 					Color 255,255,255
-					AAText(x, y, "Music volume:")
+					AAText(x, y, scpLang_GetPhrase("menu.musicvolume"))
 					If MouseOn(x+250*MenuScale,y-4*MenuScale,100*MenuScale+14,20)
 						DrawOptionsTooltip(tx,ty,tw,th,"musicvol",MusicVolume)
 					EndIf
@@ -10967,7 +9486,7 @@ Function DrawMenu()
 					PrevSFXVolume = (SlideBar(x + 250*MenuScale, y-4*MenuScale, 100*MenuScale, SFXVolume*100.0)/100.0)
 					If (Not DeafPlayer) Then SFXVolume# = PrevSFXVolume#
 					Color 255,255,255
-					AAText(x, y, "Sound volume:")
+					AAText(x, y, scpLang_GetPhrase("menu.soundvolume"))
 					If MouseOn(x+250*MenuScale,y-4*MenuScale,100*MenuScale+14,20)
 						DrawOptionsTooltip(tx,ty,tw,th,"soundvol",PrevSFXVolume)
 					EndIf
@@ -10975,7 +9494,7 @@ Function DrawMenu()
 					y = y + 30*MenuScale
 					
 					Color 100,100,100
-					AAText x, y, "Sound auto-release:"
+					AAText x, y, scpLang_GetPhrase("menu.soundautorelease")
 					EnableSFXRelease = DrawTick(x + 270 * MenuScale, y + MenuScale, EnableSFXRelease,True)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th+220*MenuScale,"sfxautorelease")
@@ -10984,7 +9503,7 @@ Function DrawMenu()
 					y = y + 30*MenuScale
 					
 					Color 100,100,100
-					AAText x, y, "Enable user tracks:"
+					AAText x, y, scpLang_GetPhrase("menu.usertracks")
 					EnableUserTracks = DrawTick(x + 270 * MenuScale, y + MenuScale, EnableUserTracks,True)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"usertrack")
@@ -10993,12 +9512,12 @@ Function DrawMenu()
 					If EnableUserTracks
 						y = y + 30 * MenuScale
 						Color 255,255,255
-						AAText x, y, "User track mode:"
+						AAText x, y, scpLang_GetPhrase("menu.trackmode")
 						UserTrackMode = DrawTick(x + 270 * MenuScale, y + MenuScale, UserTrackMode)
 						If UserTrackMode
-							AAText x, y + 20 * MenuScale, "Repeat"
+							AAText x, y + 20 * MenuScale, scpLang_GetPhrase("menu.repeat")
 						Else
-							AAText x, y + 20 * MenuScale, "Random"
+							AAText x, y + 20 * MenuScale, scpLang_GetPhrase("menu.random")
 						EndIf
 						If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 							DrawOptionsTooltip(tx,ty,tw,th,"usertrackmode")
@@ -11016,7 +9535,7 @@ Function DrawMenu()
 					
 					MouseSensitivity = (SlideBar(x + 270*MenuScale, y-4*MenuScale, 100*MenuScale, (MouseSensitivity+0.5)*100.0)/100.0)-0.5
 					Color(255, 255, 255)
-					AAText(x, y, "Mouse sensitivity:")
+					AAText(x, y, scpLang_GetPhrase("menu.mousesensitivity"))
 					If MouseOn(x+270*MenuScale,y-4*MenuScale,100*MenuScale+14,20)
 						DrawOptionsTooltip(tx,ty,tw,th,"mousesensitivity",MouseSensitivity)
 					EndIf
@@ -11024,7 +9543,7 @@ Function DrawMenu()
 					y = y + 30*MenuScale
 					
 					Color(255, 255, 255)
-					AAText(x, y, "Invert mouse Y-axis:")
+					AAText(x, y, scpLang_GetPhrase("menu.invertmouse"))
 					InvertMouse = DrawTick(x + 270 * MenuScale, y + MenuScale, InvertMouse)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"mouseinvert")
@@ -11032,43 +9551,43 @@ Function DrawMenu()
 					
 					y = y + 40*MenuScale
 					
-					MouseSmooth = (SlideBar(x + 270*MenuScale, y-4*MenuScale, 100*MenuScale, (MouseSmooth)*50.0)/50.0)
+					mouse_smooth = DrawTick(x + 270*MenuScale, y+MenuScale,mouse_smooth)
 					Color(255, 255, 255)
-					AAText(x, y, "Mouse smoothing:")
+					AAText(x, y, scpLang_GetPhrase("menu.mousesmoothing"))
 					If MouseOn(x+270*MenuScale,y-4*MenuScale,100*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"mousesmoothing",MouseSmooth)
+						DrawOptionsTooltip(tx,ty,tw,th,"mousesmoothing")
 					EndIf
 					
 					Color(255, 255, 255)
 					
 					y = y + 30*MenuScale
-					AAText(x, y, "Control configuration:")
+					AAText(x, y, scpLang_GetPhrase("menu.controlconfig"))
 					y = y + 10*MenuScale
 					
-					AAText(x, y + 20 * MenuScale, "Move Forward")
+					AAText(x, y + 20 * MenuScale, scpLang_GetPhrase("menu.moveforward"))
 					InputBox(x + 200 * MenuScale, y + 20 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_UP,210)),5)		
-					AAText(x, y + 40 * MenuScale, "Strafe Left")
+					AAText(x, y + 40 * MenuScale, scpLang_GetPhrase("menu.strafeleft"))
 					InputBox(x + 200 * MenuScale, y + 40 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_LEFT,210)),3)	
-					AAText(x, y + 60 * MenuScale, "Move Backward")
+					AAText(x, y + 60 * MenuScale, scpLang_GetPhrase("menu.movebackward"))
 					InputBox(x + 200 * MenuScale, y + 60 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_DOWN,210)),6)				
-					AAText(x, y + 80 * MenuScale, "Strafe Right")
+					AAText(x, y + 80 * MenuScale, scpLang_GetPhrase("menu.straferight"))
 					InputBox(x + 200 * MenuScale, y + 80 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_RIGHT,210)),4)
 					
-					AAText(x, y + 100 * MenuScale, "Manual Blink")
+					AAText(x, y + 100 * MenuScale, scpLang_GetPhrase("menu.manualblink"))
 					InputBox(x + 200 * MenuScale, y + 100 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_BLINK,210)),7)				
-					AAText(x, y + 120 * MenuScale, "Sprint")
+					AAText(x, y + 120 * MenuScale, scpLang_GetPhrase("menu.sprint"))
 					InputBox(x + 200 * MenuScale, y + 120 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_SPRINT,210)),8)
-					AAText(x, y + 140 * MenuScale, "Open/Close Inventory")
+					AAText(x, y + 140 * MenuScale, scpLang_GetPhrase("menu.inventory"))
 					InputBox(x + 200 * MenuScale, y + 140 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_INV,210)),9)
-					AAText(x, y + 160 * MenuScale, "Crouch")
+					AAText(x, y + 160 * MenuScale, scpLang_GetPhrase("menu.crouch"))
 					InputBox(x + 200 * MenuScale, y + 160 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_CROUCH,210)),10)
-					AAText(x, y + 180 * MenuScale, "Quick Save")
+					AAText(x, y + 180 * MenuScale, scpLang_GetPhrase("menu.quicksave"))
 					InputBox(x + 200 * MenuScale, y + 180 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_SAVE,210)),11)
 					If CanOpenConsole	
-					    AAText(x, y + 200 * MenuScale, "Open/Close Console")
+					    AAText(x, y + 200 * MenuScale, scpLang_GetPhrase("menu.console"))
 					    InputBox(x + 200 * MenuScale, y + 200 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_CONSOLE,210)),12)
 					EndIf
-					AAText(x, y + 220 * MenuScale, "Take Screenshot")
+					AAText(x, y + 220 * MenuScale, scpLang_GetPhrase("menu.screenshot"))
 					InputBox(x + 200 * MenuScale, y + 220 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_SCREENSHOT,210)),13)
 					
 					If MouseOn(x,y,300*MenuScale,240*MenuScale)
@@ -11112,7 +9631,7 @@ Function DrawMenu()
 					y = y + 50*MenuScale
 					
 					Color 255,255,255				
-					AAText(x, y, "Show HUD:")	
+					AAText(x, y, scpLang_GetPhrase("menu.hud"))	
 					HUDenabled = DrawTick(x + 270 * MenuScale, y + MenuScale, HUDenabled)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"hud")
@@ -11121,7 +9640,7 @@ Function DrawMenu()
 					y = y + 30*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "Enable console:")
+					AAText(x, y, scpLang_GetPhrase("menu.enableconsole"))
 					CanOpenConsole = DrawTick(x +270 * MenuScale, y + MenuScale, CanOpenConsole)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"consoleenable")
@@ -11131,7 +9650,7 @@ Function DrawMenu()
 					
 					If CanOpenConsole
 					    Color 255,255,255
-					    AAText(x, y, "Open console on error:")
+					    AAText(x, y, scpLang_GetPhrase("menu.consoleonerror"))
 					    ConsoleOpening = DrawTick(x + 270 * MenuScale, y + MenuScale, ConsoleOpening)
 					    If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						    DrawOptionsTooltip(tx,ty,tw,th,"consoleerror")
@@ -11144,12 +9663,12 @@ Function DrawMenu()
 					
 					If CanOpenConsole
 					    Color 255,255,255
-					    AAText(x, y, "Console Version:")
+					    AAText(x, y, scpLang_GetPhrase("menu.consoleversion"))
 					    ConsoleVersion = DrawTick(x + 270 * MenuScale, y + MenuScale, ConsoleVersion)
 					    If ConsoleVersion = 1 Then
-					        AAText(x + 310 * MenuScale, y, "New Version")
+					        AAText(x + 310 * MenuScale, y, scpLang_GetPhrase("menu.consolenew"))
 					    Else
-					        AAText(x + 310 * MenuScale, y, "Old Version")
+					        AAText(x + 310 * MenuScale, y, scpLang_GetPhrase("menu.consoleold"))
 					    EndIf    
 					    If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						    DrawOptionsTooltip(tx,ty,tw,th,"consoleversion")
@@ -11158,17 +9677,17 @@ Function DrawMenu()
 					
 					y = y + 50*MenuScale
 					
-					Color 255,255,255
-					AAText(x, y, "Achievement popups:")
-					AchvMSGenabled% = DrawTick(x + 270 * MenuScale, y, AchvMSGenabled%)
-					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"achpopup")
-					EndIf
+					; Color 255,255,255
+					; AAText(x, y, "Achievement popups:")
+					; AchvMSGenabled% = DrawTick(x + 270 * MenuScale, y, AchvMSGenabled%)
+					; If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
+					; 	DrawOptionsTooltip(tx,ty,tw,th,"achpopup")
+					; EndIf
 					
 					y = y + 50*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "Show FPS:")
+					AAText(x, y, scpLang_GetPhrase("menu.showfps"))
 					ShowFPS% = DrawTick(x + 270 * MenuScale, y, ShowFPS%)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,"showfps")
@@ -11177,7 +9696,7 @@ Function DrawMenu()
 					y = y + 30*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "Framelimit:")
+					AAText(x, y, scpLang_GetPhrase("menu.framelimit"))
 					
 					Color 255,255,255
 					If DrawTick(x + 270 * MenuScale, y, CurrFrameLimit > 0.0) Then
@@ -11203,7 +9722,7 @@ Function DrawMenu()
 					y = y + 80*MenuScale
 					
 					Color 255,255,255
-					AAText(x, y, "Antialiased text:")
+					AAText(x, y, scpLang_GetPhrase("menu.antialiasedtext"))
 					AATextEnable% = DrawTick(x + 270 * MenuScale, y + MenuScale, AATextEnable%)
 					If AATextEnable_Prev% <> AATextEnable
 						For font.AAFont = Each AAFont
@@ -11221,11 +9740,11 @@ Function DrawMenu()
 							;Next
 						EndIf
 						InitAAFont()
-						fo\Font[0] = AALoadFont(FontPath$+"cour\Courier New.ttf", Int(18 * (GraphicHeight / 1024.0)), 0,0,0)
-						fo\Font[1] = AALoadFont(FontPath$+"courbd\Courier New.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
-						fo\Font[2] = AALoadFont(FontPath$+"DS-DIGI\DS-Digital.ttf", Int(22 * (GraphicHeight / 1024.0)), 0,0,0)
-						fo\Font[3] = AALoadFont(FontPath$+"DS-DIGI\DS-Digital.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0) ;60
-						fo\Font[4] = AALoadFont(FontPath$+"Journal\Journal.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[0] = AALoadFont("GFX\font\cour\Courier New.ttf", Int(18 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[1] = AALoadFont("GFX\font\courbd\Courier New.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[2] = AALoadFont("GFX\font\DS-DIGI\DS-Digital.ttf", Int(22 * (GraphicHeight / 1024.0)), 0,0,0)
+						fo\Font[3] = AALoadFont("GFX\font\DS-DIGI\DS-Digital.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0) ;60
+						fo\Font[4] = AALoadFont("GFX\font\Journal\Journal.ttf", Int(58 * (GraphicHeight / 1024.0)), 0,0,0)
 						fo\ConsoleFont% = AALoadFont("Blitz", Int(22 * (GraphicHeight / 1024.0)), 0,0,0,1)
 						;ReloadAAFont()
 						AATextEnable_Prev% = AATextEnable
@@ -11244,7 +9763,7 @@ Function DrawMenu()
 				If (Not CanSave) Then AbleToSave = False
 				If AbleToSave
 					QuitButton = 140
-					If DrawButton(x, y + 60*MenuScale, 430*MenuScale, 60*MenuScale, "Save & Quit") Then
+					If DrawButton(x, y + 60*MenuScale, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.saveandquit")) Then
 						DropSpeed = 0
 						SaveGame(SavePath + CurrSave + "\")
 						NullGame()
@@ -11257,7 +9776,7 @@ Function DrawMenu()
 				EndIf
 			EndIf
 			
-			If DrawButton(x, y + QuitButton*MenuScale, 430*MenuScale, 60*MenuScale, "Quit") Then
+			If DrawButton(x, y + QuitButton*MenuScale, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.quit3")) Then
 				NullGame()
 				ms\MenuOpen = False
 				ms\MainMenuOpen = True
@@ -11266,14 +9785,14 @@ Function DrawMenu()
 				FlushKeys()
 			EndIf
 			
-			If DrawButton(x+101*MenuScale, y + 344*MenuScale, 230*MenuScale, 60*MenuScale, "Back") Then
+			If DrawButton(x+101*MenuScale, y + 344*MenuScale, 230*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.back2")) Then
 				AchievementsMenu = 0
 				OptionsMenu = 0
 				QuitMSG = 0
 				MouseHit1 = False
 			EndIf
 		Else
-			If DrawButton(x+101*MenuScale, y + 344*MenuScale, 230*MenuScale, 60*MenuScale, "Back") Then
+			If DrawButton(x+101*MenuScale, y + 344*MenuScale, 230*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.back2")) Then
 				AchievementsMenu = 0
 				OptionsMenu = 0
 				QuitMSG = 0
@@ -11321,16 +9840,18 @@ Function DrawMenu()
 				
 				y = y+ 72*MenuScale
 				
-				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Resume", True, True) Then
+				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.resume"), True, True) Then
 					ms\MenuOpen = False
 					ResumeSounds()
-					MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+					MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+					mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+					mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 				EndIf
 				
 				y = y + 75*MenuScale
 				If (Not SelectedDifficulty\permaDeath) Then
 					If GameSaved Then
-						If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Load Game") Then
+						If DrawButton(x, y, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.loadgame2")) Then
 							DrawLoading(0)
 							
 							ms\MenuOpen = False
@@ -11374,22 +9895,22 @@ Function DrawMenu()
 						DrawFrame(x,y,430*MenuScale, 60*MenuScale)
 						Color (100, 100, 100)
 						AASetFont fo\Font[1]
-						AAText(x + (430*MenuScale) / 2, y + (60*MenuScale) / 2, "Load Game", True, True)
+						AAText(x + (430*MenuScale) / 2, y + (60*MenuScale) / 2, scpLang_GetPhrase("menu.loadgame2"), True, True)
 					EndIf
 					y = y + 75*MenuScale
 			EndIf
 				
-				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Achievements") Then AchievementsMenu = 1
+				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.achievements2")) Then AchievementsMenu = 1
 				y = y + 75*MenuScale
 
 				If SelectedDifficulty\menu Then
-					If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Options") Then OptionsMenu = 1
+					If DrawButton(x, y, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.options2")) Then OptionsMenu = 1
 					y = y + 75*MenuScale
 				EndIf				
 			Else							
 				y = y+104*MenuScale
 				If GameSaved And (Not SelectedDifficulty\permaDeath) Then
-					If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Load Game") Then
+					If DrawButton(x, y, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.loadgame2")) Then
 						DrawLoading(0)
 						
 						ms\MenuOpen = False
@@ -11432,9 +9953,9 @@ Function DrawMenu()
 				Else
 					DrawButton(x, y, 430*MenuScale, 60*MenuScale, "")
 					Color 50,50,50
-					AAText(x + 185*MenuScale, y + 30*MenuScale, "Load Game", True, True)
+					AAText(x + 185*MenuScale, y + 30*MenuScale, scpLang_GetPhrase("menu.loadgame2"), True, True)
 				EndIf
-				If DrawButton(x, y + 80*MenuScale, 430*MenuScale, 60*MenuScale, "Quit to Menu") Then
+				If DrawButton(x, y + 80*MenuScale, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.quit4")) Then
 					NullGame()
 					ms\MenuOpen = False
 					ms\MainMenuOpen = True
@@ -11446,7 +9967,7 @@ Function DrawMenu()
 			EndIf
 			
 			If KillTimer >= 0 And (Not ms\MainMenuOpen)
-				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Quit") Then
+				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, scpLang_GetPhrase("menu.quit3")) Then
 					QuitMSG = 1
 				EndIf
 			EndIf
@@ -11495,7 +10016,7 @@ Include "Source Code\Sound_System.bb"
 Function LoadEntities()
 	DrawLoading(0)
 	
-	DeInit3DMenu()
+	;DeInit3DMenu()
 
 	Local i%
 	Local o.Objects = New Objects
@@ -11504,22 +10025,22 @@ Function LoadEntities()
 		TempSounds[i] = 0
 	Next
 	
-	PauseMenuIMG% = LoadImage_Strict("GFX\menu\pausemenu.png")
+	PauseMenuIMG% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\menu\pausemenu.png"))
 	MaskImage PauseMenuIMG, 255,255,0
 	ScaleImage PauseMenuIMG,MenuScale,MenuScale
 	
-	SprintIcon% = LoadImage_Strict(GFXPath$+"sprinticon.png")
-	BlinkIcon% = LoadImage_Strict(GFXPath$+"blinkicon.png")
-	CrouchIcon% = LoadImage_Strict(GFXPath$+"sneakicon.png")
-	HandIcon% = LoadImage_Strict(GFXPath$+"handsymbol.png")
-	HandIcon2% = LoadImage_Strict(GFXPath$+"handsymbol2.png")
+	SprintIcon% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"sprinticon.png"))
+	BlinkIcon% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"blinkicon.png"))
+	CrouchIcon% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"sneakicon.png"))
+	HandIcon% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"handsymbol.png"))
+	HandIcon2% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"handsymbol2.png"))
 
-	StaminaMeterIMG% = LoadImage_Strict(GFXPath$+"staminameter.png")
+	StaminaMeterIMG% = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"staminameter.png"))
 
-	KeypadHUD =  LoadImage_Strict(GFXPath$+"keypadhud.png")
+	KeypadHUD =  LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"keypadhud.png"))
 	MaskImage(KeypadHUD, 255,0,255)
 
-	Panel294 = LoadImage_Strict(GFXPath$+"294panel.png")
+	Panel294 = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\"+"294panel.png"))
 	MaskImage(Panel294, 255,0,255)
 	
 	Brightness% = GetINIFloat(OptionFile, "game", "brightness")
@@ -11556,7 +10077,7 @@ Function LoadEntities()
 	
 	;[OVERLAYS]
 	
-	at\OverlayTextureID[0] = LoadTexture_Strict(GFXPath$+"fog.png", 1) ;FOG
+	at\OverlayTextureID[0] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"fog.png"), 1) ;FOG
 	at\OverlayID[0] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[0], Max(GraphicWidth / 1240.0, 1.0), Max(GraphicHeight / 960.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[0], at\OverlayTextureID[0])
@@ -11564,7 +10085,7 @@ Function LoadEntities()
 	EntityOrder at\OverlayID[0], -1000
 	MoveEntity(at\OverlayID[0], 0, 0, 1.0)
 	
-	at\OverlayTextureID[1] = LoadTexture_Strict(GFXPath$+"GasmaskOverlay.png", 1) ;GASMASK
+	at\OverlayTextureID[1] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"GasmaskOverlay.png"), 1) ;GASMASK
 	at\OverlayID[1] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[1], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[1], at\OverlayTextureID[1])
@@ -11574,7 +10095,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[1], 0, 0, 1.0)
 	HideEntity(at\OverlayID[1])
 	
-	at\OverlayTextureID[2] = LoadTexture_Strict(GFXPath$+"InfectOverlay.png", 1) ;INFECTION
+	at\OverlayTextureID[2] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"InfectOverlay.png"), 1) ;INFECTION
 	at\OverlayID[2] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[2], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[2], at\OverlayTextureID[2])
@@ -11584,7 +10105,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[2], 0, 0, 1.0)
 	HideEntity(at\OverlayID[2])
 	
-	at\OverlayTextureID[3] = LoadTexture_Strict(GFXPath$+"NightVisionOverlay.png", 1) ;NVG
+	at\OverlayTextureID[3] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"NightVisionOverlay.png"), 1) ;NVG
 	at\OverlayID[3] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[3], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[3], at\OverlayTextureID[3])
@@ -11594,7 +10115,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[3], 0, 0, 1.0)
 	HideEntity(at\OverlayID[3])
 	
-	at\OverlayTextureID[4] = LoadTexture_Strict(GFXPath$+"fogNV.png", 1) ;NVG BLINK
+	at\OverlayTextureID[4] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"fogNV.png"), 1) ;NVG BLINK
 	at\OverlayID[4] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[4], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityColor(at\OverlayID[4],0,0,0)
@@ -11603,7 +10124,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[4], 0, 0, 1.0)
 	HideEntity(at\OverlayID[4])
 	
-	at\OverlayTextureID[5] = LoadTexture_Strict(GFXPath$+"BloodOverlay.png", 1) ;BLOOD
+	at\OverlayTextureID[5] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"BloodOverlay.png"), 1) ;BLOOD
 	at\OverlayID[5] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[5], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[5], at\OverlayTextureID[5])
@@ -11613,7 +10134,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[5], 0, 0, 1.0)
 	HideEntity(at\OverlayID[5])
 	
-	at\OverlayTextureID[6] = LoadTexture_Strict(GFXPath$+"HelmetOverlay.png", 1) ;HELMET
+	at\OverlayTextureID[6] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"HelmetOverlay.png"), 1) ;HELMET
 	at\OverlayID[6] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[6], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[6], at\OverlayTextureID[6])
@@ -11623,7 +10144,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[6], 0, 0, 1.0)
 	HideEntity(at\OverlayID[6])
 	
-	at\OverlayTextureID[7] = LoadTexture_Strict(GFXPath$+"447Overlay.png", 1) ;SCP-447
+	at\OverlayTextureID[7] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"447Overlay.png"), 1) ;SCP-447
 	at\OverlayID[7] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[7], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[7], at\OverlayTextureID[7])
@@ -11634,7 +10155,7 @@ Function LoadEntities()
 	EntityAlpha (at\OverlayID[7], 255.0)
 	HideEntity(at\OverlayID[7])
 	
-	at\OverlayTextureID[8] = LoadTexture_Strict(GFXPath$+"FireOverlay.png", 1) ;FIRE
+	at\OverlayTextureID[8] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"FireOverlay.png"), 1) ;FIRE
 	at\OverlayID[8] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[8], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[8], at\OverlayTextureID[8])
@@ -11644,7 +10165,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[8], 0, 0, 1.0)
 	HideEntity(at\OverlayID[8])
 	
-	at\OverlayTextureID[9] = LoadTexture_Strict(GFXPath$+"map\red_ice.png",1) ;RED ICE
+	at\OverlayTextureID[9] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"map\red_ice.png"),1) ;RED ICE
 	at\OverlayID[9] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[9], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[9], at\OverlayTextureID[9])
@@ -11654,7 +10175,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[9], 0, 0, 1.0)
 	HideEntity(at\OverlayID[9])
 	
-	at\OverlayTextureID[10] = LoadTexture_Strict(GFXPath$+"CrystalOverlay.png", 1) ;CRYSTALLIZATION
+	at\OverlayTextureID[10] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"CrystalOverlay.png"), 1) ;CRYSTALLIZATION
 	at\OverlayID[10] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[10], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[10], at\OverlayTextureID[10])
@@ -11664,7 +10185,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[10], 0, 0, 1.0)
 	HideEntity(at\OverlayID[10])
 	
-	at\OverlayTextureID[11] = LoadTexture_Strict(GFXPath$+"GlassesOverlay.png",1) ;3-D GLASSES
+	at\OverlayTextureID[11] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"GlassesOverlay.png"),1) ;3-D GLASSES
 	at\OverlayID[11] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[11], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[11], at\OverlayTextureID[11])
@@ -11674,7 +10195,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[11], 0, 0, 1.0)
 	HideEntity(at\OverlayID[11])
 	
-	at\OverlayTextureID[12] = LoadTexture_Strict(GFXPath$+"215Overlay.png", 1) ;STATIC
+	at\OverlayTextureID[12] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"215Overlay.png"), 1) ;STATIC
 	at\OverlayID[12] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[12], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[12], at\OverlayTextureID[12])
@@ -11710,7 +10231,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[14], 0, 0, 1.0)
 	HideEntity at\OverlayID[14]
 	
-	at\OverlayTextureID[21] = LoadTexture_Strict(GFXPath$+"GasmaskBlurOverlay.png", 1) ;GASMASK BLUR
+	at\OverlayTextureID[21] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"GasmaskBlurOverlay.png"), 1) ;GASMASK BLUR
 	at\OverlayID[15] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[15], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[15], at\OverlayTextureID[21])
@@ -11720,7 +10241,7 @@ Function LoadEntities()
 	MoveEntity(at\OverlayID[15], 0, 0, 1.0)
 	HideEntity(at\OverlayID[15])
 	
-	at\OverlayTextureID[22] = LoadTexture_Strict(GFXPath$+"HazmatOverlay.png", 1) ;HAZMAT SUIT
+	at\OverlayTextureID[22] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"HazmatOverlay.png"), 1) ;HAZMAT SUIT
 	at\OverlayID[16] = CreateSprite(ark_blur_cam)
 	ScaleSprite(at\OverlayID[16], Max(GraphicWidth / 1024.0, 1.0), Max(GraphicHeight / 1024.0 * 0.8, 0.8))
 	EntityTexture(at\OverlayID[16], at\OverlayTextureID[22])
@@ -11732,12 +10253,12 @@ Function LoadEntities()
 	
 	DrawLoading(5)
 				
-	at\OverlayTextureID[15] = LoadTexture_Strict(GFXPath$+"map\tesla.png", 1+2) ;TESLA
+	at\OverlayTextureID[15] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"map\tesla.png"), 1+2) ;TESLA
 	
-	at\OverlayTextureID[16] = LoadTexture_Strict(GFXPath$+"monitoroverlay.png") ;MONITOR
-	at\OverlayTextureID[17] = LoadTexture_Strict(GFXPath$+"map\LockdownScreen2.png") ;LOCKDOWN #1
-	at\OverlayTextureID[18] = LoadTexture_Strict(GFXPath$+"map\LockdownScreen.png") ;LOCKDOWN #2
-	at\OverlayTextureID[19] = LoadTexture_Strict(GFXPath$+"map\LockdownScreen3.png") ;LOCKDOWN #3
+	at\OverlayTextureID[16] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"monitoroverlay.png")) ;MONITOR
+	at\OverlayTextureID[17] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"map\LockdownScreen2.png"));LOCKDOWN #1
+	at\OverlayTextureID[18] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"map\LockdownScreen.png")) ;LOCKDOWN #2
+	at\OverlayTextureID[19] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"map\LockdownScreen3.png")) ;LOCKDOWN #3
 	at\OverlayTextureID[20] = CreateTexture(1,1) ;MONITOR OFF
 	SetBuffer TextureBuffer(at\OverlayTextureID[20])
 	ClsColor 0,0,0
@@ -11755,85 +10276,85 @@ Function LoadEntities()
 	
 	;[NPCs]
 	
-	o\NPCModelID[0] = LoadMesh_Strict(NPCsPath$+"scp_173.b3d") ;SCP-173
+	o\NPCModelID[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173.b3d")) ;SCP-173
 
-    o\NPCModelID[1] = LoadAnimMesh_Strict(NPCsPath$+"scp_106.b3d") ;SCP-106
+    o\NPCModelID[1] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_106.b3d")) ;SCP-106
 	
-	o\NPCModelID[2] = LoadAnimMesh_Strict(NPCsPath$+"guard.b3d") ;Guard
+	o\NPCModelID[2] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"guard.b3d")) ;Guard
 
-    o\NPCModelID[3] = LoadAnimMesh_Strict(NPCsPath$+"class_d.b3d") ;Class-D
+    o\NPCModelID[3] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"class_d.b3d")) ;Class-D
 	
-	o\NPCModelID[4] = LoadAnimMesh_Strict(NPCsPath$+"scp_372.b3d") ;SCP-372
+	o\NPCModelID[4] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_372.b3d")) ;SCP-372
 	
-	o\NPCModelID[5] = LoadAnimMesh_Strict(NPCsPath$+"apache.b3d") ;Apache Helicopter
+	o\NPCModelID[5] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"apache.b3d")) ;Apache Helicopter
 	
-	o\NPCModelID[6] = LoadAnimMesh_Strict(NPCsPath$+"apache_rotor.b3d") ;Helicopter's Rotor #1
+	o\NPCModelID[6] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"apache_rotor.b3d")) ;Helicopter's Rotor #1
 	
-	o\NPCModelID[7] = LoadAnimMesh_Strict(NPCsPath$+"MTF.b3d") ;MTF
+	o\NPCModelID[7] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"MTF.b3d")) ;MTF
 	
-	o\NPCModelID[8] = LoadAnimMesh_Strict(NPCsPath$+"scp_096.b3d") ;SCP-096
+	o\NPCModelID[8] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_096.b3d")) ;SCP-096
 	
-	o\NPCModelID[9] = LoadAnimMesh_Strict(NPCsPath$+"scp_049.b3d") ;SCP-049
+	o\NPCModelID[9] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_049.b3d")) ;SCP-049
 	
-	o\NPCModelID[10] = LoadAnimMesh_Strict(NPCsPath$+"scp_049_2.b3d") ;SCP-049-2
+	o\NPCModelID[10] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_049_2.b3d")) ;SCP-049-2
 	
-	o\NPCModelID[11] = LoadAnimMesh_Strict(NPCsPath$+"scp_513_1.b3d") ;SCP-513-1
+	o\NPCModelID[11] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_513_1.b3d")) ;SCP-513-1
 	
-	o\NPCModelID[12] = LoadAnimMesh_Strict(NPCsPath$+"scp_035_tentacle.b3d") ;SCP-035's Tentacle
+	o\NPCModelID[12] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_035_tentacle.b3d")) ;SCP-035's Tentacle
 	
-	o\NPCModelID[13] = LoadAnimMesh_Strict(NPCsPath$+"scp_860_2.b3d") ;SCP-860-2
+	o\NPCModelID[13] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_860_2.b3d")) ;SCP-860-2
 	
-	o\NPCModelID[14] = LoadAnimMesh_Strict(NPCsPath$+"scp_939.b3d") ;SCP-939
+	o\NPCModelID[14] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_939.b3d")) ;SCP-939
 	
-	o\NPCModelID[15] = LoadAnimMesh_Strict(NPCsPath$+"scp_066.b3d") ;SCP-066
+	o\NPCModelID[15] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_066.b3d")) ;SCP-066
 	
-	o\NPCModelID[16] = LoadAnimMesh_Strict(NPCsPath$+"scp_966.b3d") ;SCP-966
+	o\NPCModelID[16] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_966.b3d")) ;SCP-966
 	
-	o\NPCModelID[17] = LoadAnimMesh_Strict(NPCsPath$+"scp_1048_a.b3d") ;SCP-1048-A
+	o\NPCModelID[17] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_1048_a.b3d")) ;SCP-1048-A
 	
-	o\NPCModelID[18] = LoadAnimMesh_Strict(NPCsPath$+"scp_1499_1.b3d") ;SCP-1499-1
+	o\NPCModelID[18] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_1499_1.b3d")) ;SCP-1499-1
 	
-	o\NPCModelID[19] = LoadAnimMesh_Strict(NPCsPath$+"scp_008_1.b3d") ;SCP-008-1
+	o\NPCModelID[19] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_008_1.b3d")) ;SCP-008-1
 	
-	o\NPCModelID[20] = LoadAnimMesh_Strict(NPCsPath$+"clerk.b3d") ;clerk
+	o\NPCModelID[20] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"clerk.b3d")) ;clerk
 	
-	o\NPCModelID[21] = LoadAnimMesh_Strict(NPCsPath$+"scp_008_2.b3d") ;SCP-008-2                     
+	o\NPCModelID[21] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_008_2.b3d")) ;SCP-008-2                     
 	
-	o\NPCModelID[22] = LoadAnimMesh_Strict(NPCsPath$+"scp_650.b3d") ;SCP-650                                   
+	o\NPCModelID[22] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_650.b3d")) ;SCP-650                                   
               
-	o\NPCModelID[23] = LoadAnimMesh_Strict(NPCsPath$+"scp_049_3.b3d") ;SCP-049-3                
+	o\NPCModelID[23] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_049_3.b3d")) ;SCP-049-3                
 	
-	o\NPCModelID[24] = LoadAnimMesh_Strict(NPCsPath$+"scp_178_1.b3d") ;SCP-178-1
+	o\NPCModelID[24] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_178_1.b3d")) ;SCP-178-1
 	
-	o\NPCModelID[25] = LoadAnimMesh_Strict(NPCsPath$+"MTF2.b3d") ;MTF2
+	o\NPCModelID[25] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"MTF2.b3d")) ;MTF2
 	
-	o\NPCModelID[26] = LoadAnimMesh_Strict(NPCsPath$+"apache_rotor(2).b3d") ;Helicopter's Rotor #2
+	o\NPCModelID[26] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"apache_rotor(2).b3d")) ;Helicopter's Rotor #2
 	
-	o\NPCModelID[27] = LoadAnimMesh_Strict(NPCsPath$+"nazi_officer.b3d") ;Nazi Officer
+	o\NPCModelID[27] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"nazi_officer.b3d")) ;Nazi Officer
 	
-	o\NPCModelID[28] = LoadAnimMesh_Strict(NPCsPath$+"scp_1048.b3d") ;SCP-1048 #1
+	o\NPCModelID[28] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_1048.b3d")) ;SCP-1048 #1
 	
-	o\NPCModelID[29] = LoadAnimMesh_Strict(NPCsPath$+"scp_1048_p.b3d") ;SCP-1048 #2
+	o\NPCModelID[29] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_1048_p.b3d")) ;SCP-1048 #2
 	
-	o\NPCModelID[30] = LoadAnimMesh_Strict(NPCsPath$+"duck.b3d") ;Anomalous Duck
+	o\NPCModelID[30] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"duck.b3d")) ;Anomalous Duck
 	
-	o\NPCModelID[31] = LoadAnimMesh_Strict(NPCsPath$+"CI.b3d") ;CI
+	o\NPCModelID[31] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"CI.b3d")) ;CI
 	
-	o\NPCModelID[32] = LoadAnimMesh_Strict(NPCsPath$+"scp_035.b3d") ;SCP-035
+	o\NPCModelID[32] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_035.b3d")) ;SCP-035
 	
-	o\NPCModelID[33] = LoadMesh_Strict(NPCsPath$+"scp_682_arm.b3d") ;SCP-682's Arm
+	o\NPCModelID[33] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_682_arm.b3d")) ;SCP-682's Arm
 	
-	o\NPCModelID[34] = LoadMesh_Strict(NPCsPath$+"scp_173_box.b3d") ;SCP-173's Box
+	o\NPCModelID[34] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173_box.b3d")) ;SCP-173's Box
 	
-	o\NPCModelID[35] = LoadAnimMesh_Strict(NPCsPath$+"scp_205_demon.b3d") ;SCP-205's Demon #1
+	o\NPCModelID[35] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_205_demon.b3d")) ;SCP-205's Demon #1
 	
-	o\NPCModelID[36] = LoadAnimMesh_Strict(NPCsPath$+"scp_205_demon(2).b3d") ;SCP-205's Demon#2
+	o\NPCModelID[36] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_205_demon(2).b3d")) ;SCP-205's Demon#2
 	
-	o\NPCModelID[37] = LoadAnimMesh_Strict(NPCsPath$+"scp_205_demon(3).b3d") ;SCP-205's Demon#3
+	o\NPCModelID[37] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_205_demon(3).b3d")) ;SCP-205's Demon#3
 	
-	o\NPCModelID[38] = LoadAnimMesh_Strict(NPCsPath$+"scp_205_woman.b3d") ;SCP-205's Woman
+	o\NPCModelID[38] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_205_woman.b3d")) ;SCP-205's Woman
 	
-	o\NPCModelID[39] = LoadAnimMesh_Strict(NPCsPath$+"vehicle.b3d") ;Vehicle
+	o\NPCModelID[39] = LoadAnimMesh_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"vehicle.b3d")) ;Vehicle
 		
     For i = 0 To MaxNPCModelIDAmount-1
         HideEntity o\NPCModelID[i]
@@ -11843,27 +10364,27 @@ Function LoadEntities()
 	
 	;[DOORS]
 	
-	o\DoorID[0] = LoadMesh_Strict(MapPath$+"door01.x") ;door
+	o\DoorID[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"door01.x")) ;door
 	
-	o\DoorID[1] = LoadMesh_Strict(MapPath$+"doorframe.x") ;frame #1
+	o\DoorID[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"doorframe.x")) ;frame #1
 	
-	o\DoorID[2] = LoadMesh_Strict(MapPath$+"heavydoor1.x") ;heavy door #1
+	o\DoorID[2] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"heavydoor1.x")) ;heavy door #1
 	
-	o\DoorID[3] = LoadMesh_Strict(MapPath$+"heavydoor2.x") ;heavy door #2
+	o\DoorID[3] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"heavydoor2.x")) ;heavy door #2
 	
-	o\DoorID[4] = LoadMesh_Strict(MapPath$+"doorcoll.x") ;collider
+	o\DoorID[4] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"doorcoll.x")) ;collider
 		
-	o\DoorID[5] = LoadMesh_Strict(MapPath$+"ContDoorLeft.x") ;big door #1
+	o\DoorID[5] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"ContDoorLeft.x")) ;big door #1
 
-	o\DoorID[6] = LoadMesh_Strict(MapPath$+"ContDoorRight.x") ;big door #2
+	o\DoorID[6] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"ContDoorRight.x")) ;big door #2
 	
-	o\DoorID[7] = LoadMesh_Strict(MapPath$+"elevatordoor.b3d") ;elevator door
+	o\DoorID[7] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"elevatordoor.b3d")) ;elevator door
 	
-	o\DoorID[8] = LoadMesh_Strict(MapPath$+"forest\door_frame.b3d") ;frame #2
+	o\DoorID[8] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\door_frame.b3d")) ;frame #2
 	
-	o\DoorID[9] = LoadMesh_Strict(MapPath$+"forest\door.b3d") ;wooden door
+	o\DoorID[9] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"forest\door.b3d")) ;wooden door
 	
-	o\DoorID[10] = LoadMesh_Strict(MapPath$+"doorhit.b3d") ;door's hitbox
+	o\DoorID[10] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"doorhit.b3d")) ;door's hitbox
 
 	For i = 0 To MaxDoorIDAmount-1
 	    HideEntity o\DoorID[i]
@@ -11871,9 +10392,9 @@ Function LoadEntities()
 	
 	;[LEVERS]
 	
-	o\LeverID[0] = LoadMesh_Strict(MapPath$+"leverbase.x") ;lever base
+	o\LeverID[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"leverbase.x")) ;lever base
 
-	o\LeverID[1] = LoadMesh_Strict(MapPath$+"leverhandle.x") ;lever handle
+	o\LeverID[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"leverhandle.x")) ;lever handle
 
 	For i = 0 To MaxLeverIDAmount-1
 	    HideEntity o\LeverID[i]
@@ -11881,15 +10402,15 @@ Function LoadEntities()
 
     ;[BUTTONS]
 
-	o\ButtonID[0] = LoadMesh_Strict(MapPath$+"Button.b3d") ;button
+	o\ButtonID[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"Button.b3d")) ;button
 	
-	o\ButtonID[1] = LoadMesh_Strict(MapPath$+"ButtonKeycard.b3d") ;keycard button
+	o\ButtonID[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"ButtonKeycard.b3d")) ;keycard button
 	
-	o\ButtonID[2] = LoadMesh_Strict(MapPath$+"ButtonCode.b3d") ;code button
+	o\ButtonID[2] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"ButtonCode.b3d")) ;code button
 		
-	o\ButtonID[3] = LoadMesh_Strict(MapPath$+"ButtonScanner.b3d") ;scanner button
+	o\ButtonID[3] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"ButtonScanner.b3d")) ;scanner button
 	
-	o\ButtonID[4] = LoadMesh_Strict(MapPath$+"ButtonElevator.b3d") ;elevator button
+	o\ButtonID[4] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"ButtonElevator.b3d")) ;elevator button
 	
 	For i=0 To MaxButtonIDAmount-1
         HideEntity o\ButtonID[i]
@@ -11897,9 +10418,9 @@ Function LoadEntities()
 
     ;[OTHER MODELS]
 	
-	o\OtherModelsID[0] = LoadMesh_Strict(ItemsPath$+"cup_liquid.x") ;cup's liquid
+	o\OtherModelsID[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\items\"+"cup_liquid.x")) ;cup's liquid
 	
-	o\OtherModelsID[1] = LoadMesh_Strict(GFXPath$+"lightcone.b3d") ;light cone
+	o\OtherModelsID[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\"+"lightcone.b3d")) ;light cone
 	
 	For i=0 To MaxOtherModelsIDAmount-1
         HideEntity o\OtherModelsID[i]
@@ -11907,60 +10428,60 @@ Function LoadEntities()
 	
 	DrawLoading(15)
 	
-	at\LightSpriteTextureID[0] = LoadTexture_Strict(GFXPath$+"light.png", 1)
-	at\LightSpriteTextureID[1] = LoadTexture_Strict(GFXPath$+"light(2).png", 1)
-	at\LightSpriteTextureID[2] = LoadTexture_Strict(GFXPath$+"lightsprite.png",1)
+	at\LightSpriteTextureID[0] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"light.png"), 1)
+	at\LightSpriteTextureID[1] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"light(2).png"), 1)
+	at\LightSpriteTextureID[2] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"lightsprite.png"),1)
 	
-	at\OtherTextureID[3] = LoadTexture_Strict(GFXPath$+"079Overlays\079Overlay.png")
+	at\OtherTextureID[3] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"079Overlays\079Overlay.png"))
 	For i = 4 To 9
-	    at\OtherTextureID[i] = LoadTexture_Strict(GFXPath$+"079Overlays\079Overlay(" + (i - 2) + ").png")
+	    at\OtherTextureID[i] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"079Overlays\079Overlay(" + (i - 2) + ").png"))
 	Next
 	
-	at\OtherTextureID[10] = LoadTexture_Strict(GFXPath$+"895Overlays\895Overlay.png")
+	at\OtherTextureID[10] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"895Overlays\895Overlay.png"))
 	For i = 11 To 20
-		at\OtherTextureID[i] = LoadTexture_Strict(GFXPath$+"895Overlays\895Overlay(" + (i - 9) + ").png")
+		at\OtherTextureID[i] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"895Overlays\895Overlay(" + (i - 9) + ").png"))
 	Next
 		
 	DrawLoading(20)
 	
-	at\DecalTextureID[0] = LoadTexture_Strict(GFXPath$+"decal.png", 1 + 2)
+	at\DecalTextureID[0] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal.png"), 1 + 2)
 
 	For i = 1 To 6
-		at\DecalTextureID[i] = LoadTexture_Strict(GFXPath$+"decal(" + (i + 1) + ").png", 1 + 2)
+		at\DecalTextureID[i] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal(" + (i + 1) + ").png"), 1 + 2)
 	Next
 	
-	at\DecalTextureID[7] = LoadTexture_Strict(GFXPath$+"decal447.png", 1 + 2)
+	at\DecalTextureID[7] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal447.png"), 1 + 2)
 	
-	at\DecalTextureID[8] = LoadTexture_Strict(GFXPath$+"decalpd.png", 1 + 2)
+	at\DecalTextureID[8] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decalpd.png"), 1 + 2)
 	For i = 9 To 12
-		at\DecalTextureID[i] = LoadTexture_Strict(GFXPath$+"decalpd("+(i-7)+").png", 1 + 2)	
+		at\DecalTextureID[i] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decalpd("+(i-7)+").png"), 1 + 2)	
 	Next
 	
-	at\DecalTextureID[13] = LoadTexture_Strict(GFXPath$+"bullethole.png", 1 + 2)
-	at\DecalTextureID[14] = LoadTexture_Strict(GFXPath$+"bullethole(2).png", 1 + 2)		
+	at\DecalTextureID[13] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"bullethole.png"), 1 + 2)
+	at\DecalTextureID[14] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"bullethole(2).png"), 1 + 2)		
 	
-	at\DecalTextureID[15] = LoadTexture_Strict(GFXPath$+"blooddrop.png", 1 + 2)
-	at\DecalTextureID[16] = LoadTexture_Strict(GFXPath$+"blooddrop(2).png", 1 + 2)
+	at\DecalTextureID[15] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"blooddrop.png"), 1 + 2)
+	at\DecalTextureID[16] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"blooddrop(2).png"), 1 + 2)
 		
-	at\DecalTextureID[17] = LoadTexture_Strict(GFXPath$+"decal(8).png", 1 + 2)
+	at\DecalTextureID[17] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal(8).png"), 1 + 2)
 		
-	at\DecalTextureID[18] = LoadTexture_Strict(GFXPath$+"decalpd(6).dc", 1 + 2)
+	at\DecalTextureID[18] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decalpd(6).dc"), 1 + 2)
 		
-	at\DecalTextureID[19] = LoadTexture_Strict(GFXPath$+"decal409.png", 1 + 2)
-	at\DecalTextureID[20] = LoadTexture_Strict(GFXPath$+"decal427.png", 1 + 2)
-	at\DecalTextureID[21] = LoadTexture_Strict(GFXPath$+"decal008.png", 1 + 2)
-	at\DecalTextureID[22] = LoadTexture_Strict(GFXPath$+"decal1079.png", 1 + 2)
-	at\DecalTextureID[23] = LoadTexture_Strict(GFXPath$+"decal1079(2).png", 1 + 2)
+	at\DecalTextureID[19] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal409.png"), 1 + 2)
+	at\DecalTextureID[20] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal427.png"), 1 + 2)
+	at\DecalTextureID[21] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal008.png"), 1 + 2)
+	at\DecalTextureID[22] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal1079.png"), 1 + 2)
+	at\DecalTextureID[23] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"decal1079(2).png"), 1 + 2)
 
 	DrawLoading(25)
 	
 	;[MONITORS]
 	
-	o\MonitorID[0] = LoadMesh_Strict(MapPath$+"monitor.b3d") ;monitor #1
+	o\MonitorID[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"monitor.b3d")) ;monitor #1
 
-	o\MonitorID[1] = LoadMesh_Strict(MapPath$+"monitor_checkpoint.b3d") ;monitor #2
+	o\MonitorID[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"monitor_checkpoint.b3d")) ;monitor #2
 
-	o\MonitorID[2] = LoadMesh_Strict(MapPath$+"monitor_checkpoint.b3d") ;monitor #3
+	o\MonitorID[2] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"monitor_checkpoint.b3d")) ;monitor #3
 
     For i=0 To MaxMonitorIDAmount-1
         HideEntity o\MonitorID[i]
@@ -11968,9 +10489,9 @@ Function LoadEntities()
 	
 	;[CAMS]
 	
-	o\CamID[0] = LoadMesh_Strict(MapPath$+"cambase.x") ;cam base
+	o\CamID[0] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"cambase.x")) ;cam base
 
-	o\CamID[1] = LoadMesh_Strict(MapPath$+"CamHead.b3d") ;cam head
+	o\CamID[1] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"CamHead.b3d")) ;cam head
 
 	For i=0 To MaxCamIDAmount-1
         HideEntity o\CamID[i]
@@ -12011,17 +10532,17 @@ Function LoadEntities()
 	
 	UserTrackMusicAmount% = 0
 	If EnableUserTracks Then
-		Local dirPath$ = SFXPath$+"Radio\UserTracks\"
+		Local dirPath$ = scpModding_ProcessFilePath$("SFX\"+"Radio\UserTracks\")
 		If FileType(dirPath)<>2 Then
 			CreateDir(dirPath)
 		EndIf
 		
-		Local Dir% = ReadDir(MusicPath2$)
+		Local Dir% = ReadDir(scpModding_ProcessFilePath$("SFX\Radio\UserTracks"))
 		Repeat
 			file$=NextFile(Dir)
 			If file$="" Then Exit
-			If FileType(MusicPath2$+file$) = 1 Then
-				test = LoadSound(MusicPath2$+file$)
+			If FileType(scpModding_ProcessFilePath$("SFX\Radio\UserTracks"+file$)) = 1 Then
+				test = LoadSound(scpModding_ProcessFilePath$("SFX\Radio\UserTracks"+file$))
 				If test<>0
 					UserTrackName$(UserTrackMusicAmount%) = file$
 					UserTrackMusicAmount% = UserTrackMusicAmount% + 1
@@ -12031,20 +10552,20 @@ Function LoadEntities()
 		Forever
 		CloseDir Dir
 	EndIf
-	If EnableUserTracks Then DebugLog "User Tracks found: "+UserTrackMusicAmount
+	If EnableUserTracks Then DebugLog scpLang_GetPhrase("menu.trackfound")+": "+UserTrackMusicAmount
 	
 	InitItemTemplates()
 	
-	at\ParticleTextureID[0] = LoadTexture_Strict(GFXPath$+"smoke.png", 1 + 2)
-	at\ParticleTextureID[1] = LoadTexture_Strict(GFXPath$+"flash.png", 1 + 2)
-	at\ParticleTextureID[2] = LoadTexture_Strict(GFXPath$+"dust.png", 1 + 2)
-	at\ParticleTextureID[3] = LoadTexture_Strict(NPCsPath$+"hg.pt", 1 + 2)
-	at\ParticleTextureID[4] = LoadTexture_Strict(MapPath$+"sun.png", 1 + 2)
-	at\ParticleTextureID[5] = LoadTexture_Strict(GFXPath$+"bloodsprite.png", 1 + 2)
-	at\ParticleTextureID[6] = LoadTexture_Strict(GFXPath$+"smoke2.png", 1 + 2)
-	at\ParticleTextureID[7] = LoadTexture_Strict(GFXPath$+"spark.png", 1 + 2)
-	at\ParticleTextureID[8] = LoadTexture_Strict(GFXPath$+"particle.png", 1 + 2)
-	at\ParticleTextureID[9] = LoadTexture_Strict(GFXPath$+"fire_particle.png", 1 + 2)
+	at\ParticleTextureID[0] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"smoke.png"), 1 + 2)
+	at\ParticleTextureID[1] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"flash.png"), 1 + 2)
+	at\ParticleTextureID[2] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"dust.png"), 1 + 2)
+	at\ParticleTextureID[3] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"hg.pt"), 1 + 2)
+	at\ParticleTextureID[4] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"sun.png"), 1 + 2)
+	at\ParticleTextureID[5] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"bloodsprite.png"), 1 + 2)
+	at\ParticleTextureID[6] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"smoke2.png"), 1 + 2)
+	at\ParticleTextureID[7] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"spark.png"), 1 + 2)
+	at\ParticleTextureID[8] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"particle.png"), 1 + 2)
+	at\ParticleTextureID[9] = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\"+"fire_particle.png"), 1 + 2)
 	
 	SetChunkDataValues()
 	
@@ -12053,98 +10574,98 @@ Function LoadEntities()
 		HideEntity DTextures[i]
 	Next
 	;Gonzales
-	tex = LoadTexture_Strict(NPCsPath$+"Gonzales.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"Gonzales.png"))
 	EntityTexture DTextures[1],tex
 	FreeTexture tex
 	;SCP-970 Sorpse
-	tex = LoadTexture_Strict(NPCsPath$+"corpse.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"corpse.png"))
 	EntityTexture DTextures[2],tex
 	FreeTexture tex
 	;1st Scientist
-	tex = LoadTexture_Strict(NPCsPath$+"scientist.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scientist.png"))
 	EntityTexture DTextures[3],tex
 	FreeTexture tex
 	;Franklin
-	tex = LoadTexture_Strict(NPCsPath$+"Franklin.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"Franklin.png"))
 	EntityTexture DTextures[4],tex
 	FreeTexture tex
 	;Janitor #1
-	tex = LoadTexture_Strict(NPCsPath$+"janitor.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"janitor.png"))
 	EntityTexture DTextures[5],tex
 	FreeTexture tex
 	;2nd Class-D
-	tex = LoadTexture_Strict(NPCsPath$+"class_d(2).png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"class_d(2).png"))
 	EntityTexture DTextures[6],tex
 	FreeTexture tex
 	;SCP-035 Victim
-	tex = LoadTexture_Strict(NPCsPath$+"scp_035_victim.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_035_victim.png"))
 	EntityTexture DTextures[7],tex
 	FreeTexture tex
 	;SCP-106's Victim
-	tex = LoadTexture_Strict(NPCsPath$+"scp_106_victim.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_106_victim.png"))
 	EntityTexture DTextures[8],tex
 	FreeTexture tex
 	;1st Body
-	tex = LoadTexture_Strict(NPCsPath$+"body.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"body.png"))
 	EntityTexture DTextures[9],tex
 	FreeTexture tex
 	;2nd Body
-	tex = LoadTexture_Strict(NPCsPath$+"body(2).png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"body(2).png"))
 	EntityTexture DTextures[10],tex
 	FreeTexture tex
 	;D-9341
-	tex = LoadTexture_Strict(NPCsPath$+"d_9341.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"d_9341.png"))
 	EntityTexture DTextures[11],tex
 	FreeTexture tex
 	
 	;{~--<MOD>--~}
 	
 	;1st Class-D Victim
-	tex = LoadTexture_Strict(NPCsPath$+"scp_106_victim(2).png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_106_victim(2).png"))
 	EntityTexture DTextures[12],tex
 	FreeTexture tex
 	;2nd Class-D Victim
-	tex = LoadTexture_Strict(NPCsPath$+"scp_106_victim(3).png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_106_victim(3).png"))
 	EntityTexture DTextures[13],tex
 	FreeTexture tex
 	;Janitor Victim
-	tex = LoadTexture_Strict(NPCsPath$+"scp_106_victim(4).png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_106_victim(4).png"))
 	EntityTexture DTextures[14],tex
 	FreeTexture tex
 	;3d Body
-    tex = LoadTexture_Strict(NPCsPath$+"body(3).png")
+    tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"body(3).png"))
 	EntityTexture DTextures[15],tex
 	FreeTexture tex
 	;4th Body
-    tex = LoadTexture_Strict(NPCsPath$+"body(4).png")
+    tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"body(4).png"))
 	EntityTexture DTextures[16],tex
 	FreeTexture tex
 	;SCP-008-1's Victim
-	tex = LoadTexture_Strict(NPCsPath$+"scp_008_victim.png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_008_victim.png"))
 	EntityTexture DTextures[17],tex
 	FreeTexture tex
 	;Janitor #2
-	tex = LoadTexture_Strict(NPCsPath$+"janitor(2).png")
+	tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"janitor(2).png"))
 	EntityTexture DTextures[18],tex
 	FreeTexture tex
 	
 	;{~--<END>--~}
 	
-	LoadMaterials("DATA\materials.ini")
+	LoadMaterials(scpModding_ProcessFilePath$("DATA\materials.ini"))
 	
-	o\OBJTunnelID[0] = LoadRMesh(MapPath$+"mt1.rmesh", Null) ;tunnel #1
+	o\OBJTunnelID[0] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"mt1.rmesh"), Null) ;tunnel #1
 			
-	o\OBJTunnelID[1] = LoadRMesh(MapPath$+"mt2.rmesh", Null) ;tunnel #2
+	o\OBJTunnelID[1] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"mt2.rmesh"), Null) ;tunnel #2
 
-	o\OBJTunnelID[2] = LoadRMesh(MapPath$+"mt2c.rmesh", Null) ;tunnel #2 (corner)
+	o\OBJTunnelID[2] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"mt2c.rmesh"), Null) ;tunnel #2 (corner)
 				
-	o\OBJTunnelID[3] = LoadRMesh(MapPath$+"mt3.rmesh", Null) ;tunnel #3
+	o\OBJTunnelID[3] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"mt3.rmesh"), Null) ;tunnel #3
 	
-	o\OBJTunnelID[4] = LoadRMesh(MapPath$+"mt4.rmesh", Null) ;tunnel #4
+	o\OBJTunnelID[4] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"mt4.rmesh"), Null) ;tunnel #4
 				
-	o\OBJTunnelID[5] = LoadRMesh(MapPath$+"mt_elevator.rmesh", Null) ;elevator
+	o\OBJTunnelID[5] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"mt_elevator.rmesh"), Null) ;elevator
 
-	o\OBJTunnelID[6] = LoadRMesh(MapPath$+"mt_generator.rmesh", Null) ;generator
+	o\OBJTunnelID[6] = LoadRMesh(scpModding_ProcessFilePath$("GFX\map\"+"mt_generator.rmesh"), Null) ;generator
 
 	For i = 0 To MaxOBJTunnelIDAmount-1
         HideEntity o\OBJTunnelID[i]
@@ -12168,7 +10689,7 @@ Function LoadEntities()
 	SetTemplateParticlesPerInterval(ParticleEffect[0], 6)
 	SetTemplateEmitterLifeTime(ParticleEffect[0], 6)
 	SetTemplateParticleLifeTime(ParticleEffect[0], 20, 30)
-	SetTemplateTexture(ParticleEffect[0], GFXPath$+"Spark.png", 2, 3)
+	SetTemplateTexture(ParticleEffect[0], scpModding_ProcessFilePath$("GFX\"+"Spark.png"), 2, 3)
 	SetTemplateOffset(ParticleEffect[0], -0.1, 0.1, -0.1, 0.1, -0.1, 0.1)
 	SetTemplateVelocity(ParticleEffect[0], -0.0375, 0.0375, -0.0375, 0.0375, -0.0375, 0.0375)
 	SetTemplateAlignToFall(ParticleEffect[0], True, 45)
@@ -12185,7 +10706,7 @@ Function LoadEntities()
 	SetTemplateInterval(ParticleEffect[1], 1)
 	SetTemplateEmitterLifeTime(ParticleEffect[1], 3)
 	SetTemplateParticleLifeTime(ParticleEffect[1], 30, 45)
-	SetTemplateTexture(ParticleEffect[1], GFXPath$+"smoke2.png", 2, 1)
+	SetTemplateTexture(ParticleEffect[1], scpModding_ProcessFilePath$("GFX\"+"smoke2.png"), 2, 1)
 	;SetTemplateOffset(ParticleEffect[1], -.3, .3, -.3, .3, -.3, .3)
 	SetTemplateOffset(ParticleEffect[1], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 	;SetTemplateVelocity(ParticleEffect[1], -.04, .04, .1, .2, -.04, .04)
@@ -12201,7 +10722,7 @@ Function LoadEntities()
 	SetTemplateInterval(ParticleEffect[2], 1)
 	SetTemplateEmitterLifeTime(ParticleEffect[2], 3)
 	SetTemplateParticleLifeTime(ParticleEffect[2], 30, 45)
-	SetTemplateTexture(ParticleEffect[2], GFXPath$+"smoke.png", 2, 1)
+	SetTemplateTexture(ParticleEffect[2], scpModding_ProcessFilePath$("GFX\"+"smoke.png"), 2, 1)
 	SetTemplateOffset(ParticleEffect[2], -0.1, 0.1, -0.1, 0.1, -0.1, 0.1)
 	SetTemplateVelocity(ParticleEffect[2], -0.005, 0.005, 0.0, -0.03, -0.005, 0.005)
 	SetTemplateAlphaVel(ParticleEffect[2], True)
@@ -12213,7 +10734,7 @@ Function LoadEntities()
 	SetTemplateInterval(t0, 1)
 	SetTemplateEmitterLifeTime(t0, 3)
 	SetTemplateParticleLifeTime(t0, 30, 45)
-	SetTemplateTexture(t0, GFXPath$+"smoke2.png", 2, 1)
+	SetTemplateTexture(t0, scpModding_ProcessFilePath$("GFX\"+"smoke2.png"), 2, 1)
 	SetTemplateOffset(t0, -0.1, 0.1, -0.1, 0.1, -0.1, 0.1)
 	SetTemplateVelocity(t0, -0.005, 0.005, 0.0, -0.03, -0.005, 0.005)
 	SetTemplateAlphaVel(t0, True)
@@ -12251,7 +10772,7 @@ Function InitNewGame()
 	If SelectedMap = "" Then
 		CreateMap()
 	Else
-		LoadMap("Map Creator\Maps\"+SelectedMap)
+		LoadMap(scpModding_ProcessFilePath$("Map Creator\Maps\"+SelectedMap))
 	EndIf
 	InitWayPoints()
 	
@@ -12480,17 +11001,17 @@ Function InitLoadGame()
 				;[Block]
 				DrawLoading(91)
 				e\room\Objects[0] = CreatePlane()
-				Local planetex% = LoadTexture_Strict(MapPath$+"dimension1499\grit3.jpg")
+				Local planetex% = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\map\"+"dimension1499\grit3.jpg"))
 				EntityTexture e\room\Objects[0],planetex%
 				FreeTexture planetex%
 				PositionEntity e\room\Objects[0],0,EntityY(e\room\obj),0
 				EntityType e\room\Objects[0],HIT_MAP
 				;EntityParent e\room\Objects[0],e\room\obj
 				DrawLoading(92)
-				I_1499\Sky = sky_CreateSky(MapPath$+"sky\1499sky")
+				I_1499\Sky = sky_CreateSky(scpModding_ProcessFilePath$("GFX\map\"+"sky\1499sky"))
 				DrawLoading(93)
 				For i = 1 To 15
-					e\room\Objects[i] = LoadMesh_Strict(MapPath$+"dimension1499\1499object"+i+".b3d")
+					e\room\Objects[i] = LoadMesh_Strict(scpModding_ProcessFilePath$("GFX\map\"+"dimension1499\1499object"+i+".b3d"))
 					HideEntity e\room\Objects[i]
 				Next
 				DrawLoading(96)
@@ -12894,7 +11415,7 @@ Function NullGame(playbuttonsfx%=True)
 	    End Select	
 	EndIf			
 	PutINIValue(OptionFile, "options", "game progress", roomlocationentry)
-	Init3DMenu()
+	;Init3DMenu()
 	
 	;{~--<END>--~}
 						
@@ -12916,7 +11437,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			;StoreSteamStats()
 			;BS_UserStats_SetAchievement(BS_UserStats(), "s"+achvname)
 			;BS_UserStats_StoreStats(BS_UserStats())
-			scpSDK_UploadLeaderboard_RefinedItems()
+			;scpSDK_UploadLeaderboard_RefinedItems()
 		EndIf
 	;If UsedConsole<>True Then
 	;	scpSteam_UploadScore("914items", 1)
@@ -12968,7 +11489,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				    ;[Block]
 					n.NPCs = CreateNPC(NPCtype1499_1,x,y,z)
 					n\State = 1
-					n\Sound = LoadSound_Strict(SFXPath$+"SCP\1499\Triggered.ogg")
+					n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1499\Triggered.ogg"))
 					n\SoundChn = PlaySound2(n\Sound, Camera, n\Collider,20.0)
 					n\State3 = 1
 					RemoveItem(item)
@@ -13586,7 +12107,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			Select setting
 				Case "rough", "coarse"
 				    ;[Block]
-					PlaySound_Strict LoadTempSound(SFXPath$+"SCP\513\914Refine.ogg")
+					PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\513\914Refine.ogg"))
 					For n.NPCs = Each NPCs
 						If n\NPCtype = NPCtype513_1 Then RemoveNPC(n)
 					Next
@@ -14770,23 +13291,23 @@ Function Use294()
 				EndIf
 				
 				If Input294<>""
-					Local loc% = GetINISectionLocation("Data\SCP-294.ini",Input294)
+					Local loc% = GetINISectionLocation(scpModding_ProcessFilePath$("Data\SCP-294.ini"),Input294)
 				EndIf
 				
 				If loc > 0 Then
-					strtemp$ = GetINIString2("Data\SCP-294.ini", loc, "dispensesound")
+					strtemp$ = GetINIString2(scpModding_ProcessFilePath$("Data\SCP-294.ini"), loc, "dispensesound")
 					If strtemp="" Then
-						PlayerRoom\SoundCHN = PlaySound_Strict (LoadTempSound(SFXPath$+"SCP\294\Dispense1.ogg"))
+						PlayerRoom\SoundCHN = PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\294\Dispense1.ogg")))
 					Else
 						PlayerRoom\SoundCHN = PlaySound_Strict (LoadTempSound(strtemp))
 					EndIf
 					
-					If GetINIInt2("Data\SCP-294.ini", loc, "explosion")=True Then 
+					If GetINIInt2(scpModding_ProcessFilePath$("Data\SCP-294.ini"), loc, "explosion")=True Then 
 						ExplosionTimer = 135
-						DeathMSG = GetINIString2("Data\SCP-294.ini", loc, "deathmessage")
+						DeathMSG = GetINIString2(scpModding_ProcessFilePath$("Data\SCP-294.ini"), loc, "deathmessage")
 					EndIf
 					
-					strtemp$ = GetINIString2("Data\SCP-294.ini", loc, "color")
+					strtemp$ = GetINIString2(scpModding_ProcessFilePath$("Data\SCP-294.ini"), loc, "color")
 					
 					sep1 = Instr(strtemp, ",", 1)
 					sep2 = Instr(strtemp, ",", sep1+1)
@@ -14794,8 +13315,8 @@ Function Use294()
 					g% = Trim(Mid(strtemp, sep1+1, sep2-sep1-1))
 					b% = Trim(Right(strtemp, Len(strtemp)-sep2))
 					
-					alpha# = Float(GetINIString2("Data\SCP-294.ini", loc, "alpha",1.0))
-					glow = GetINIInt2("Data\SCP-294.ini", loc, "glow")
+					alpha# = Float(GetINIString2(scpModding_ProcessFilePath$("Data\SCP-294.ini"), loc, "alpha",1.0))
+					glow = GetINIInt2(scpModding_ProcessFilePath$("Data\SCP-294.ini"), loc, "glow")
 					;If alpha = 0 Then alpha = 1.0
 					If glow Then alpha = -alpha
 					
@@ -14806,7 +13327,7 @@ Function Use294()
 				Else
 					;out of range
 					Input294 = "OUT OF RANGE"
-					PlayerRoom\SoundCHN = PlaySound_Strict (LoadTempSound(SFXPath$+"SCP\294\OutOfRange.ogg"))
+					PlayerRoom\SoundCHN = PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\294\OutOfRange.ogg")))
 				EndIf
 				
 			EndIf
@@ -14817,17 +13338,21 @@ Function Use294()
 			HidePointer()
 			Using294 = False
 			Input294 = ""
-			MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+			MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+			mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+			mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 		EndIf
 		
 	Else ;playing a dispensing sound
-		If Input294 <> "OUT OF RANGE" Then Input294 = "DISPENSING..."
+		If Input294 <> scpLang_GetPhrase("achievements.s10s") Then Input294 = scpLang_GetPhrase("ingame.dispense")
 		
 		If Not ChannelPlaying(PlayerRoom\SoundCHN) Then
-			If Input294 <> "OUT OF RANGE" Then
+			If Input294 <> scpLang_GetPhrase("achievements.s10s") Then
 				HidePointer()
 				Using294 = False
-				MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
+				MouseXSpeed() : MouseYSpeed() : MouseZSpeed()
+				mouse_x_speed_1=0.0 : mouse_y_speed_1=0.0
+				mouse_x_leverTurn=0.0 : mouse_y_leverTurn=0.0
 				Local e.Events
 				For e.Events = Each Events
 					If e\room = PlayerRoom
@@ -14841,6 +13366,17 @@ Function Use294()
 		EndIf
 	EndIf
 	
+End Function
+
+Function WrapAngle180#(angle#)
+	If angle = Infinity Then Return 0.0
+	While angle < -180
+		angle = angle + 360
+	Wend
+	While angle >= 180
+		angle = angle - 360
+	Wend
+	Return angle
 End Function
 
 Function Use427()
@@ -14878,24 +13414,24 @@ Function Use427()
 				EndIf
 			Next
 			If I_427\Sound[0]=0 Then
-				I_427\Sound[0] = LoadSound_Strict(SFXPath$+"SCP\427\Effect.ogg")
+				I_427\Sound[0] = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\427\Effect.ogg"))
 			EndIf
 			If (Not ChannelPlaying(I_427\SoundCHN[0])) Then
 				I_427\SoundCHN[0] = PlaySound_Strict(I_427\Sound[0])
 			EndIf
 			If I_427\Timer => 70*180 Then
 				If I_427\Sound[1]=0 Then
-					I_427\Sound[1] = LoadSound_Strict(SFXPath$+"SCP\427\Transform.ogg")
+					I_427\Sound[1] = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\427\Transform.ogg"))
 				EndIf
 				If (Not ChannelPlaying(I_427\SoundCHN[1])) Then
 					I_427\SoundCHN[1] = PlaySound_Strict(I_427\Sound[1])
 				EndIf
 			EndIf
 			If prevI427Timer < 70*60 And I_427\Timer => 70*60 Then
-				Msg = "You feel refreshed and energetic."
+				Msg = scpLang_GetPhrase("ingame.scp2941")
 				MsgTimer = 70*5
 			ElseIf prevI427Timer < 70*180 And I_427\Timer => 70*180 Then
-				Msg = "You feel gentle muscle spasms all over your body."
+				Msg = scpLang_GetPhrase("ingame.scp2942")
 				MsgTimer = 70*5
 			EndIf
 		Else
@@ -14909,18 +13445,18 @@ Function Use427()
 		EndIf
 	Else
 		If prevI427Timer-fs\FPSfactor[0] < 70*360 And I_427\Timer => 70*360 Then
-			Msg = "Your muscles are swelling. You feel more powerful than ever."
+			Msg = scpLang_GetPhrase("ingame.scp2943")
 			MsgTimer = 70*5
 		ElseIf prevI427Timer-fs\FPSfactor[0] < 70*390 And I_427\Timer => 70*390 Then
-			Msg = "You can't feel your legs. But you don't need legs anymore."
+			Msg = scpLang_GetPhrase("ingame.scp2944")
 			MsgTimer = 70*5
 		EndIf
 		I_427\Timer = I_427\Timer + fs\FPSfactor[0]
 		If I_427\Sound[0]=0 Then
-			I_427\Sound[0] = LoadSound_Strict(SFXPath$+"SCP\427\Effect.ogg")
+			I_427\Sound[0] = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\427\Effect.ogg"))
 		EndIf
 		If I_427\Sound[1]=0 Then
-			I_427\Sound[1] = LoadSound_Strict(SFXPath$+"SCP\427\Transform.ogg")
+			I_427\Sound[1] = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\427\Transform.ogg"))
 		EndIf
 		For i = 0 To 1
 			If (Not ChannelPlaying(I_427\SoundCHN[i])) Then
@@ -14942,7 +13478,7 @@ Function Use427()
 		EndIf
 		If I_427\Timer >= 70*420 Then
 			Kill()
-			DeathMSG = Chr(34)+"Requesting support from MTF Nu-7. We need more firepower to take this thing down."+Chr(34)
+			DeathMSG = Chr(34)+scpLang_GetPhrase("ingame.scp2945")+Chr(34)
 		ElseIf I_427\Timer >= 70*390 Then
 		    If Crouch = False Then CrouchCHN = PlaySound_Strict(CrouchSFX) 
 			Crouch = True
@@ -14967,7 +13503,7 @@ Function Use215() ;The first UE's object
     EndIf
 
     If I_215\Sound[0]=0 Then
-		I_215\Sound[0] = LoadSound_Strict(SFXPath$+"SCP\215\Whisper.ogg")
+		I_215\Sound[0] = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\215\Whisper.ogg"))
 	EndIf
 
     If I_215\Timer > 0 Then
@@ -14992,7 +13528,7 @@ Function Use215() ;The first UE's object
         EndIf
         If I_215\Timer > 30.0 And prevI215Timer =< 30.0 Then
             BlurTimer = 3000
-            Msg = "The walls seems alive for you."
+            Msg = scpLang_GetPhrase("ingame.scp2159")
 			MsgTimer = 70*6
         EndIf
         If I_215\Timer > 35.0 And prevI215Timer =< 35.0 Then
@@ -15000,12 +13536,12 @@ Function Use215() ;The first UE's object
         EndIf
 		If I_215\Timer > 40.0 And prevI215Timer =< 40.0 Then
 		    BlurTimer = 5000
-			Msg = "You hear strange sounds in your head."
+			Msg = scpLang_GetPhrase("ingame.scp21510")
 			MsgTimer = 70*6
 			PlaySound_Strict I_215\Sound[0]
 		EndIf
 		If I_215\Timer > 45.0 And prevI215Timer =< 45.0 Then
-		    Msg = Chr(34)+"Are you okay, Steve?"+Chr(34)
+		    Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21511")+Chr(34)
 		    MsgTimer = 70*6
 		EndIf
 		If I_215\Timer > 55.0
@@ -15013,23 +13549,23 @@ Function Use215() ;The first UE's object
 			HeartBeatVolume = 1.0
 		EndIf
 	    If I_215\Timer > 60.0 And prevI215Timer =< 60.0 Then
-	        Msg = Chr(34)+"It seems to me that everything around me is alive."+Chr(34)
+	        Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21512")+Chr(34)
 	        MsgTimer = 70*6
 	    EndIf
 	    If I_215\Timer > 65.0 And prevI215Timer =< 65.0 Then
-	        Msg = Chr(34)+"How are you, Paul?"+Chr(34)
+	        Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21513")+Chr(34)
 	        MsgTimer = 70*6
 	    EndIf
 		If I_215\Timer > 70.0 And prevI215Timer =< 70.0 Then
 		    BlurTimer = 5200
 		    CameraShake = 22
-			Msg = "You have a paranoia."
+			Msg = scpLang_GetPhrase("ingame.scp21514")
 			MsgTimer = 70*6
 			PlaySound_Strict I_215\Sound[0]
 		EndIf
 	    If I_215\Timer > 75.0 And prevI215Timer =< 75.0 Then
 	        CameraShake = 30
-	        Msg = Chr(34)+"Why are you not talking with me?"+Chr(34)
+	        Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21515")+Chr(34)
 	        MsgTimer = 70*6
 	    EndIf
 		If I_215\Timer > 86.0 And prevI215Timer =< 86.0 Then
@@ -15039,7 +13575,7 @@ Function Use215() ;The first UE's object
 		    For i=0 To MaxItemAmount-1
                 If Inventory(i)<>Null Then
                     If Inventory(i)\itemtemplate\name="SCP-215" Then
-                        Msg = "You don't want to take your glasses off."
+                        Msg = scpLang_GetPhrase("ingame.scp21516")
 			            MsgTimer = 70*6
 			            If WearingGasMask Or I_1499\Using Or WearingHazmat Or WearingNightVision Or I_178\Using Then
 			                I_215\Using = 1
@@ -15056,36 +13592,36 @@ Function Use215() ;The first UE's object
 		EndIf
 	    If I_215\Timer > 90.0 And prevI215Timer =< 90.0 Then
 	        CameraShake = 50
-	        Msg = "You feel angry."
+	        Msg = scpLang_GetPhrase("ingame.scp21517")
 	        MsgTimer = 70*6
 	    EndIf
 	    If I_215\Timer > 94.0 And prevI215Timer =< 94.0 Then
 	        CameraShake = 50
-	        Msg = Chr(34)+"What did you say?"+Chr(34)
+	        Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21518")+Chr(34)
 	        MsgTimer = 70*6
 	    EndIf
 	    If I_215\Timer > 96.0 And prevI215Timer =< 96.0 Then
 	        BlurTimer = 7000
 	        CameraShake = 50
-	        Msg = Chr(34)+"I feel fine..."+Chr(34)
+	        Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21519")+Chr(34)
 	        MsgTimer = 70*6
 	    EndIf
 	    If I_215\Timer > 110.0 And prevI215Timer =< 110.0 Then
 	        BlurTimer = 8000
 	        CameraShake = 50
-	        Msg = Chr(34)+"Please, help me..."+Chr(34)
+	        Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21520")+Chr(34)
 	        MsgTimer = 70*6
         EndIf
         If I_215\Timer > 135.0 And prevI215Timer =< 135.0 Then
             BlurTimer = 8000
 	        CameraShake = 50
-	        Msg = Chr(34)+"Something is wrong..."+Chr(34)
+	        Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21521")+Chr(34)
 	        MsgTimer = 70*6
         EndIf
         If I_215\Timer > 146.0 And prevI215Timer =< 146.0 Then
             BlurTimer = 9000
             CameraShake = 100
-            Msg = Chr(34)+"This is the end..."+Chr(34)
+            Msg = Chr(34)+scpLang_GetPhrase("ingame.scp21522")+Chr(34)
 	        MsgTimer = 70*6
 	    EndIf
 	Else
@@ -15120,14 +13656,12 @@ Function Use207()
 		  EndIf
 
           If I_207\Timer >= 50.0 Then
-              DeathMSG = SubjectName$+". Cause of death: organ failure due to massive internal hemorrhage. As SCP-207-A was empty on recovery, it's believed ingesting a full bottle [DATA REDACTED]."
+              DeathMSG = scpLang_GetPhrase("items.scp2075")
               Kill()
           EndIf
       EndIf
 End Function
 
-;This SCP sucks - Jabka
-;DON' FORGET TO REMOVE IN NEXT UPDATE!
 Function Use402() 
 
     Local prevI402Timer# = I_402\Timer
@@ -15141,23 +13675,23 @@ Function Use402()
                 PlaySound_Strict(CoughSFX(Rand(0, 2)))
                 CameraShake = 5
                 If I_1033RU\HP = 0
-                    Msg = "SCP-402 hit you in the throat."
+                    Msg = scpLang_GetPhrase("ingame.scp4024")
                     Injuries = Injuries + 0.1
                 Else
-                    Msg = "SCP-402 hit you in the throat, but SCP-1033-RU protected you."
+                    Msg = scpLang_GetPhrase("ingame.scp4025")
                     Damage1033RU(10 + (Rand(5) * SelectedDifficulty\aggressiveNPCs))
                 EndIf
                 MsgTimer = 70*6
             EndIf
 
             If I_402\Timer > 15.0 And prevI402Timer =< 15.0 Then
-                Msg = "You feel fear."
+                Msg = scpLang_GetPhrase("ingame.scp4026")
                 MsgTimer = 70*6
             EndIf
 
             If I_1033RU\HP > 0
                 If I_402\Timer > 12.0 Then
-                    Msg = "SCP-1033-RU pulled out the SCP-402 from your throat."
+                    Msg = scpLang_GetPhrase("ingame.scp4027")
                     MsgTimer = 70*6
                     Damage1033RU(10 + (Rand(5) * SelectedDifficulty\aggressiveNPCs))
                     PlaySound_Strict(CoughSFX(Rand(0, 2)))
@@ -15166,7 +13700,7 @@ Function Use402()
             EndIf
                  
             If I_402\Timer > 20.0 And prevI402Timer =< 20.0 Then
-                Msg = "You feel tired."
+                Msg = scpLang_GetPhrase("ingame.scp4028")
                 MsgTimer = 70*6
                 CameraShake = 5
                 Injuries = Injuries + 0.1
@@ -15174,7 +13708,7 @@ Function Use402()
             EndIf
  
             If I_402\Timer > 40.0 And prevI402Timer =< 40.0 Then
-                Msg = "You breathe heavily. You can't pull out the stone from your throat."
+                Msg = scpLang_GetPhrase("ingame.scp4029")
 			    MsgTimer = 70*6
                 PlaySound_Strict(CoughSFX(Rand(0, 2)))
                 CameraShake = 5
@@ -15191,7 +13725,7 @@ Function Use402()
 	        EndIf
 
 	        If I_402\Timer > 50.0 And prevI402Timer =< 50.0 Then
-	            Msg = Chr(34)+"Can't... Breathe..."+Chr(34)
+	            Msg = Chr(34)+scpLang_GetPhrase("ingame.scp40210")+Chr(34)
 	            MsgTimer = 70*6
 	            PlaySound_Strict(CoughSFX(Rand(0, 2)))
 	        EndIf
@@ -15202,7 +13736,7 @@ Function Use402()
 	
 	        If I_402\Timer >= 60.0 And prevI402Timer =< 60.0 Then
 	            PlaySound_Strict(CoughSFX(Rand(0, 2)))
-                DeathMSG = "The emaciated body of "+SubjectName$+" is found in [DATA REDACTED]. SCP-402 was discovered in the subject's lungs, death was caused by suffocation." ;REALLY??? SUFFOCATION??? I will remove this SCP in future version - Jabka
+                DeathMSG = scpLang_GetPhrase("ingame.scp40211")
 		        Kill()
 	        EndIf   
 	    EndIf
@@ -15211,9 +13745,6 @@ Function Use402()
 	EndIf
        
 End Function
-
-;Just copy of the SCP-198... But I'm too lazy to rewrite or remove it. - Jabka
-;DON' FORGET TO REMOVE IN NEXT UPDATE!
 
 Function Use357() 
      Local prevI357Timer# = I_357\Timer
@@ -15244,12 +13775,12 @@ Function Use357()
          EndIf
 		 If I_357\Timer > 40.0 And prevI357Timer =< 40.0 Then
 		     BlurTimer = 5000
-			 Msg = "Your fingers on your hand are immersed inside the SCP-357."
+			 Msg = scpLang_GetPhrase("ingame.scp3571")
 			 MsgTimer = 70*6
 		 EndIf
          If I_357\Timer > 56.0 And prevI357Timer =< 56.0 Then
              BlurTimer = 5000
-             Msg = "You can't move your fingers."
+             Msg = scpLang_GetPhrase("ingame.scp3572")
              MsgTimer = 70*6
          EndIf
          If I_357\Timer > 65.0 Then
@@ -15269,11 +13800,11 @@ Function Use357()
 		 EndIf
 	     If I_357\Timer >= 75.0 Then
 	         If Rand(2) = 1 Then
-	             DeathMSG = SubjectName$+" found dead in Sector [DATA REDACTED] without right hand. "
+	             DeathMSG = scpLang_GetPhrase("ingame.scp3573")+" "
 	         Else
-	             DeathMSG = SubjectName$+" found dead in Sector [DATA REDACTED] without left hand. "
+	             DeathMSG = scpLang_GetPhrase("ingame.scp3574")+" "
              EndIf
-	         DeathMSG = DeathMSG + "Probably subject had physical contact with SCP-357."
+	         DeathMSG = DeathMSG + scpLang_GetPhrase("ingame.scp3575")
 	         Kill()
 	     EndIf
      EndIf
@@ -15287,7 +13818,6 @@ Function UpdateMTF()
 	Local dist#, i%
 	Local fs.FPS_Settings = First FPS_Settings
 	
-	;mtf ei viel?¤ spawnannut, spawnataan jos pelaaja menee tarpeeksi l?¤helle gate a:t?¤
 	If MTFtimer = 0 Then
 		If Rand(30) = 1 And PlayerRoom\RoomTemplate\Name$ <> "dimension1499" Then
 			
@@ -15298,7 +13828,7 @@ Function UpdateMTF()
 			If entrance <> Null Then 
 				If Abs(EntityZ(entrance\obj)-EntityZ(Collider))<30.0 Then
 					If PlayerInReachableRoom()
-						PlayAnnouncement(SFXPath$+"Character\MTF\Announc.ogg")
+						PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Announc.ogg"))
 						GiveAchievement(AchvMTF)
 					EndIf
 					
@@ -15323,21 +13853,21 @@ Function UpdateMTF()
             MTFtimer = MTFtimer + fs\FPSfactor[0]
         ElseIf MTFtimer > 70*90 And MTFtimer < 70*91
             If PlayerInReachableRoom()
-                PlayAnnouncement(SFXPath$+"Character\MTF2\Announc.ogg")
+                PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Announc.ogg"))
             EndIf
             MTFtimer = 70*91
         ElseIf MTFtimer >= 70*91 And MTFtimer <= 70*131 ;70*120
 			MTFtimer = MTFtimer + fs\FPSfactor[0]
 		ElseIf MTFtimer > 70*131 And MTFtimer < 10000
 			If PlayerInReachableRoom()
-				PlayAnnouncement(SFXPath$+"Character\MTF\AnnouncAfter1.ogg")
+				PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\AnnouncAfter1.ogg"))
 			EndIf
 			MTFtimer = 10000
 		ElseIf MTFtimer >= 10000 And MTFtimer <= 10000+(70*120) ;70*120
 			MTFtimer = MTFtimer + fs\FPSfactor[0]
 		ElseIf MTFtimer > 10000+(70*120) And MTFtimer < 20000
 			If PlayerInReachableRoom()
-				PlayAnnouncement(SFXPath$+"Character\MTF\AnnouncAfter2.ogg")
+				PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\AnnouncAfter2.ogg"))
 			EndIf
 			MTFtimer = 20000
 		ElseIf MTFtimer >= 20000 And MTFtimer <= 20000+(70*60) ;70*120
@@ -15348,7 +13878,7 @@ Function UpdateMTF()
 				For i = 0 To MaxItemAmount-1
 					If Inventory(i) <> Null Then
 						If (Left(Inventory(i)\itemtemplate\name, 4) = "SCP-") And (Left(Inventory(i)\itemtemplate\name, 7) <> "SCP-035") And (Left(Inventory(i)\itemtemplate\name, 7) <> "SCP-093") And (Left(Inventory(i)\itemtemplate\name, 7) <> "SCP-085") And (Left(Inventory(i)\itemtemplate\name, 7) <> "SCP-457") And (Left(Inventory(i)\itemtemplate\name, 7) <> "SCP-3651")
-							PlayAnnouncement(SFXPath$+"Character\MTF\ThreatAnnouncPossession.ogg")
+							PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ThreatAnnouncPossession.ogg"))
 							MTFtimer = 25000
 							Return
 							Exit
@@ -15356,7 +13886,7 @@ Function UpdateMTF()
 					EndIf
 				Next
 				
-				PlayAnnouncement(SFXPath$+"Character\MTF\ThreatAnnounc"+Rand(1,3)+".ogg")
+				PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ThreatAnnounc"+Rand(1,3)+".ogg"))
 			EndIf
 			MTFtimer = 25000
 			
@@ -15364,7 +13894,7 @@ Function UpdateMTF()
 			MTFtimer = MTFtimer + fs\FPSfactor[0]
 		ElseIf MTFtimer > 25000+(70*60) And MTFtimer < 30000
 			If PlayerInReachableRoom()
-				PlayAnnouncement(SFXPath$+"Character\MTF\ThreatAnnouncFinal.ogg")
+				PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ThreatAnnouncFinal.ogg"))
 			EndIf
 			MTFtimer = 30000
 			
@@ -15380,7 +13910,7 @@ Function UpdateMTF2()
 	Local dist#, i%
 	Local fs.FPS_Settings = First FPS_Settings
 	
-	;mtf2 ei viel?¤ spawnannut, spawnataan jos pelaaja menee tarpeeksi l?¤helle gate b:t?¤
+	;mtf2 ei viel?ï¿½ spawnannut, spawnataan jos pelaaja menee tarpeeksi l?ï¿½helle gate b:t?ï¿½
 	If MTF2timer = 0 Then
 		If Rand(30) = 1 And PlayerRoom\RoomTemplate\Name$ <> "dimension1499" Then
 			
@@ -15419,7 +13949,7 @@ Function Update409()
 	Local fs.FPS_Settings = First FPS_Settings
 	
 	If I_409\Sound[0]=0 Then
-		I_409\Sound[0] = LoadSound_Strict(SFXPath$+"Character\D9341\Damage10.ogg")
+		I_409\Sound[0] = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\D9341\Damage10.ogg"))
 	EndIf
 	If I_409\Timer > 0 And I_409\Timer =< 100 Then
 		ShowEntity at\OverlayID[10]
@@ -15431,16 +13961,16 @@ Function Update409()
 	    BlurTimer = Max(I_409\Timer*3*(2.0-CrouchState),BlurTimer)
 
         If I_409\Timer > 40.0 And prevI409Timer =< 40.0 Then
-			Msg = "Crystals are enveloping the skin on your legs."
+			Msg = scpLang_GetPhrase("ingame.scp4091")
 			MsgTimer = 70*6
 		ElseIf I_409\Timer > 55.0 And prevI409Timer =< 55.0 Then
-			Msg = "Crystals are up to your abdomen."
+			Msg = scpLang_GetPhrase("ingame.scp4092")
 			MsgTimer = 70*6
 		ElseIf I_409\Timer > 70.0 And prevI409Timer =< 70.0 Then
-			Msg = "Crystals are starting to envelop your arms."
+			Msg = scpLang_GetPhrase("ingame.scp4093")
 			MsgTimer = 70*6
 		ElseIf I_409\Timer > 85.0 And prevI409Timer =< 85.0 Then
-			Msg = "Crystals starting to envelop your head."
+			Msg = scpLang_GetPhrase("ingame.scp4094")
 			MsgTimer = 70*6
 		ElseIf I_409\Timer > 93.0 And prevI409Timer =< 93.0 Then
 			PlaySound_Strict(I_409\Sound[0])
@@ -15453,8 +13983,7 @@ Function Update409()
 			CameraShake = 3.0
 		EndIf
 		If I_409\Timer >= 96.9222
-			DeathMSG = "Pile of SCP-409 crystals found and, by comparing list of the dead, was found to be "+SubjectName$+" who had physical contact with SCP-409. "
-			DeathMSG = DeathMSG + "Remains were incinerated along with crystal-infested areas of facility."
+			DeathMSG = scpLang_GetPhrase("ingame.scp4095")
 			Kill(True)
         EndIf
     Else
@@ -15489,12 +14018,12 @@ Function Update008()
 		
 	    For i = 0 To 6
 	        If I_008\Sound[i] = 0
-		        I_008\Sound[i] = LoadSound_Strict(SFXPath$+"SCP\008\Voices"+i+".ogg")
+		        I_008\Sound[i] = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\008\Voices"+i+".ogg"))
 		    EndIf
 		Next
 	    For i = 0 To 1
 	        If I_008\Sound2[i] = 0 
-		        I_008\Sound2[i] = LoadSound_Strict(SFXPath$+"SCP\008\KillScientist"+i+".ogg")
+		        I_008\Sound2[i] = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\008\KillScientist"+i+".ogg"))
 		    EndIf
 		Next
 		
@@ -15517,16 +14046,16 @@ Function Update008()
 			Next
 			
 			If I_008\Timer > 20 And prevI008Timer =< 20.0 Then
-				Msg = "You feel kinda feverish."
+				Msg = scpLang_GetPhrase("ingame.scp0081")
 				MsgTimer = 70*6
 			ElseIf I_008\Timer > 40 And prevI008Timer =< 40.0
-				Msg = "You feel nauseated."
+				Msg = scpLang_GetPhrase("ingame.scp0082")
 				MsgTimer = 70*6
 			ElseIf I_008\Timer > 60 And prevI008Timer =< 60.0
-				Msg = "The nausea's getting worse."
+				Msg = scpLang_GetPhrase("ingame.scp0083")
 				MsgTimer = 70*6
 			ElseIf I_008\Timer > 80 And prevI008Timer =< 80.0
-				Msg = "You feel very faint."
+				Msg = scpLang_GetPhrase("ingame.scp0084")
 				MsgTimer = 70*6
 			ElseIf I_008\Timer => 91.5
 				BlinkTimer = Max(Min(-10*(I_008\Timer-91.5), BlinkTimer),-10)
@@ -15582,8 +14111,7 @@ Function Update008()
 					If prevI008Timer < 94.7 Then 
 						PlayerRoom\NPC[0]\SoundCHN = PlaySound_Strict(I_008\Sound2[1])
 						
-						DeathMSG = SubjectName$+" found ingesting Dr. [DATA REDACTED] at Sector [DATA REDACTED]. Subject was immediately terminated by Nine-Tailed Fox and sent for autopsy. "
-						DeathMSG = DeathMSG + "SCP-008 infection was confirmed, after which the body was incinerated."
+						DeathMSG = scpLang_GetPhrase("ingame.scp0085")
 						
 						Kill()
 						de.Decals = CreateDecal(3, EntityX(PlayerRoom\NPC[0]\Collider), 544*RoomScale + 0.01, EntityZ(PlayerRoom\NPC[0]\Collider),90,Rnd(360),0)
@@ -15623,16 +14151,15 @@ Function Update008()
 				Kill()
 				BlinkTimer = Max(Min(-10*(I_008\Timer-96), BlinkTimer),-10)
 				If PlayerRoom\RoomTemplate\Name = "dimension1499" Then
-					DeathMSG = "The whereabouts of SCP-1499 are still unknown, but a recon team has been dispatched to investigate reports of a violent attack to a church in the Russian town of [DATA REDACTED]."
+					DeathMSG = scpLang_GetPhrase("ingame.scp0086")
 				ElseIf PlayerRoom\RoomTemplate\Name = "gatea" Or PlayerRoom\RoomTemplate\Name = "gateb" Then
-					DeathMSG = SubjectName$+" found wandering around Gate "
+					DeathMSG = SubjectName$+" " + scpLang_GetPhrase("ingame.scp0087") + " "
 					If PlayerRoom\RoomTemplate\Name = "gatea" Then
 						DeathMSG = DeathMSG + "A"
 					Else
 						DeathMSG = DeathMSG + "B"
 					EndIf
-					DeathMSG = DeathMSG + ". Subject was immediately terminated by Nine-Tailed Fox and sent for autopsy. "
-					DeathMSG = DeathMSG + "SCP-008 infection was confirmed, after which the body was incinerated."
+					DeathMSG = DeathMSG + scpLang_GetPhrase("ingame.scp0088")
 				Else
 					DeathMSG = ""
 				EndIf
@@ -15752,12 +14279,12 @@ End Function
 ; Find mesh extents
 Function GetMeshExtents(Mesh%)
 	Local s%, surf%, surfs%, v%, verts%, x#, y#, z#
-	Local minx# = INFINITY
-	Local miny# = INFINITY
-	Local minz# = INFINITY
-	Local maxx# = -INFINITY
-	Local maxy# = -INFINITY
-	Local maxz# = -INFINITY
+	Local minx# = Infinity
+	Local miny# = Infinity
+	Local minz# = Infinity
+	Local maxx# = -Infinity
+	Local maxy# = -Infinity
+	Local maxz# = -Infinity
 	
 	surfs = CountSurfaces(Mesh)
 	
@@ -15863,7 +14390,7 @@ Function RenderWorld2()
 					power%=Int(Inventory(i)\state)
 					If Inventory(i)\state<=0.0 Then ;this nvg can't be used
 						hasBattery = 0
-						Msg = "The batteries in these night vision goggles died."
+						Msg = scpLang_GetPhrase("ingame.nvgdead")
 						BlinkTimer = -1.0
 						MsgTimer = 350
 						Exit
@@ -15911,10 +14438,10 @@ Function RenderWorld2()
 			Local plusY% = 0
 			If hasBattery=1 Then plusY% = 40
 			
-			AAText GraphicWidth/2,(20+plusY)*MenuScale,"REFRESHING DATA IN",True,False
+			AAText GraphicWidth/2,(20+plusY)*MenuScale,scpLang_GetPhrase("ingame.nvgr"),True,False
 			
 			AAText GraphicWidth/2,(60+plusY)*MenuScale,Max(f2s(NVTimer/60.0,1),0.0),True,False
-			AAText GraphicWidth/2,(100+plusY)*MenuScale,"SECONDS",True,False
+			AAText GraphicWidth/2,(100+plusY)*MenuScale,scpLang_GetPhrase("ingame.nvgr2"),True,False
 			
 			temp% = CreatePivot() : temp2% = CreatePivot()
 			PositionEntity temp, EntityX(Collider), EntityY(Collider), EntityZ(Collider)
@@ -15991,7 +14518,7 @@ Function RenderWorld2()
 			Color 255,0,0
 			AASetFont fo\Font[2]
 			
-			AAText GraphicWidth/2,20*MenuScale,"WARNING: LOW BATTERY",True,False
+			AAText GraphicWidth/2,20*MenuScale,scpLang_GetPhrase("ingame.nvgr3"),True,False
 			Color 255,255,255
 		EndIf
 	EndIf
@@ -16124,7 +14651,7 @@ Function UpdateLeave1499()
 				Next
 				r1499 = Null
 				ShouldEntitiesFall = False
-				PlaySound_Strict (LoadTempSound(SFXPath$+"SCP\1499\Exit.ogg"))
+				PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\1499\Exit.ogg")))
 				I_1499\PrevX# = 0.0
 				I_1499\PrevY# = 0.0
 				I_1499\PrevZ# = 0.0
@@ -16172,7 +14699,7 @@ Function IsItemGoodFor1162(itt.ItemTemplates)
 			Return True
 		Case "drawing"
 			If itt\img<>0 Then FreeImage itt\img	
-			itt\img = LoadImage_Strict(ItemsPath$+"1048\1048_"+Rand(1,25)+".jpg") ;Gives a random drawing.
+			itt\img = LoadImage_Strict(scpModding_ProcessFilePath$("GFX\items\"+"1048\1048_"+Rand(1,25)+".jpg")) ;Gives a random drawing.
 			Return True
 		Default
 			If itt\tempname <> "paper" Then
@@ -16272,9 +14799,9 @@ Function Create3DIcon(width%,height%,modelpath$,modelX#=0,modelY#=0,modelZ#=0,mo
 	EndIf
 	
 	If Right(Lower(modelpath$),6)=".rmesh"
-		model = LoadRMesh(modelpath$,Null)
+		model = LoadRMesh(scpModding_ProcessFilePath$(modelpath$),Null)
 	Else
-		model = LoadMesh(modelpath$)
+		model = LoadMesh(scpModding_ProcessFilePath$(modelpath$))
 	EndIf
 	ScaleEntity model,modelscaleX,modelscaleY,modelscaleZ
 	PositionEntity model,modelX#,modelY#,modelZ#
@@ -16318,7 +14845,7 @@ End Function
 
 Function PlayStartupVideos()
 	
-	If PlayStartUp = 0 Then Return
+	;If PlayStartUp = 0 Then Return
 	
 	Local Cam = CreateCamera() 
 	CameraClsMode Cam, 0, 1
@@ -16339,16 +14866,14 @@ Function PlayStartupVideos()
 	EndIf
 	
 	Local i, moviefile$
-	For i = 0 To 3
+	For i = 0 To 2
 		Select i
 			Case 0
-				moviefile$ = "GFX\menu\startup_RM"
+				moviefile$ = scpModding_ProcessFilePath$("GFX\menu\startup_RM")
 			Case 1
-				moviefile$ = "GFX\menu\startup_UET"
+				moviefile$ = scpModding_ProcessFilePath$("GFX\menu\startup_TSS")
 			Case 2
-				moviefile$ = "GFX\menu\startup_TSS"
-			Case 3
-				moviefile$ = "GFX\menu\startup_Undertow"
+				moviefile$ = scpModding_ProcessFilePath$("GFX\menu\startup_Undertow")
 		End Select
 		BlitzMovie_Open(moviefile$+".avi") ;Get movie size
 		Local moview = BlitzMovie_GetWidth()
@@ -16370,7 +14895,7 @@ Function PlayStartupVideos()
 			Cls
 			ProjectImage(image, RealGraphicWidth, ScaledGraphicHeight, Quad, Texture)
 			Color 255,255,255
-	        Text GraphicWidth/2,GraphicHeight-50,"PRESS ANY KEY TO SKIP VIDEO",True, True
+	        Text GraphicWidth/2,GraphicHeight-50,scpLang_GetPhrase("loadingscreens.anykey2"),True, True
 			Flip
 		Until (GetKey() Or (Not IsStreamPlaying_Strict(SplashScreenAudio)))
 		StopStream_Strict(SplashScreenAudio)

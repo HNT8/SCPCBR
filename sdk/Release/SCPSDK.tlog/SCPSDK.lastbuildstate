@@ -1,2 +1,2 @@
-PlatformToolSet=v143:VCToolArchitecture=Native32Bit:VCToolsVersion=14.34.31933:TargetPlatformVersion=10.0.22000.0:
-Release|Win32|X:\SCPCBR\sdk\|
+PlatformToolSet=ClangCL:VCToolArchitecture=Native32Bit:VCToolsVersion=14.36.32532:TargetPlatformVersion=10.0.22000.0:VcpkgTriplet=x86-windows:
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\Llvm|15.0.1|Release|Win32|D:\SCPCBR\sdk\|

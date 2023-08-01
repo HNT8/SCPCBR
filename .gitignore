@@ -4,15 +4,28 @@
 /source/Source Code/*.bb_bak2
 /source/*.Backup
 /source/*_original.exe
-/source/developer
 /source/dev/*.exe.config
+
+/build/
 
 /steam/
 
 /sdk/.vs/
+/sdk/x64/
+
+/dpisdk/.vs/
+/dpisdk/obj/
+/dpisdk/release/
+
+/prepblitz/.vs/
+/prepblitz/obj/
+/prepblitz/release/
 
 /prepblitz/bin
 /prepblitz/obj
+
+/workshopuploader/.vs/
+/workshopuploader/Release/
 
 *.pdb
 *.exp

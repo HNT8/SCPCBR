@@ -29,6 +29,8 @@
                 $str = str_replace("[/i]", "</i>", $str);
                 $str = str_replace("[b]", "<b>", $str);
                 $str = str_replace("[/b]", "</b>", $str);
+                $str = str_replace("[u]", "<u>", $str);
+                $str = str_replace("[/u]", "</u>", $str);
                 $str = str_replace("[img]", "<img src=\"", $str);
                 $str = str_replace("[/img]", "\">", $str);
 

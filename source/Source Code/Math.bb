@@ -56,11 +56,11 @@ Function CircleToLineSegIsect% (cx#, cy#, r#, l1x#, l1y#, l2x#, l2y#)
 	
 	;Palauttaa:
 	;  True (1) kun:
-	;      Ympyr?¤ [keskipiste = (cx, cy): s?¤de = r]
+	;      Ympyr?ï¿½ [keskipiste = (cx, cy): s?ï¿½de = r]
 	;      leikkaa janan, joka kulkee pisteiden (l1x, l1y) & (l2x, l2y) kaitta
 	;  False (0) muulloin
 	
-	;Ympyr?¤n keskipisteen ja (ainakin toisen) janan p?¤?¤tepisteen et?¤isyys < r
+	;Ympyr?ï¿½n keskipisteen ja (ainakin toisen) janan p?ï¿½?ï¿½tepisteen et?ï¿½isyys < r
 	;-> leikkaus
 	If Distance(cx, cy, l1x, l1y) <= r Then
 		Return True
@@ -70,7 +70,7 @@ Function CircleToLineSegIsect% (cx#, cy#, r#, l1x#, l1y#, l2x#, l2y#)
 		Return True
 	EndIf	
 	
-	;Vektorit (janan vektori ja vektorit janan p?¤?¤tepisteist?¤ ympyr?¤n keskipisteeseen)
+	;Vektorit (janan vektori ja vektorit janan p?ï¿½?ï¿½tepisteist?ï¿½ ympyr?ï¿½n keskipisteeseen)
 	Local SegVecX# = l2x - l1x
 	Local SegVecY# = l2y - l1y
 	
@@ -93,21 +93,21 @@ Function CircleToLineSegIsect% (cx#, cy#, r#, l1x#, l1y#, l2x#, l2y#)
 		Return False
 	EndIf
 	
-	;Janan p?¤?¤tepisteiden kautta kulkevan suoran ;yht?¤l?¶; (ax + by + c = 0)
+	;Janan p?ï¿½?ï¿½tepisteiden kautta kulkevan suoran ;yht?ï¿½l?ï¿½; (ax + by + c = 0)
 	Local a# = (l2y - l1y) / (l2x - l1x)
 	Local b# = -1
 	Local c# = -(l2y - l1y) / (l2x - l1x) * l1x + l1y
 	
-	;Ympyr?¤n keskipisteen et?¤isyys suorasta
+	;Ympyr?ï¿½n keskipisteen et?ï¿½isyys suorasta
 	Local d# = Abs(a * cx + b * cy + c) / Sqr(a * a + b * b)
 	
-	;Ympyr?¤ on liian kaukana
+	;Ympyr?ï¿½ on liian kaukana
 	;-> ei leikkausta
 	If d > r Then Return False
 	
 	;Local kateetin_pituus# = Cos(angle) * hyp
 	
-	;Jos p?¤?¤st?¤?¤n t?¤nne saakka, ympyr?¤ ja jana leikkaavat (tai ovat sis?¤kk?¤in)
+	;Jos p?ï¿½?ï¿½st?ï¿½?ï¿½n t?ï¿½nne saakka, ympyr?ï¿½ ja jana leikkaavat (tai ovat sis?ï¿½kk?ï¿½in)
 	Return True
 End Function
 

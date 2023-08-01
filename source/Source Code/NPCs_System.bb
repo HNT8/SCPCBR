@@ -102,23 +102,23 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			;On Halloween set jack-o-latern texture.
 			If (Left(CurrentDate(), 7) = "31 Oct ") Then
 				at\OtherTextureID[0] = True
-				Local texFestive = LoadTexture_Strict(NPCsPath$+"scp_173_h.pt", 1)
+				Local texFestive = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173_h.pt"), 1)
 				EntityTexture n\obj, texFestive, 0, 0
 				FreeTexture texFestive
 			EndIf
 			
-			;On Halloween set jack-o-latern texture.
+			;On New Years set ny texture.
 			If (Left(CurrentDate(), 7) = "1 Jan ") Then
 				at\OtherTextureID[1] = True
-				Local texFestive2 = LoadTexture_Strict(NPCsPath$+"scp_173_ny.pt", 1)
+				Local texFestive2 = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_173_ny.pt"), 1)
 				EntityTexture n\obj, texFestive2, 0, 0
 				FreeTexture texFestive2
 			EndIf
 			
-			temp# = (GetINIFloat("Data\NPCs.ini", "SCP-173", "scale") / MeshDepth(n\obj))			
+			temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-173", "scale") / MeshDepth(n\obj))			
 			ScaleEntity n\obj, temp,temp,temp
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-173", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-173", "speed") / 100.0)
 			
 			n\obj2 = CopyEntity(o\NPCModelID[34])
 			ScaleEntity n\obj2, RoomScale, RoomScale, RoomScale
@@ -136,12 +136,12 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			EntityType n\Collider, HIT_PLAYER
 			n\obj = CopyEntity(o\NPCModelID[1])
 			
-			temp# = (GetINIFloat("Data\NPCs.ini", "SCP-106", "scale") / 2.2)		
+			temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-106", "scale") / 2.2)		
 			ScaleEntity n\obj, temp, temp, temp
 			
-			Local OldManEyes% = LoadTexture_Strict(NPCsPath$+"scp_106_eyes.png")
+			Local OldManEyes% = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_106_eyes.png"))
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-106", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-106", "speed") / 100.0)
 			
 			n\obj2 = CreateSprite()
 			ScaleSprite(n\obj2, 0.03, 0.03)
@@ -160,8 +160,8 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			EntityType n\Collider, HIT_PLAYER
 			n\obj = CopyEntity(o\NPCModelID[2]) 
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "Guard", "speed") / 100.0)
-			temp# = (GetINIFloat("Data\NPCs.ini", "Guard", "scale") / 2.5)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "Guard", "speed") / 100.0)
+			temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "Guard", "scale") / 2.5)
 			
 			ScaleEntity n\obj, temp, temp, temp
 			
@@ -256,23 +256,23 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
             If n\obj = 0 Then
 			    n\obj = CopyEntity(o\NPCModelID[7]) 
 			
-			    temp# = (GetINIFloat("Data\NPCs.ini", "MTF", "scale") / 2.5)
+			    temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "MTF", "scale") / 2.5)
 			
 			    ScaleEntity n\obj, temp, temp, temp
 			
 			    MeshCullBox (n\obj, -MeshWidth(n\obj), -MeshHeight(n\obj), -MeshDepth(n\obj), MeshWidth(n\obj)*2, MeshHeight(n\obj)*2, MeshDepth(n\obj)*2) 
 			EndIf
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "MTF", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "MTF", "speed") / 100.0)
 			
 			If MTFSFX(0) = 0 Then
-				MTFSFX(0) = LoadSound_Strict(SFXPath$+"Character\MTF\ClassD1.ogg")
-				MTFSFX(1) = LoadSound_Strict(SFXPath$+"Character\MTF\ClassD2.ogg")
-				MTFSFX(2) = LoadSound_Strict(SFXPath$+"Character\MTF\ClassD3.ogg")			
-				MTFSFX(3) = LoadSound_Strict(SFXPath$+"Character\MTF\ClassD4.ogg")
-				;MTFSFX(4) = LoadSound_Strict(SFXPath$+"Character\MTF\Tesla0.ogg")
-				MTFSFX(5) = LoadSound_Strict(SFXPath$+"Character\MTF\Beep.ogg")
-				MTFSFX(6) = LoadSound_Strict(SFXPath$+"Character\MTF\Breath.ogg")
+				MTFSFX(0) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ClassD1.ogg"))
+				MTFSFX(1) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ClassD2.ogg"))
+				MTFSFX(2) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ClassD3.ogg"))			
+				MTFSFX(3) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ClassD4.ogg"))
+				;MTFSFX(4) = LoadSound_Strict("SFX\"+"Character\MTF\Tesla0.ogg")
+				MTFSFX(5) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Beep.ogg"))
+				MTFSFX(6) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Breath.ogg"))
 			EndIf
 			If MTFrooms[6] = Null Then 
 				For r.Rooms = Each Rooms
@@ -303,9 +303,9 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			EntityType n\Collider, HIT_PLAYER
 			n\obj = CopyEntity(o\NPCModelID[8])
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-096", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-096", "speed") / 100.0)
 			
-			temp# = (GetINIFloat("Data\NPCs.ini", "SCP-096", "scale") / 3.0)
+			temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-096", "scale") / 3.0)
 			ScaleEntity n\obj, temp, temp, temp	
 			
 			MeshCullBox (n\obj, -MeshWidth(n\obj)*2, -MeshHeight(n\obj)*2, -MeshDepth(n\obj)*2, MeshWidth(n\obj)*2, MeshHeight(n\obj)*4, MeshDepth(n\obj)*4)
@@ -321,14 +321,14 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			EntityType n\Collider, HIT_PLAYER
 			n\obj = CopyEntity(o\NPCModelID[9])
 			
-			n\Speed = (GetINIFloat("DATA\NPCs.ini", "SCP-049", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("DATA\NPCs.ini"), "SCP-049", "speed") / 100.0)
 			
-			temp# = GetINIFloat("DATA\NPCs.ini", "SCP-049", "scale")
+			temp# = GetINIFloat(scpModding_ProcessFilePath$("DATA\NPCs.ini"), "SCP-049", "scale")
 			ScaleEntity n\obj, temp, temp, temp	
 			
-			n\Sound = LoadSound_Strict(SFXPath$+"Horror\Horror12.ogg")
+			n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Horror\Horror12.ogg"))
 			
-			If HorrorSFX(13)=0 Then HorrorSFX(13)=LoadSound_Strict(SFXPath$+"Horror\Horror13.ogg")
+			If HorrorSFX(13)=0 Then HorrorSFX(13)=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Horror\Horror13.ogg"))
 			
 			n\CanUseElevator = True
 			;[End Block]
@@ -349,17 +349,17 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			If n\obj = 0 Then 
 				n\obj = CopyEntity(o\NPCModelID[10])
 				
-				temp# = (GetINIFloat("Data\NPCs.ini", "SCP-049-2", "scale") / 2.5)
+				temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-049-2", "scale") / 2.5)
 				ScaleEntity n\obj, temp, temp, temp
 				
 				MeshCullBox (n\obj, -MeshWidth(n\obj), -MeshHeight(n\obj), -MeshDepth(n\obj), MeshWidth(n\obj)*2, MeshHeight(n\obj)*2, MeshDepth(n\obj)*2)
 			EndIf
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-049-2", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-049-2", "speed") / 100.0)
 			
 			SetAnimTime(n\obj, 107)
 			
-			n\Sound = LoadSound_Strict(SFXPath$+"SCP\049_2\Breath.ogg")
+			n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049_2\Breath.ogg"))
 			
 			n\HP = 100
 			;[End Block]
@@ -411,7 +411,7 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			
 			EntityFX(n\obj, 1)
 			
-			tex = LoadTexture_Strict(NPCsPath$+"scp_860_2_eyes.png",1+2)
+			tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_860_2_eyes.png"),1+2)
 			
 			n\obj2 = CreateSprite()
 			ScaleSprite(n\obj2, 0.1, 0.1)
@@ -422,9 +422,9 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			EntityBlend(n\obj2, BLEND_ADD)
 			SpriteViewMode(n\obj2, 2)
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-860-2", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-860-2", "speed") / 100.0)
 			
-			temp# = (GetINIFloat("Data\NPCs.ini", "SCP-860-2", "scale") / 20.0)
+			temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-860-2", "scale") / 20.0)
 			ScaleEntity n\obj, temp, temp, temp	
 			
 			MeshCullBox (n\obj, -MeshWidth(n\obj)*2, -MeshHeight(n\obj)*2, -MeshDepth(n\obj)*2, MeshWidth(n\obj)*2, MeshHeight(n\obj)*4, MeshDepth(n\obj)*4)
@@ -458,11 +458,11 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			If n\obj = 0 Then 
 			    n\obj = CopyEntity(o\NPCModelID[14])
 							
-				temp# = GetINIFloat("Data\NPCs.ini", "SCP-939", "scale") / 2.5
+				temp# = GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-939", "scale") / 2.5
 				ScaleEntity n\obj, temp, temp, temp		
 			EndIf
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-939", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-939", "speed") / 100.0)
 			
 			n\CollRadius = 0.3
 			;[End Block]
@@ -474,10 +474,10 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			EntityType n\Collider, HIT_PLAYER
 			
 			n\obj = CopyEntity(o\NPCModelID[15])
-			temp# = GetINIFloat("Data\NPCs.ini", "SCP-066", "scale") / 2.5
+			temp# = GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-066", "scale") / 2.5
 			ScaleEntity n\obj, temp, temp, temp		
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-066", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-066", "speed") / 100.0)
 			;[End Block]
 		Case NPCtype966
 			;[Block]
@@ -502,7 +502,7 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			
 			    EntityFX n\obj,1
 			
-			    temp# = GetINIFloat("Data\NPCs.ini", "SCP-966", "scale") / 40.0
+			    temp# = GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-966", "scale") / 40.0
 			    ScaleEntity n\obj, temp, temp, temp		
 			EndIf
 						
@@ -510,7 +510,7 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			
 			EntityType n\Collider,HIT_PLAYER
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-966", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-966", "speed") / 100.0)
 			;[End Block]
 		Case NPCtype1048_A
 			;[Block]
@@ -519,8 +519,8 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			ScaleEntity n\obj, 0.05,0.05,0.05
 			SetAnimTime(n\obj, 2)
 			
-			n\Sound = LoadSound_Strict(SFXPath$+"SCP\1048A\Shriek.ogg")
-			n\Sound2 = LoadSound_Strict(SFXPath$+"SCP\1048A\Growth.ogg")
+			n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1048A\Shriek.ogg"))
+			n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1048A\Growth.ogg"))
 			;[End Block]
 
 		Case NPCtype1499_1
@@ -538,8 +538,8 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			
 			If n\obj = 0 Then n\obj = CopyEntity(o\NPCModelID[18])
 
-			n\Speed = (GetINIFloat("DATA\NPCs.ini", "SCP-1499-1", "speed") / 100.0) * Rnd(0.9, 1.1)
-			temp# = (GetINIFloat("DATA\NPCs.ini", "SCP-1499-1", "scale") / 4.0) * Rnd(0.8,1.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("DATA\NPCs.ini"), "SCP-1499-1", "speed") / 100.0) * Rnd(0.9, 1.1)
+			temp# = (GetINIFloat(scpModding_ProcessFilePath$("DATA\NPCs.ini"), "SCP-1499-1", "scale") / 4.0) * Rnd(0.8,1.0)
 			
 			ScaleEntity n\obj, temp, temp, temp
 			
@@ -566,7 +566,7 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			
 			SetNPCFrame n, 11
 			
-			n\Sound = LoadSound_Strict(SFXPath$+"SCP\008_1\Breath.ogg")
+			n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\008_1\Breath.ogg"))
 			
 			n\HP = 120
 			;[End Block]
@@ -601,17 +601,17 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			If n\obj = 0 Then 
 				n\obj = CopyEntity(o\NPCModelID[21]) 
 				
-				temp# = (GetINIFloat("Data\NPCs.ini", "SCP-008-2", "scale") / 2.5)
+				temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-008-2", "scale") / 2.5)
 				ScaleEntity n\obj, temp, temp, temp
 				
 				MeshCullBox (n\obj, -MeshWidth(n\obj), -MeshHeight(n\obj), -MeshDepth(n\obj), MeshWidth(n\obj)*2, MeshHeight(n\obj)*2, MeshDepth(n\obj)*2)
 			EndIf
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-008-2", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-008-2", "speed") / 100.0)
 
 			SetAnimTime(n\obj, 107)
 						
-			n\Sound = LoadSound_Strict(SFXPath$+"SCP\008_1\Breath.ogg")
+			n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\008_1\Breath.ogg"))
 			
 			n\HP = 120
 			;[End Block]
@@ -627,10 +627,10 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			
 			n\obj = CopyEntity(o\NPCModelID[22])
 			
-			temp# = (GetINIFloat("Data\NPCs.ini", "SCP-650", "scale") / MeshDepth(n\obj))			
+			temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-650", "scale") / MeshDepth(n\obj))			
 			ScaleEntity n\obj, temp,temp,temp
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-650", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-650", "speed") / 100.0)
 			
 			SetNPCFrame n, 1
 			
@@ -646,18 +646,18 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
             If n\obj = 0 Then
 			    n\obj = CopyEntity(o\NPCModelID[1])
 			
-			    temp# = (GetINIFloat("Data\NPCs.ini", "SCP-457", "scale") / 2.2)		
+			    temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-457", "scale") / 2.2)		
 			    ScaleEntity n\obj, temp, temp, temp
 			EndIf
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-457", "speed") / 150.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-457", "speed") / 150.0)
 			
-			tex = LoadTexture_Strict(NPCsPath$+"scp_457.png")
+			tex = LoadTexture_Strict(scpModding_ProcessFilePath$("GFX\npcs\"+"scp_457.png"))
 			EntityAlpha n\obj, 0.25
 			EntityTexture n\obj, tex
 			FreeTexture tex
 						
-			n\Sound = LoadSound_Strict(SFXPath$+"SCP\457\Sighting.ogg")
+			n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\457\Sighting.ogg"))
             n\CollRadius = 0.32
 	        ;[End Block]
 	    Case NPCtype049_3
@@ -672,15 +672,15 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 				
 				MeshCullBox (n\obj, -MeshWidth(n\obj), -MeshHeight(n\obj), -MeshDepth(n\obj), MeshWidth(n\obj)*2, MeshHeight(n\obj)*2, MeshDepth(n\obj)*2)
 				
-				temp# = (GetINIFloat("Data\NPCs.ini", "SCP-049-3", "scale") / 20.6)
+				temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-049-3", "scale") / 20.6)
 				ScaleEntity n\obj, temp, temp, temp	
 			EndIf
 						
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "SCP-049-3", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "SCP-049-3", "speed") / 100.0)
 			
 			SetAnimTime(n\obj, 3.0)
 			
-			n\Sound = LoadSound_Strict(SFXPath$+"SCP\049_2\Breath.ogg")
+			n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049_2\Breath.ogg"))
 			
 			n\HP = 100
 			;[End Block]
@@ -732,22 +732,22 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			If n\obj = 0 Then
 			    n\obj = CopyEntity(o\NPCModelID[25])
 
-			    temp# = (GetINIFloat("Data\NPCs.ini", "MTF2", "scale") / 2.5)
+			    temp# = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "MTF2", "scale") / 2.5)
 			
 			    ScaleEntity n\obj, temp, temp, temp
 			
 			    MeshCullBox (n\obj, -MeshWidth(n\obj), -MeshHeight(n\obj), -MeshDepth(n\obj), MeshWidth(n\obj)*2, MeshHeight(n\obj)*2, MeshDepth(n\obj)*2) 
 			EndIf
 			
-			n\Speed = (GetINIFloat("Data\NPCs.ini", "MTF2", "speed") / 100.0)
+			n\Speed = (GetINIFloat(scpModding_ProcessFilePath$("Data\NPCs.ini"), "MTF2", "speed") / 100.0)
 			
 			If MTF2SFX(0) = 0
-			    MTF2SFX(0) = LoadSound_Strict(SFXPath$+"Character\MTF2\Stop1.ogg")
-				MTF2SFX(1) = LoadSound_Strict(SFXPath$+"Character\MTF2\Stop2.ogg")
-				MTF2SFX(2) = LoadSound_Strict(SFXPath$+"Character\MTF2\Stop3.ogg")			
-				MTF2SFX(3) = LoadSound_Strict(SFXPath$+"Character\MTF2\ClassD2.ogg")
-				MTF2SFX(4) = LoadSound_Strict(SFXPath$+"Character\MTF2\ClassD1.ogg")
-				MTF2SFX(5) = LoadSound_Strict(SFXPath$+"Character\MTF2\Beep.ogg")
+			    MTF2SFX(0) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Stop1.ogg"))
+				MTF2SFX(1) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Stop2.ogg"))
+				MTF2SFX(2) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Stop3.ogg"))		
+				MTF2SFX(3) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\ClassD2.ogg"))
+				MTF2SFX(4) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\ClassD1.ogg"))
+				MTF2SFX(5) = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Beep.ogg"))
 			EndIf
 
 			If MTF2rooms[6] = Null Then 
@@ -1025,7 +1025,7 @@ Function UpdateNPCs()
 																	MoveEntity pvt, 0, 0, n\Speed * 0.6
 																	
 																	If EntityPick(pvt, 0.5) = d\buttons[i] Then 
-																		PlaySound_Strict (LoadTempSound(SFXPath$+"Door\DoorOpen173.ogg"))
+																		PlaySound_Strict (LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Door\DoorOpen173.ogg")))
 																		UseDoor(d, False)
 																	EndIf
 																	
@@ -1053,15 +1053,13 @@ Function UpdateNPCs()
 												
 												Select PlayerRoom\RoomTemplate\Name
 													Case "lockroom", "room2closets", "room895"
-														DeathMSG = SubjectName$+". Cause of death: Fatal cervical fracture. The surveillance tapes confirm that the subject was killed by SCP-173."	
+														DeathMSG = scpLang_GetPhrase("events.scp1731")
 													Case "room173intro"
-														DeathMSG = SubjectName$+". Cause of death: Fatal cervical fracture. According to Security Chief Franklin who was present at SCP-173's containment "
-														DeathMSG = DeathMSG + "chamber during the breach, the subject was killed by SCP-173 as soon as the disruptions in the electrical network started."
+														DeathMSG = scpLang_GetPhrase("events.scp1732")
 													Case "room2doors"
-														DeathMSG = Chr(34)+"If I'm not mistaken, one of the main purposes of these rooms was to stop SCP-173 from moving further in the event of a containment breach. "
-														DeathMSG = DeathMSG + "So, who's brilliant idea was it to put A GODDAMN MAN-SIZED VENTILATION DUCT in there?"+Chr(34)
+														DeathMSG = Chr(34)+scpLang_GetPhrase("events.scp1733")+Chr(34)
 													Default 
-														DeathMSG = SubjectName$+". Cause of death: Fatal cervical fracture. Assumed to be attacked by SCP-173."
+														DeathMSG = scpLang_GetPhrase("events.scp1734")
 												End Select
 												
 												If (Not chs\GodMode) Then n\Idle = True
@@ -1346,7 +1344,7 @@ Function UpdateNPCs()
 											PlaySound_Strict(DamageSFX(1))
 											PlaySound_Strict(HorrorSFX(5))											
 											If PlayerRoom\RoomTemplate\Name = "pocketdimension" Then
-												DeathMSG = SubjectName$+". Body partially decomposed by what is assumed to be SCP-106's "+Chr(34)+"corrosion"+Chr(34)+" effect. Body disposed of via incineration."
+												DeathMSG = scpLang_GetPhrase("events.scp106")
 												Kill()
 											Else
 											    If Rand(2) = 1 Then
@@ -1461,12 +1459,12 @@ Function UpdateNPCs()
 						If dist<8.0 Then
 							GiveAchievement(Achv096)
 							;If n\Sound = 0 Then
-							;	n\Sound = LoadSound_Strict(MusicPath$+"096.ogg")
+							;	n\Sound = LoadSound_Strict("SFX\Music\"+"096.ogg")
 							;Else
 							;	n\SoundCHN = LoopSound2(n\Sound, n\SoundCHN, Camera, n\Collider, 8.0, 1.0)
 							;EndIf
 							If n\SoundCHN = 0
-								n\SoundCHN = StreamSound_Strict(MusicPath$+"096.ogg",0)
+								n\SoundCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\Music\"+"096.ogg"),0)
 								n\SoundCHN_IsStream = True
 							Else
 								UpdateStreamSoundOrigin(n\SoundCHN,Camera,n\Collider,8.0,1.0)
@@ -1503,7 +1501,7 @@ Function UpdateNPCs()
 										If ProjectedY()>0 And ProjectedY()<GraphicHeight Then
 											If EntityVisible(Collider, n\Collider) Then
 												If (BlinkTimer < - 16 Or BlinkTimer > - 6)
-													PlaySound_Strict LoadTempSound(SFXPath$+"SCP\096\Triggered.ogg")
+													PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\096\Triggered.ogg"))
 													
 													CurrCameraZoom = 10
 													
@@ -1528,14 +1526,14 @@ Function UpdateNPCs()
 						
 						If n\Target = Null Then 
 							If n\SoundCHN = 0
-								n\SoundCHN = StreamSound_Strict(SFXPath$+"SCP\096\Scream.ogg",0)
+								n\SoundCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\096\Scream.ogg"),0)
 								n\SoundCHN_IsStream = True
 							Else
 								UpdateStreamSoundOrigin(n\SoundCHN,Camera,n\Collider,7.5,1.0)
 							EndIf
 							
 							If n\SoundCHN2 = 0
-								n\SoundCHN2 = StreamSound_Strict(MusicPath$+"096Chase.ogg",0)
+								n\SoundCHN2 = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\Music\"+"096Chase.ogg"),0)
 								n\SoundCHN2_IsStream = 2
 							Else
 								SetStreamVolume_Strict(n\SoundCHN2,Min(Max(8.0-dist,0.6),1.0)*SFXVolume#)
@@ -1579,7 +1577,7 @@ Function UpdateNPCs()
 												pvt = CreatePivot()
 												CameraShake = 30
 												BlurTimer = 2000
-												DeathMSG = "A large amount of blood found in [DATA REDACTED]. DNA indentified as "+SubjectName$+". Most likely [DATA REDACTED] by SCP-096."
+												DeathMSG = scpLang_GetPhrase("events.scp096")
 												Kill(True)
 												KillAnim = 1
 												For i = 0 To 6
@@ -1709,7 +1707,7 @@ Function UpdateNPCs()
 					Case 1,2,3
 						;[Block]
 						If n\SoundCHN = 0
-							n\SoundCHN = StreamSound_Strict(MusicPath$+"096Angered.ogg",0)
+							n\SoundCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\Music\"+"096Angered.ogg"),0)
 							n\SoundCHN_IsStream = True
 						Else
 							UpdateStreamSoundOrigin(n\SoundCHN,Camera,n\Collider,10.0,1.0)
@@ -1755,7 +1753,7 @@ Function UpdateNPCs()
 							EndIf
 							
 							If n\SoundCHN = 0
-								n\SoundCHN = StreamSound_Strict(MusicPath$+"096.ogg",0)
+								n\SoundCHN = StreamSound_Strict(scpModding_ProcessFilePath$("SFX\Music\"+"096.ogg"),0)
 								n\SoundCHN_IsStream = True
 							Else
 								UpdateStreamSoundOrigin(n\SoundCHN,Camera,n\Collider,14.0,1.0)
@@ -1827,7 +1825,7 @@ Function UpdateNPCs()
 										If ProjectedY()>0 And ProjectedY()<GraphicHeight Then
 											If EntityVisible(Collider, n\Collider) Then
 												If (BlinkTimer < - 16 Or BlinkTimer > - 6)
-													PlaySound_Strict LoadTempSound(SFXPath$+"SCP\096\Triggered.ogg")
+													PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\096\Triggered.ogg"))
 													
 													CurrCameraZoom = 10
 													
@@ -1921,7 +1919,7 @@ Function UpdateNPCs()
 									;Playing a sound after detecting the player
 									If n\PrevState <= 1 And ChannelPlaying(n\SoundCHN2)=False
 										If n\Sound2 <> 0 Then FreeSound_Strict(n\Sound2)
-										n\Sound2 = LoadSound_Strict(SFXPath$+"SCP\049\Spotted"+Rand(1,7)+".ogg")
+										n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049\Spotted"+Rand(1,7)+".ogg"))
 										n\SoundCHN2 = LoopSound2(n\Sound2,n\SoundCHN2,Camera,n\obj)
 										n\PrevState = 2
 									EndIf
@@ -1938,7 +1936,7 @@ Function UpdateNPCs()
 											BlurTimer = BlurTimer+fs\FPSfactor[0]*2.5
 											If BlurTimer>250 And BlurTimer-fs\FPSfactor[0]*2.5 <= 250 And n\PrevState<>3 Then
 												If n\SoundCHN2 <> 0 Then StopChannel(n\SoundCHN2)
-												n\SoundCHN2 = PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\049\TakeOffHazmat.ogg"))
+												n\SoundCHN2 = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\049\TakeOffHazmat.ogg")))
 												n\PrevState=3
 											ElseIf BlurTimer => 500
 												For i = 0 To MaxItemAmount-1
@@ -1961,7 +1959,7 @@ Function UpdateNPCs()
 											BlurTimer = BlurTimer+fs\FPSfactor[0]*2.5
 											If BlurTimer>250 And BlurTimer-fs\FPSfactor[0]*2.5 <= 250 And n\PrevState<>3 Then
 												If n\SoundCHN2 <> 0 Then StopChannel(n\SoundCHN2)
-												n\SoundCHN2 = PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\049\714Equipped.ogg"))
+												n\SoundCHN2 = PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\049\714Equipped.ogg")))
 												n\PrevState=3
 											ElseIf BlurTimer => 500
 												I_714\Using=False
@@ -1980,17 +1978,17 @@ Function UpdateNPCs()
 											
 											If (Not chs\GodMode) Then
 												If PlayerRoom\RoomTemplate\Name$ = "room049"
-													DeathMSG = "Two (2) active instances of SCP-049-2 and one (1) instances of SCP-049-3 discovered in the tunnel outside SCP-049's containment chamber. Terminated by Nine-Tailed Fox."
+													DeathMSG = scpLang_GetPhrase("events.scp0491")
 													For e.events = Each Events
 														If e\EventName = "room049" Then e\EventState=-1 : Exit
 													Next
 												Else
-													DeathMSG = "An active instance of SCP-049-2 was discovered in [DATA REDACTED]. Terminated by Nine-Tailed Fox."
+													DeathMSG = scpLang_GetPhrase("events.scp0492")
 													Kill()
 												EndIf
 												PlaySound_Strict HorrorSFX(13)
 												If n\Sound2 <> 0 Then FreeSound_Strict(n\Sound2)
-												n\Sound2 = LoadSound_Strict(SFXPath$+"SCP\049\Kidnap"+Rand(1,2)+".ogg")
+												n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049\Kidnap"+Rand(1,2)+".ogg"))
 												n\SoundCHN2 = LoopSound2(n\Sound2,n\SoundCHN2,Camera,n\obj)
 												n\State = 3
 											EndIf										
@@ -2072,9 +2070,9 @@ Function UpdateNPCs()
 											If n\PrevState = 0 And ChannelPlaying(n\SoundCHN2)=False
 												If n\Sound2 <> 0 Then FreeSound_Strict(n\Sound2)
 												If Rand(30)=1
-													n\Sound2 = LoadSound_Strict(SFXPath$+"SCP\049\Searching7.ogg")
+													n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049\Searching7.ogg"))
 												Else
-													n\Sound2 = LoadSound_Strict(SFXPath$+"SCP\049\Searching"+Rand(1,6)+".ogg")
+													n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\049\Searching"+Rand(1,6)+".ogg"))
 												EndIf
 												n\SoundCHN2 = LoopSound2(n\Sound2,n\SoundCHN2,Camera,n\obj)
 												n\PrevState = 1
@@ -2249,7 +2247,7 @@ Function UpdateNPCs()
 								n\State3 = 0
 								n\State2 = 70*2
 								n\PrevState = 0
-								PlaySound_Strict LoadTempSound(SFXPath$+"Room\Room2SL049Spawn.ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Room\Room2SL049Spawn.ogg"))
 							ElseIf PlayerSeeAble% = 2 And n\State3 > 0.0
 								n\PathStatus = FindPath(n,EntityX(Collider),EntityY(Collider),EntityZ(Collider))
 							Else
@@ -2508,7 +2506,7 @@ Function UpdateNPCs()
 							                        EndIf
 											    EndIf
 											    If Injuries > 3.0
-												    DeathMSG = SubjectName$+". Cause of death: multiple lacerations and severe blunt force trauma caused by an instance of SCP-049-2."
+												    DeathMSG = scpLang_GetPhrase("events.scp0493")
 												    Kill(True)
 												EndIf
 											EndIf
@@ -2533,7 +2531,7 @@ Function UpdateNPCs()
 							                        EndIf
                                                 EndIf
 												If Injuries > 3.0
-												    DeathMSG = SubjectName$+". Cause of death: multiple lacerations and severe blunt force trauma caused by an instance of SCP-049-2."
+												    DeathMSG = scpLang_GetPhrase("events.scp0493")
 												    Kill(True)
 											    EndIf
 											EndIf
@@ -2616,10 +2614,10 @@ Function UpdateNPCs()
 										Local instaKillPlayer% = False
 										
 										If PlayerRoom\RoomTemplate\Name = "room173" Then 
-											DeathMSG = SubjectName$+". Cause of death: Gunshot wound to the head. The surveillance tapes confirm that the subject was terminated by Agent Ulgrin shortly after the site lockdown was initiated."
+											DeathMSG = scpLang_GetPhrase("events.introdeath")
 											instaKillPlayer = True
 										ElseIf PlayerRoom\RoomTemplate\Name = "gateb" Then
-											DeathMSG = Chr(34)+"Agent G. to control. Eliminated a Class D escape in Gate B's courtyard."+Chr(34)
+											DeathMSG = Chr(34)+scpLang_GetPhrase("events.gatebdeath")+Chr(34)
 										Else
 											DeathMSG = ""
 										EndIf
@@ -3165,7 +3163,7 @@ Function UpdateNPCs()
 									If EntityInView(n\Collider,Camera) Then
 										If EntityVisible(Collider, n\Collider) Then
 											n\LastSeen = 1
-											PlaySound_Strict LoadTempSound(SFXPath$+"SCP\513\Bell"+Rand(2, 4)+".ogg")
+											PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\513\Bell"+Rand(2, 4)+".ogg"))
 										EndIf
 									EndIf
 								EndIf								
@@ -3213,7 +3211,7 @@ Function UpdateNPCs()
 													If EntityInView(n\Collider,Camera) Then
 														If EntityVisible(Collider, n\Collider) Then
 															n\LastSeen = 1
-															PlaySound_Strict LoadTempSound(SFXPath$+"SCP\513\Bell"+Rand(2, 4)+".ogg")
+															PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\513\Bell"+Rand(2, 4)+".ogg"))
 														EndIf
 													EndIf
 												EndIf
@@ -3415,9 +3413,9 @@ Function UpdateNPCs()
 													PlaySound2(Gunshot2SFX, Camera, n\Collider, 20)
 													
 													If PlayerRoom\RoomTemplate\Name = "gateb" Then
-														DeathMSG = Chr(34)+"CH-2 to control. Shot down a runaway Class D at Gate B."+Chr(34)
+														DeathMSG = Chr(34)+scpLang_GetPhrase("events.gatebdeath2")+Chr(34)
 													Else
-													    DeathMSG = Chr(34)+"CH-2 to control. Shot down a runaway Class D at Gate A."+Chr(34)
+													    DeathMSG = Chr(34)+scpLang_GetPhrase("events.gateadeath")+Chr(34)
 													EndIf
 													
 													Shoot(EntityX(pvt),EntityY(pvt), EntityZ(pvt),((10/dist)*(1/dist))*(n\State=2),(n\State=2))
@@ -3458,10 +3456,10 @@ Function UpdateNPCs()
 							
 							If EntityDistance(n\obj, target) <0.3 Then
 								;If TempSound2 <> 0 Then FreeSound_Strict TempSound2 : TempSound2 = 0
-								;TempSound2 = LoadSound_Strict(SFXPath$+"Character\Apache\Crash"+Rand(1,2)+".ogg")
+								;TempSound2 = LoadSound_Strict("SFX\"+"Character\Apache\Crash"+Rand(1,2)+".ogg")
 								CameraShake = Max(CameraShake, 3.0)
 								;PlaySound_Strict TempSound2
-								PlaySound_Strict LoadTempSound(SFXPath$+"Character\Apache\Crash"+Rand(1,2)+".ogg")
+								PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\Apache\Crash"+Rand(1,2)+".ogg"))
 								n\State = 5
 							EndIf
 							
@@ -3500,7 +3498,7 @@ Function UpdateNPCs()
 							    Else
 								    If dist < 2.5 Then 
 									    SetNPCFrame(n, 284)
-									    n\Sound2 = LoadSound_Strict(SFXPath$+"Room\035Chamber\TentacleSpawn.ogg")
+									    n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\035Chamber\TentacleSpawn.ogg"))
 									    PlaySound_Strict(n\Sound2)
 								    EndIf
 							    EndIf
@@ -3510,7 +3508,7 @@ Function UpdateNPCs()
 						    Case 1 ;idle
 							    If n\Sound2=0 Then
 								    FreeSound_Strict n\Sound2 : n\Sound2=0
-								    n\Sound2 = LoadSound_Strict(SFXPath$+"Room\035Chamber\TentacleIdle.ogg")
+								    n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\035Chamber\TentacleIdle.ogg"))
 							    EndIf
 							    n\SoundCHN2 = LoopSound2(n\Sound2,n\SoundCHN2,Camera,n\Collider)
 							
@@ -3541,7 +3539,7 @@ Function UpdateNPCs()
 									    ;SetAnimTime(n\obj,2)
 									    If n\Sound2<>0 Then FreeSound_Strict n\Sound2 : n\Sound2 = 0
 									    n\Frame = 2
-									    n\Sound = LoadSound_Strict(SFXPath$+"Room\035Chamber\TentacleAttack"+Rand(1,2)+".ogg")
+									    n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Room\035Chamber\TentacleAttack"+Rand(1,2)+".ogg"))
 									    PlaySound_Strict(n\Sound)
 								    EndIf
 								    AnimateNPC(n, 2, 32, 0.3, False)
@@ -3551,7 +3549,7 @@ Function UpdateNPCs()
 									    If dist < 1.8 Then
 										    If Abs(DeltaYaw(n\Collider, Collider))<20 Then 
 											    If WearingHazmat Then
-											        PlaySound_Strict(LoadTempSound(SFXPath$+"General\BodyFall.ogg"))
+											        PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\BodyFall.ogg")))
 											        BlurTimer = 100
 											        If I_1033RU\HP = 0
 												        Injuries = Injuries+Rnd(0.5)
@@ -3576,16 +3574,9 @@ Function UpdateNPCs()
 												    EndIf
 												    If Injuries > 3.0 Then
 													    If PlayerRoom\RoomTemplate\Name = "room2offices" Then
-														    DeathMSG = Chr(34)+"One large and highly active tentacle-like appendage seems "
-														    DeathMSG = DeathMSG + "to have grown outside the dead body of a scientist within office area [DATA REDACTED]. It's level of aggression is "
-														    DeathMSG = DeathMSG + "unlike anything we've seen before - it looks like it has "
-														    DeathMSG = DeathMSG + "beaten some unfortunate Class D to death at some point during the breach."+Chr(34)
+														    DeathMSG = Chr(34)+scpLang_GetPhrase("events.scp0351")+Chr(34)
 													    Else
-														    DeathMSG = Chr(34)+"We will need more than the regular cleaning team to take care of this. "
-														    DeathMSG = DeathMSG + "Two large and highly active tentacle-like appendages seem "
-														    DeathMSG = DeathMSG + "to have formed inside the chamber. Their level of aggression is "
-														    DeathMSG = DeathMSG + "unlike anything we've seen before - it looks like they have "
-														    DeathMSG = DeathMSG + "beaten some unfortunate Class D to death at some point during the breach."+Chr(34)
+														    DeathMSG = Chr(34)+scpLang_GetPhrase("events.scp0352")+Chr(34)
 													    EndIf
 													    Kill(True)
 												    EndIf
@@ -3766,7 +3757,7 @@ Function UpdateNPCs()
 									If EntityInView(n\Collider, Camera) Then 
 										n\State2 = 1
 										If Rand(8)=1 Then
-											PlaySound2(LoadTempSound(SFXPath$+"SCP\860\Cancer"+Rand(0,2)+".ogg"), Camera, n\Collider, 20.0)
+											PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\860\Cancer"+Rand(0,2)+".ogg")), Camera, n\Collider, 20.0)
 										EndIf										
 									EndIf
 								Else
@@ -3847,9 +3838,9 @@ Function UpdateNPCs()
 								If n\State2 = 0 Then
 									If dist<8.0 Then
 										If EntityInView(n\Collider,Camera) Then
-											PlaySound_Strict LoadTempSound(SFXPath$+"SCP\860\Chase"+Rand(1,2)+".ogg")
+											PlaySound_Strict LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\860\Chase"+Rand(1,2)+".ogg"))
 											
-											PlaySound2(LoadTempSound(SFXPath$+"SCP\860\Cancer"+Rand(0,2)+".ogg"), Camera, n\Collider)	
+											PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\860\Cancer"+Rand(0,2)+".ogg")), Camera, n\Collider)	
 											n\State2 = 1
 										EndIf										
 									EndIf
@@ -3863,7 +3854,7 @@ Function UpdateNPCs()
 											If ChannelPlaying (n\SoundCHN) Then temp = False
 										EndIf
 										If temp Then
-											n\SoundCHN = PlaySound2(LoadTempSound(SFXPath$+"SCP\860\Cancer"+Rand(0,2)+".ogg"), Camera, n\Collider)
+											n\SoundCHN = PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\860\Cancer"+Rand(0,2)+".ogg")), Camera, n\Collider)
 										EndIf
 									EndIf
 								Else
@@ -3871,7 +3862,7 @@ Function UpdateNPCs()
 								EndIf
 								
 								If dist<4.5 Or n\State3 > Rnd(200,250) Then
-									n\SoundCHN = PlaySound2(LoadTempSound(SFXPath$+"SCP\860\Cancer"+Rand(3,5)+".ogg"), Camera, n\Collider)
+									n\SoundCHN = PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\860\Cancer"+Rand(3,5)+".ogg")), Camera, n\Collider)
 									n\State = 3
 								EndIf
 								
@@ -3897,8 +3888,8 @@ Function UpdateNPCs()
 							
 							RotateEntity n\Collider, 0, angle-90, 0, True
 							
-							If n\Sound = 0 Then n\Sound = LoadSound_Strict(SFXPath$+"General\Slash1.ogg")
-							If n\Sound2 = 0 Then n\Sound2 = LoadSound_Strict(SFXPath$+"General\Slash2.ogg")
+							If n\Sound = 0 Then n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Slash1.ogg"))
+							If n\Sound2 = 0 Then n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Slash2.ogg"))
 							
 							;if close enough to attack OR already attacking, play the attack anim
 							If (dist<1.1 Or (n\Frame>451 And n\Frame<493) Or KillTimer < 0) Then
@@ -4019,7 +4010,7 @@ Function UpdateNPCs()
 									EndIf
 									If temp Then
 										If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-										n\Sound = LoadSound_Strict(SFXPath$+"SCP\939\"+(n\ID Mod 3)+"Lure"+Rand(1,10)+".ogg")
+										n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\939\"+(n\ID Mod 3)+"Lure"+Rand(1,10)+".ogg"))
 										n\SoundCHN = PlaySound2(n\Sound, Camera, n\Collider)
 									EndIf
 								EndIf
@@ -4036,7 +4027,7 @@ Function UpdateNPCs()
 							
 						Case 3
 							If EntityVisible(Collider, n\Collider) Then
-								If n\Sound2 = 0 Then n\Sound2 = LoadSound_Strict(SFXPath$+"General\Slash1.ogg")
+								If n\Sound2 = 0 Then n\Sound2 = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"General\Slash1.ogg"))
 								
 								n\EnemyX = EntityX(Collider)
 								n\EnemyZ = EntityZ(Collider)
@@ -4076,8 +4067,7 @@ Function UpdateNPCs()
 									EndIf
 									
 									If Injuries>4.0 Then 
-										DeathMSG=Chr(34)+"All four (4) escaped SCP-939 specimens have been captured and recontained successfully. "
-										DeathMSG=DeathMSG+"Four (4) of them made quite a mess at Storage Area 6. A cleaning team has been dispatched."+Chr(34)
+										DeathMSG=Chr(34)+scpLang_GetPhrase("events.scp939")+Chr(34)
 										Kill(True)
 										If (Not chs\GodMode) Then n\State = 5
 									EndIf								
@@ -4135,10 +4125,10 @@ Function UpdateNPCs()
 						If PlayerSoundVolume*1.2>dist Or dist < 1.5 Then
 							If n\State3 = 0 Then
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"SCP\939\"+(n\ID Mod 3)+"Attack"+Rand(1,3)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\939\"+(n\ID Mod 3)+"Attack"+Rand(1,3)+".ogg"))
 								n\SoundCHN = PlaySound2(n\Sound, Camera, n\Collider)										
 								
-								PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\939\Attack.ogg"))
+								PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\939\Attack.ogg")))
 								n\State3 = 1
 							EndIf
 							
@@ -4146,7 +4136,7 @@ Function UpdateNPCs()
 						ElseIf PlayerSoundVolume*1.6>dist
 							If n\State<>1 And n\Reload <= 0 Then
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"SCP\939\"+(n\ID Mod 3)+"Alert"+Rand(1,3)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\939\"+(n\ID Mod 3)+"Alert"+Rand(1,3)+".ogg"))
 								n\SoundCHN = PlaySound2(n\Sound, Camera, n\Collider)	
 								
 								n\Frame = 175
@@ -4217,7 +4207,7 @@ Function UpdateNPCs()
 						EndIf
 						dist = Distance(EntityX(Collider),EntityZ(Collider),EntityX(n\Collider),EntityZ(n\Collider))
 						
-						If Rand(700)=1 Then PlaySound2(LoadTempSound(SFXPath$+"SCP\066\Eric"+Rand(1,3)+".ogg"),Camera, n\Collider, 8.0)
+						If Rand(700)=1 Then PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\066\Eric"+Rand(1,3)+".ogg")),Camera, n\Collider, 8.0)
 						
 						If dist < 1.0+n\LastDist Then n\State = Rand(2,3)
 					Case 2 ;roll towards the player and make a sound, and then escape	
@@ -4235,14 +4225,14 @@ Function UpdateNPCs()
 							If n\Frame=683 Then 
 								If n\State2 = 0 Then
 									If Rand(2)=1 Then
-										PlaySound2(LoadTempSound(SFXPath$+"SCP\066\Eric"+Rand(1,3)+".ogg"),Camera, n\Collider, 8.0)
+										PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\066\Eric"+Rand(1,3)+".ogg")),Camera, n\Collider, 8.0)
 									Else
-										PlaySound2(LoadTempSound(SFXPath$+"SCP\066\Notes"+Rand(1,6)+".ogg"), Camera, n\Collider, 8.0)
+										PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\066\Notes"+Rand(1,6)+".ogg")), Camera, n\Collider, 8.0)
 									EndIf									
 									
 									Select Rand(1,6)
 										Case 1
-											If n\Sound2=0 Then n\Sound2=LoadSound_Strict(SFXPath$+"SCP\066\Beethoven.ogg")
+											If n\Sound2=0 Then n\Sound2=LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\066\Beethoven.ogg"))
 											n\SoundCHN2 = PlaySound2(n\Sound2, Camera, n\Collider)
 											DeafTimer# = 70*(45+(15*SelectedDifficulty\aggressiveNPCs))
 											DeafPlayer = True
@@ -4264,7 +4254,7 @@ Function UpdateNPCs()
 												CameraShake = 5.0
 												de.Decals = CreateDecal(1, EntityX(n\Collider), 0.01, EntityZ(n\Collider), 90, Rand(360), 0)
 												de\Size = 0.3 : UpdateDecals
-												PlaySound_Strict(LoadTempSound(SFXPath$+"General\BodyFall.ogg"))
+												PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\BodyFall.ogg")))
 												If Distance(EntityX(Collider),EntityZ(Collider),EntityX(n\Collider),EntityZ(n\Collider))<0.8 Then
 												    If I_1033RU\HP = 0
 													    Injuries = Injuries + Rnd(0.3,0.5)
@@ -4323,7 +4313,7 @@ Function UpdateNPCs()
 				End Select
 				
 				If n\State > 1 Then
-					If n\Sound = 0 Then n\Sound = LoadSound_Strict(SFXPath$+"SCP\066\Rolling.ogg")
+					If n\Sound = 0 Then n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\066\Rolling.ogg"))
 					If n\SoundCHN<>0 Then
 						If ChannelPlaying(n\SoundCHN) Then
 							n\SoundCHN = LoopSound2(n\Sound, n\SoundCHN, Camera, n\Collider, 20)
@@ -4378,17 +4368,17 @@ Function UpdateNPCs()
 							If dist<1 And n\Reload <= 0 And MsgTimer <= 0 Then
 								Select Rand(6)
 									Case 1
-										Msg="You feel something breathing right next to you."
+										Msg=scpLang_GetPhrase("events.scp9661")
 									Case 2
-										Msg=Chr(34)+"It feels like something's in this room with me."+Chr(34)
+										Msg=Chr(34)+scpLang_GetPhrase("events.scp9662")+Chr(34)
 									Case 3
-										Msg="You feel like something is here with you, but you do not see anything."
+										Msg=scpLang_GetPhrase("events.scp9663")
 									Case 4
-										Msg=Chr(34)+"Is my mind playing tricks on me or is there someone else here?"+Chr(34)
+										Msg=Chr(34)+scpLang_GetPhrase("events.scp9664")+Chr(34)
 									Case 5
-										Msg="You feel like something is following you."
+										Msg=scpLang_GetPhrase("events.scp9665")
 									Case 6
-										Msg="You can feel something near you, but you are unable to see it. Perhaps its time is now."
+										Msg=scpLang_GetPhrase("events.scp9666")
 								End Select
                            		n\Reload = 20*70
 								MsgTimer=8*70
@@ -4465,7 +4455,7 @@ Function UpdateNPCs()
 							
 								;If n\Frame>1029.0 And prevFrame<=1029.0 Or n\Frame>1203.0 And prevFrame<=1203.0 Then
 								If n\Frame>228.0 And prevFrame<=228.0
-									PlaySound2(LoadTempSound(SFXPath$+"SCP\966\Echo"+Rand(1,3)+".ogg"), Camera, n\Collider)
+									PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\966\Echo"+Rand(1,3)+".ogg")), Camera, n\Collider)
 								EndIf
 							
 								angle = VectorYaw(EntityX(Collider)-EntityX(n\Collider),0,EntityZ(Collider)-EntityZ(n\Collider))
@@ -4486,13 +4476,13 @@ Function UpdateNPCs()
 										If MsgTimer<=0 And StaminaEffect<1.5 Then
 											Select Rand(4)
 												Case 1
-													Msg = "You feel exhausted."
+													Msg = scpLang_GetPhrase("events.scp9667")
 												Case 2
-													Msg = Chr(34)+"Could really go for a nap now..."+Chr(34)
+													Msg = Chr(34)+scpLang_GetPhrase("events.scp9668")+Chr(34)
 												Case 3
-													Msg = Chr(34)+"If I wasn't in this situation I would take a nap somewhere."+Chr(34)
+													Msg = Chr(34)+scpLang_GetPhrase("events.scp9669")+Chr(34)
 												Case 4
-													Msg = "You feel restless."
+													Msg = scpLang_GetPhrase("events.scp96610")
 											End Select
 										
 											MsgTimer = 7*70
@@ -4520,7 +4510,7 @@ Function UpdateNPCs()
 							
 								;If n\Frame>1393.0 And prevFrame<=1393.0 Or n\Frame>1589.0 And prevFrame<=1589.0 Or n\Frame>2000.0 And prevFrame<=2000.0 Then
 								If n\Frame>271.0 And prevFrame<=271.0 Or n\Frame>354 Or n\Frame>314.0 And prevFrame<=314.0 Or n\Frame>301.0 And prevFrame<=301.0
-									PlaySound2(LoadTempSound(SFXPath$+"SCP\966\Idle"+Rand(1,3)+".ogg"), Camera, n\Collider)
+									PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\966\Idle"+Rand(1,3)+".ogg")), Camera, n\Collider)
 								EndIf
 							
 								angle = VectorYaw(EntityX(Collider)-EntityX(n\Collider),0,EntityZ(Collider)-EntityZ(n\Collider))
@@ -4627,7 +4617,7 @@ Function UpdateNPCs()
 								EndIf
 							Case 10 ;attack
 								If n\LastSeen=0
-									PlaySound2(LoadTempSound(SFXPath$+"SCP\966\Echo"+Rand(1,3)+".ogg"), Camera, n\Collider)
+									PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\966\Echo"+Rand(1,3)+".ogg")), Camera, n\Collider)
 									n\LastSeen = 1
 								EndIf
 							
@@ -4677,7 +4667,7 @@ Function UpdateNPCs()
 								If dist<1.0 Then
 									;If n\Frame>2173.0 And prevFrame<=2173.0 Or n\Frame>2203.0 And prevFrame<=2203.0 Or n\Frame>2227.0 And prevFrame<=2227.0 Then
 									If n\Frame>470.0 And prevFrame<=470.0 Or n\Frame>500.0 And prevFrame<=500.0 Or n\Frame>527.0 And prevFrame<=527.0
-										PlaySound2(LoadTempSound(SFXPath$+"General\Slash"+Rand(1,2)+".ogg"), Camera, n\Collider)
+										PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\Slash"+Rand(1,2)+".ogg")), Camera, n\Collider)
 										If I_1033RU\HP = 0
 										    Injuries = Injuries + Rnd(0.5,1.0)
 										Else
@@ -4913,7 +4903,7 @@ Function UpdateNPCs()
 										dist = EntityDistance(n\Collider,Collider)
 										If (dist < 20.0) Then
 											If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-											n\Sound = LoadSound_Strict(SFXPath$+"SCP\1499\Idle"+Rand(1,4)+".ogg")
+											n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1499\Idle"+Rand(1,4)+".ogg"))
 											n\SoundCHN = PlaySound2(n\Sound, Camera, n\Collider, 20.0)
 										EndIf
 									EndIf
@@ -4927,7 +4917,7 @@ Function UpdateNPCs()
 											n\State = 2
 											If dist < 5.0 Then
 												If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-												n\Sound = LoadSound_Strict(SFXPath$+"SCP\1499\Triggered.ogg")
+												n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1499\Triggered.ogg"))
 												n\SoundCHN = PlaySound2(n\Sound, Camera, n\Collider,20.0)
 												
 												n\State2 = 1 ;if player is too close, switch to attack after screaming
@@ -4955,7 +4945,7 @@ Function UpdateNPCs()
 									If dist < 4.0 Then
 										If EntityVisible(n\Collider,Collider) Then
 											If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-											n\Sound = LoadSound_Strict(SFXPath$+"SCP\1499\Triggered.ogg")
+											n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"SCP\1499\Triggered.ogg"))
 											n\SoundCHN = PlaySound2(n\Sound, Camera, n\Collider,20.0)
 											
 											n\State = 1
@@ -5034,17 +5024,13 @@ Function UpdateNPCs()
 										Else
 										    Damage1033RU(20+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 										EndIf
-										PlaySound2(LoadTempSound(SFXPath$+"General\Slash"+Rand(1,2)+".ogg"), Camera, n\Collider)
+										PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\Slash"+Rand(1,2)+".ogg")), Camera, n\Collider)
 										If Injuries > 10.0
 											Kill(True)
 											If PlayerRoom\RoomTemplate\Name$ = "dimension1499"
-												DeathMSG = "All personnel situated within Evacuation Shelter LC-2 during the breach have been administered "
-												DeathMSG = DeathMSG + "Class B amnestics due to Incident 1499-E. The Class D subject involved in the event "
-												DeathMSG = DeathMSG + "died shortly after being shot by Agent [DATA REDACTED]."
+												DeathMSG = scpLang_GetPhrase("events.scp14991")
 											Else
-												DeathMSG = "An unidentified male and a deceased Class D subject were discovered in [DATA REDACTED] by the Nine-Tailed Fox. "
-												DeathMSG = DeathMSG + "The man was described as highly agitated and seemed to only speak Russian. "
-												DeathMSG = DeathMSG + "He's been taken into a temporary holding area at [DATA REDACTED] while waiting for a translator to arrive."
+												DeathMSG = scpLang_GetPhrase("events.scp14992")
 											EndIf
 										EndIf
 									EndIf
@@ -5063,17 +5049,13 @@ Function UpdateNPCs()
 										Else
 										    Damage1033RU(20+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 										EndIf
-										PlaySound2(LoadTempSound(SFXPath$+"General\Slash"+Rand(1,2)+".ogg"), Camera, n\Collider)
+										PlaySound2(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"General\Slash"+Rand(1,2)+".ogg")), Camera, n\Collider)
 										If Injuries > 10.0
 											Kill(True)
 											If PlayerRoom\RoomTemplate\Name$ = "dimension1499"
-												DeathMSG = "All personnel situated within Evacuation Shelter LC-2 during the breach have been administered "
-												DeathMSG = DeathMSG + "Class-B amnestics due to Incident 1499-E. The Class D subject involved in the event "
-												DeathMSG = DeathMSG + "died shortly after being shot by Agent [DATA REDACTED]."
+												DeathMSG = scpLang_GetPhrase("events.scp14991")
 											Else
-												DeathMSG = "An unidentified male and a deceased Class D subject were discovered in [DATA REDACTED] by the See No Evil. "
-												DeathMSG = DeathMSG + "The man was described as highly agitated and seemed to only speak Russian. "
-												DeathMSG = DeathMSG + "He's been taken into a temporary holding area at [DATA REDACTED] while waiting for a translator to arrive."
+												DeathMSG = scpLang_GetPhrase("events.scp14992")
 											EndIf
 										EndIf
 									EndIf
@@ -5249,8 +5231,7 @@ Function UpdateNPCs()
 							                    n\IsDead = True
 							                EndIf
 										EndIf
-										DeathMSG = SubjectName$+". Cause of death: multiple lacerations and severe blunt force trauma caused by [DATA REDACTED], who was infected with SCP-008. "
-										DeathMSG = DeathMSG + "Said subject was located by Nine-Tailed Fox and terminated."
+										DeathMSG = scpLang_GetPhrase("events.scp0081")
 									EndIf
 								EndIf
 							ElseIf n\Frame => 164
@@ -5486,7 +5467,7 @@ Function UpdateNPCs()
 							                        EndIf
 											    EndIf
 											    If Injuries > 3.0
-												    DeathMSG = SubjectName$+". Cause of death: multiple lacerations and severe blunt force trauma caused by an instance of SCP-008-2."
+												    DeathMSG = scpLang_GetPhrase("events.scp0082")
 												    Kill(True)
 												EndIf
 											EndIf
@@ -5511,7 +5492,7 @@ Function UpdateNPCs()
 							                        EndIf
                                                 EndIf
 												If Injuries > 3.0
-												    DeathMSG = SubjectName$+". Cause of death: multiple lacerations and severe blunt force trauma caused by an instance of SCP-008-2."
+												    DeathMSG = scpLang_GetPhrase("events.scp0082")
 												    Kill(True)
 											    EndIf
 											EndIf
@@ -5738,12 +5719,10 @@ Function UpdateNPCs()
 										            PointEntity n\obj, Collider 
 										            RotateEntity n\Collider, 0, CurveAngle(EntityYaw(n\obj), EntityYaw(n\Collider), 10.0), 0 
 										            If Ceil(n\Frame) = 110 And (Not chs\GodMode) Then
-										                PlaySound_Strict(LoadTempSound(SFXPath$+"SCP\294\Burn.ogg"))
+										                PlaySound_Strict(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"SCP\294\Burn.ogg")))
 												        Kill(False, True)
 												
-											            DeathMsg = SubjectName$+" found dead inside the SCP-457's Storage Tunnels. Subject seems to be burned down by SCP-457 as his body is completely burnt. "
-											            DeathMsg = DeathMsg + "SCP-457 seems to had damaged the whole area trying to get as many fuel as possible to grow. Luckely SCP-457 wasn't able to use the "
-											            DeathMsg = DeathMsg + "elevators to get to the main facility."
+											            DeathMsg = scpLang_GetPhrase("events.scp457")
 	                                               EndIf
 	                                            EndIf
 										    EndIf
@@ -5936,7 +5915,7 @@ Function UpdateNPCs()
 							                    EndIf
 							        		EndIf
 							                If Injuries > 3.0 Then
-							                    DeathMSG = SubjectName$+". Cause of death: multiple lacerations and severe blunt force trauma caused by an instance of SCP-049-3."
+							                    DeathMSG = scpLang_GetPhrase("events.scp0493")
 							                    Kill(True)
 							                EndIf
 							   			EndIf
@@ -6132,14 +6111,9 @@ Function UpdateNPCs()
 						   EndIf
 							If Injuries>=4.0 Then
 								If n\State3=0.0 Then
-									DeathMSG = SubjectName$+" wearing SCP-178 was found dead in [DATA REDACTED]. "
-									DeathMSG = DeathMSG + "Presumed to be killed by the "
-									DeathMSG = DeathMSG + "effects of SCP-178."
+									DeathMSG = scpLang_GetPhrase("events.scp1781")
 								Else
-									DeathMSG = "Several bipedal entities of unknown origin were found in Site-[DATA REDACTED]. "
-									DeathMSG = DeathMSG + "Testing reveals that these entities behave similarly to those "
-									DeathMSG = DeathMSG + "seen when using SCP-178. It's unknown at the current time "
-									DeathMSG = DeathMSG + "whether SCP-178 and these entities are related."
+									DeathMSG = scpLang_GetPhrase("events.scp1782")
 								EndIf
 								Kill(True)
 							EndIf
@@ -6316,11 +6290,11 @@ Function UpdateNPCs()
 		MTF_CameraCheckTimer=0.0
 		If (Not PlayerDetected)
 			If MTF_CameraCheckDetected
-				PlayAnnouncement(SFXPath$+"Character\MTF\AnnouncCameraFound"+Rand(1,2)+".ogg")
+				PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\AnnouncCameraFound"+Rand(1,2)+".ogg"))
 				PlayerDetected=True
 				MTF_CameraCheckTimer=70*60
 			Else
-				PlayAnnouncement(SFXPath$+"Character\MTF\AnnouncCameraNoFound.ogg")
+				PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\AnnouncCameraNoFound.ogg"))
 			EndIf
 		EndIf
 		MTF_CameraCheckDetected=False
@@ -6335,11 +6309,11 @@ Function UpdateNPCs()
 		;MTF2_CameraCheckTimer=0.0
 		;If (Not PlayerDetected)
 			;If MTF2_CameraCheckDetected
-				;PlayAnnouncement(SFXPath$+"Character\MTF2\AnnouncCameraFound"+Rand(1,2)+".ogg")
+				;PlayAnnouncement("SFX\"+"Character\MTF2\AnnouncCameraFound"+Rand(1,2)+".ogg")
 				;PlayerDetected=True
 				;MTF2_CameraCheckTimer=70*60
 			;Else
-		        ;PlayAnnouncement(SFXPath$+"Character\MTF2\AnnouncCameraNoFound.ogg")
+		        ;PlayAnnouncement("SFX\"+"Character\MTF2\AnnouncCameraNoFound.ogg")
 			;EndIf
 		;EndIf
 		;MTF2_CameraCheckDetected=False
@@ -6566,7 +6540,7 @@ Function UpdateMTFUnit(n.NPCs)
 		;only play the "blinking" sound clip if searching/containing 173
 		If n\State = 2
 			If OtherNPCSeesMeNPC(Curr173,n) Or EntityDistance(n\Collider,Curr173\Collider)<3.0
-				PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF\173\BLINKING.ogg"),n)
+				PlayMTFSound(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\173\BLINKING.ogg")),n)
 			EndIf
 		EndIf
 		n\BlinkTimer = 70.0*Rnd(10.0,15.0)
@@ -6647,9 +6621,9 @@ Function UpdateMTFUnit(n.NPCs)
 											Curr173\Target = Null
 											Curr173\IsDead = True
 											If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-											n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\173\Cont"+Rand(1,4)+".ogg")
+											n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\173\Cont"+Rand(1,4)+".ogg"))
 											PlayMTFSound(n\Sound, n)
-											PlayAnnouncement(SFXPath$+"Character\MTF\Announc173Contain.ogg")
+											PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Announc173Contain.ogg"))
 											r\RoomDoors[1]\MTFClose = True
                                          	UseDoor(r\RoomDoors[1],False)
 											r\RoomDoors[1]\open = False
@@ -6799,13 +6773,13 @@ Function UpdateMTFUnit(n.NPCs)
 					If n\LastSeen > 0 And n\LastSeen < 70*15 Then
 						If temp < 2
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\ThereHeIs"+Rand(1,6)+".ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\ThereHeIs"+Rand(1,6)+".ogg"))
 							PlayMTFSound(n\Sound, n)
 						EndIf
 					Else
 						If temp = True
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\Stop"+Rand(1,6)+".ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Stop"+Rand(1,6)+".ogg"))
 							PlayMTFSound(n\Sound, n)
 						ElseIf temp = 2
 							;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
@@ -6846,7 +6820,7 @@ Function UpdateMTFUnit(n.NPCs)
 							n\PathTimer=0.0
 							n\PathStatus=0
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\173\Spotted"+Rand(1,2)+".ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\173\Spotted"+Rand(1,2)+".ogg"))
 							PlayMTFSound(n\Sound, n)
 						EndIf
 					EndIf
@@ -6866,7 +6840,7 @@ Function UpdateMTFUnit(n.NPCs)
 							n\Target = Curr106
 							;If n\MTFLeader=Null
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\106\Spotted"+Rand(1,4)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\106\Spotted"+Rand(1,4)+".ogg"))
 								PlayMTFSound(n\Sound, n)
 							;EndIf
 						EndIf
@@ -6885,7 +6859,7 @@ Function UpdateMTFUnit(n.NPCs)
 							n\PathTimer = 0.0
 							n\PathStatus = 0
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\096\Spotted"+Rand(1,2)+".ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\096\Spotted"+Rand(1,2)+".ogg"))
 							PlayMTFSound(n\Sound, n)
 						EndIf
 					EndIf
@@ -6905,7 +6879,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\PathStatus = 0
 								n\Target = n2
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Spotted"+Rand(1,5)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Spotted"+Rand(1,5)+".ogg"))
 								PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -6924,7 +6898,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Player0492_1.ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Player0492_1.ogg"))
 								PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -6943,7 +6917,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\008\008_1spotted.ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\008\008_1spotted.ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -6965,7 +6939,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\049_3Spotted.ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\049\049_3Spotted.ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -6984,7 +6958,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\008\008_2spotted.ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\008\008_2spotted.ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -7003,7 +6977,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\035\Tentacle_Spotted.ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\035\Tentacle_Spotted.ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -7050,12 +7024,12 @@ Function UpdateMTFUnit(n.NPCs)
 									
 									FreeEntity(pvt)
 									
-									DeathMSG=SubjectName$+". Died of blood loss after being shot by Nine-Tailed Fox."
+									DeathMSG = scpLang_GetPhrase("events.ntf1")
 									
 									;player killed -> "target terminated"
 									If prev => 0 And KillTimer < 0 Then
-										DeathMSG=SubjectName$+". Terminated by Nine-Tailed Fox."
-										PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF\Targetterminated"+Rand(1,4)+".ogg"),n)
+										DeathMSG = scpLang_GetPhrase("events.ntf2")
+										PlayMTFSound(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Targetterminated"+Rand(1,4)+".ogg")),n)
 									EndIf
 								EndIf	
 							EndIf
@@ -7223,7 +7197,7 @@ Function UpdateMTFUnit(n.NPCs)
 					
 					If n\MTFLeader=Null And n\LastSeen<70*30 And n\LastSeen+fs\FPSfactor[0]=>70*30 Then
 						If Rand(2)=1 Then 
-							PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF\Searching"+Rand(1,6)+".ogg"),n)
+							PlayMTFSound(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Searching"+Rand(1,6)+".ogg")),n)
 						EndIf
 					EndIf
 					
@@ -7234,10 +7208,10 @@ Function UpdateMTFUnit(n.NPCs)
                 
                 If n\State2<=0.0 And n\State2+fs\FPSfactor[0] >0.0 Then
 					If n\MTFLeader = Null Then
-						PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF\Targetlost"+Rand(1,3)+".ogg"),n)
+						PlayMTFSound(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\Targetlost"+Rand(1,3)+".ogg")),n)
 						If MTF_CameraCheckTimer=0.0
 							If Rand(15-(7*SelectedDifficulty\aggressiveNPCs))=1 ;Maybe change this to another chance - ENDSHN
-								PlayAnnouncement(SFXPath$+"Character\MTF\AnnouncCameraCheck.ogg")
+								PlayAnnouncement(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\AnnouncCameraCheck.ogg"))
 								MTF_CameraCheckTimer = fs\FPSfactor[0]
 							EndIf
 						EndIf
@@ -7256,7 +7230,7 @@ Function UpdateMTFUnit(n.NPCs)
 							n\EnemyZ = EntityZ(Curr173\Collider,True)
 							n\State2 = 70.0*15.0 ;give up after 15 seconds
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\173\Spotted3.ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\173\Spotted3.ogg"))
 							PlayMTFSound(n\Sound, n)
 							n\State3 = 0.0
 							n\PathTimer=0.0
@@ -7278,7 +7252,7 @@ Function UpdateMTFUnit(n.NPCs)
 							n\Target = Curr106
 							If n\MTFLeader=Null
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\106\Spotted5.ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\106\Spotted5.ogg"))
 								PlayMTFSound(n\Sound, n)
 							EndIf
 						EndIf
@@ -7297,7 +7271,7 @@ Function UpdateMTFUnit(n.NPCs)
 							n\PathStatus = 0
 							If n\MTFLeader=Null
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\096\Spotted"+Rand(1,2)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\096\Spotted"+Rand(1,2)+".ogg"))
 								PlayMTFSound(n\Sound, n)
 							EndIf
 						EndIf
@@ -7317,7 +7291,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\PathStatus = 0
 								n\Target = n2
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Spotted"+Rand(1,5)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Spotted"+Rand(1,5)+".ogg"))
 								PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -7336,7 +7310,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Player0492_1.ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Player0492_1.ogg"))
 								PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -7359,7 +7333,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Reload = 70*5
 								;If n\MTFLeader=Null
 								    ;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\049_3Spotted.ogg")
+								    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\049\049_3Spotted.ogg")
 								    ;PlayMTFSound(n\Sound, n)
 								;EndIf
 								Exit
@@ -7380,7 +7354,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Reload = 70*5
 								;If n\MTFLeader=Null
 								    ;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\008\008_2Spotted.ogg")
+								    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\008\008_2Spotted.ogg")
 								    ;PlayMTFSound(n\Sound, n)
 								;EndIf
 								Exit
@@ -7401,7 +7375,7 @@ Function UpdateMTFUnit(n.NPCs)
 								n\Reload = 70*5
 								;If n\MTFLeader=Null
 								    ;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\035\Tentacle_Spotted.ogg")
+								    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\035\Tentacle_Spotted.ogg")
 								    ;PlayMTFSound(n\Sound, n)
 								;EndIf
 								Exit
@@ -7443,7 +7417,7 @@ Function UpdateMTFUnit(n.NPCs)
 									Curr173\Idle = 2
 									If n\MTFLeader = Null Then Curr173\Target = n
 									If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-									n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\173\Box"+Rand(1,3)+".ogg")
+									n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\173\Box"+Rand(1,3)+".ogg"))
 									PlayMTFSound(n\Sound, n)
 								EndIf
 							EndIf
@@ -7844,7 +7818,7 @@ Function UpdateMTFUnit(n.NPCs)
 							
 							;If prev => 0 And KillTimer < 0 Then
 								;DeathMSG=SubjectName$+". Terminated by Nine-Tailed Fox."
-								;If n\MTFLeader = Null Then PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF\049\Player0492_2.ogg"),n)
+								;If n\MTFLeader = Null Then PlayMTFSound(LoadTempSound("SFX\"+"Character\MTF\049\Player0492_2.ogg"),n)
 							;EndIf
 						EndIf	
 					EndIf
@@ -8052,16 +8026,16 @@ Function UpdateMTFUnit(n.NPCs)
 								If (Not n\Target\IsDead)
 									If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
 									If n\NPCtype = NPCtype049_2
-										n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Player0492_2.ogg")
+										n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Player0492_2.ogg"))
 										PlayMTFSound(n\Sound, n)
 									;ElseIf n\NPCtype = NPCtype049_3
-									    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Player049_3_2.ogg")
+									    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\049\Player049_3_2.ogg")
 									    ;PlayMTFSound(n\Sound, n)
 									;ElseIf n\NPCtype = NPCtype008_2
-									    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\008\008_2.ogg")
+									    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\008\008_2.ogg")
 									    ;PlayMTFSound(n\Sound, n)
 									;Else;If n\NPCtype = NPCtype008_1
-									    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\008\008_1.ogg")
+									    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\008\008_1.ogg")
 									    ;PlayMTFSound(n\Sound, n)
 									EndIf
 								EndIf
@@ -8289,7 +8263,7 @@ Function UpdateMTF2Unit(n.NPCs)
 		;only play the "blinking" sound clip if searching/containing 173
 		If n\State = 2 
 		    If OtherNPCSeesMeNPC(Curr173,n) Or EntityDistance(n\Collider,Curr173\Collider)<3.0
-			    PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF2\173\BLINKING"+Rand(1,4)+".ogg"),n)
+			    PlayMTFSound(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\173\BLINKING"+Rand(1,4)+".ogg")),n)
 			EndIf
 		EndIf
 		n\BlinkTimer = 70.0*Rnd(10.0,15.0)
@@ -8368,9 +8342,9 @@ Function UpdateMTF2Unit(n.NPCs)
 											Curr173\Target = Null
 											Curr173\IsDead = True
 											If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-											n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\173\Cont"+Rand(1,6)+".ogg")
+											n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\173\Cont"+Rand(1,6)+".ogg"))
 											PlayMTFSound(n\Sound, n)
-											;PlayAnnouncement(SFXPath$+"Character\MTF2\Announc173Contain.ogg")
+											;PlayAnnouncement("SFX\"+"Character\MTF2\Announc173Contain.ogg")
 											r\RoomDoors[1]\MTFClose = True
                                          	UseDoor(r\RoomDoors[1],False)
 											r\RoomDoors[1]\open = False
@@ -8520,13 +8494,13 @@ Function UpdateMTF2Unit(n.NPCs)
 					If n\LastSeen > 0 And n\LastSeen < 70*15 Then
 						If temp < 2
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\ThereHeIs"+Rand(1,6)+".ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\ThereHeIs"+Rand(1,6)+".ogg"))
 							PlayMTFSound(n\Sound, n)
 						EndIf
 					Else
 						If temp = True
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\Stop"+Rand(1,6)+".ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Stop"+Rand(1,6)+".ogg"))
 							PlayMTFSound(n\Sound, n)
 						ElseIf temp = 2
 							;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
@@ -8564,7 +8538,7 @@ Function UpdateMTF2Unit(n.NPCs)
 							n\PathTimer=0.0
 							n\PathStatus=0
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\173\Spotted"+Rand(1,4)+".ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\173\Spotted"+Rand(1,4)+".ogg"))
 							PlayMTFSound(n\Sound, n)
 						EndIf
 					EndIf
@@ -8584,7 +8558,7 @@ Function UpdateMTF2Unit(n.NPCs)
 							n\Target = Curr106
 							;If n\MTF2Leader=Null
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\106\Spotted"+Rand(1,6)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\106\Spotted"+Rand(1,6)+".ogg"))
 								PlayMTFSound(n\Sound, n)
 							;EndIf
 						EndIf
@@ -8603,7 +8577,7 @@ Function UpdateMTF2Unit(n.NPCs)
 							n\PathTimer = 0.0
 							n\PathStatus = 0
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\096\Spotted"+Rand(1,2)+".ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\096\Spotted"+Rand(1,2)+".ogg"))
 							PlayMTFSound(n\Sound, n)
 						EndIf
 					EndIf
@@ -8623,7 +8597,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\PathStatus = 0
 								n\Target = n2
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\049\Spotted"+Rand(1,?)+".ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\049\Spotted"+Rand(1,?)+".ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -8642,7 +8616,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\008\008_1spotted.ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\008\008_1spotted.ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -8661,7 +8635,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\049\Player0492_1.ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\049\Player0492_1.ogg"))
 								PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -8683,7 +8657,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\008\008_2Spotted.ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\008\008_2Spotted.ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -8702,7 +8676,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\049\049_3Spotted.ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\049\049_3Spotted.ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -8721,7 +8695,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Target = n2
 								n\Reload = 70*5
 								;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\035\Tentalce_Spotted.ogg")
+								;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\035\Tentalce_Spotted.ogg")
 								;PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -8768,12 +8742,12 @@ Function UpdateMTF2Unit(n.NPCs)
 									
 									FreeEntity(pvt)
 									
-									DeathMSG=SubjectName$+". Died of blood loss after being shot by See No Evil."
+									DeathMSG = scpLang_GetPhrase("events.sne1")
 									
 									;player killed -> "target terminated"
 									If prev => 0 And KillTimer < 0 Then
-										DeathMSG=SubjectName$+". Terminated by See No Evil."
-										PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF2\Targetterminated"+Rand(1,5)+".ogg"),n)
+										DeathMSG = scpLang_GetPhrase("events.sne2")
+										PlayMTFSound(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Targetterminated"+Rand(1,5)+".ogg")),n)
 									EndIf
 								EndIf	
 							EndIf
@@ -8941,7 +8915,7 @@ Function UpdateMTF2Unit(n.NPCs)
 					
 					If n\MTF2Leader=Null And n\LastSeen<70*30 And n\LastSeen+fs\FPSfactor[0]=>70*30 Then
 						If Rand(2)=1 Then 
-							PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF2\Searching"+Rand(1,6)+".ogg"),n)
+							PlayMTFSound(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Searching"+Rand(1,6)+".ogg")),n)
 						EndIf
 					EndIf
 					
@@ -8952,10 +8926,10 @@ Function UpdateMTF2Unit(n.NPCs)
                 
                 If n\State2<=0.0 And n\State2+fs\FPSfactor[0] >0.0 Then
 					If n\MTF2Leader = Null Then
-						PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF2\Targetlost"+Rand(1,4)+".ogg"),n)
+						PlayMTFSound(LoadTempSound(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\Targetlost"+Rand(1,4)+".ogg")),n)
 						If MTF2_CameraCheckTimer=0.0
 							If Rand(15-(7*SelectedDifficulty\aggressiveNPCs))=1 ;Maybe change this to another chance - ENDSHN
-								;PlayAnnouncement(SFXPath$+"Character\MTF2\AnnouncCameraCheck.ogg")
+								;PlayAnnouncement("SFX\"+"Character\MTF2\AnnouncCameraCheck.ogg")
 								MTF2_CameraCheckTimer = fs\FPSfactor[0]
 							EndIf
 						EndIf
@@ -8974,7 +8948,7 @@ Function UpdateMTF2Unit(n.NPCs)
 							n\EnemyZ = EntityZ(Curr173\Collider,True)
 							n\State2 = 70.0*15.0 ;give up after 15 seconds
 							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\173\Spotted3.ogg")
+							n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\173\Spotted3.ogg"))
 							PlayMTFSound(n\Sound, n)
 							n\State3 = 0.0
 							n\PathTimer=0.0
@@ -8997,7 +8971,7 @@ Function UpdateMTF2Unit(n.NPCs)
 							n\Target = Curr106
 							If n\MTF2Leader=Null
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\106\Spotted4.ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\106\Spotted4.ogg"))
 								PlayMTFSound(n\Sound, n)
 							EndIf
 						EndIf
@@ -9017,7 +8991,7 @@ Function UpdateMTF2Unit(n.NPCs)
 							n\PathStatus = 0
 							If n\MTF2Leader=Null
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\096\Spotted"+Rand(1,2)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\096\Spotted"+Rand(1,2)+".ogg"))
 								PlayMTFSound(n\Sound, n)
 							EndIf
 						EndIf
@@ -9038,7 +9012,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\PathStatus = 0
 								n\Target = n2
 								If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-								n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Spotted"+Rand(1,5)+".ogg")
+								n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Spotted"+Rand(1,5)+".ogg"))
 								PlayMTFSound(n\Sound, n)
 								Exit
 							EndIf
@@ -9058,7 +9032,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Reload = 70*5
 								;If n\MTF2Leader=Null
 									If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-									n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\049\Player0492_1.ogg")
+									n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\049\Player0492_1.ogg"))
 									PlayMTFSound(n\Sound, n)
 								;EndIf
 								Exit
@@ -9082,7 +9056,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Reload = 70*5
 								;If n\MTF2Leader=Null
 									;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-									;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\049\049_3Spotted.ogg")
+									;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\049\049_3Spotted.ogg")
 									;PlayMTFSound(n\Sound, n)
 								;EndIf
 								Exit
@@ -9103,7 +9077,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Reload = 70*5
 								;If n\MTF2Leader=Null
 									;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-									;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\008\008_2Spotted.ogg")
+									;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\008\008_2Spotted.ogg")
 									;PlayMTFSound(n\Sound, n)
 								;EndIf
 								Exit
@@ -9124,7 +9098,7 @@ Function UpdateMTF2Unit(n.NPCs)
 								n\Reload = 70*5
 								;If n\MTF2Leader=Null
 									;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-									;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\035\Tentacle_Spotted.ogg")
+									;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\035\Tentacle_Spotted.ogg")
 									;PlayMTFSound(n\Sound, n)
 								;EndIf
 								Exit
@@ -9166,7 +9140,7 @@ Function UpdateMTF2Unit(n.NPCs)
 									Curr173\Idle = 2
 									If n\MTF2Leader = Null Then Curr173\Target = n
 									If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-									n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\173\Box"+Rand(1,4)+".ogg")
+									n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF2\173\Box"+Rand(1,4)+".ogg"))
 									PlayMTFSound(n\Sound, n)
 								EndIf
 							EndIf
@@ -9549,7 +9523,7 @@ Function UpdateMTF2Unit(n.NPCs)
 							
 							;If prev => 0 And KillTimer < 0 Then
 								;DeathMSG=SubjectName$+". Terminated by See No Evil."
-								;If n\MTF2Leader = Null Then PlayMTFSound(LoadTempSound(SFXPath$+"Character\MTF2\049\Player0492_2.ogg"),n)
+								;If n\MTF2Leader = Null Then PlayMTFSound(LoadTempSound("SFX\"+"Character\MTF2\049\Player0492_2.ogg"),n)
 							;EndIf
 						EndIf	
 					EndIf
@@ -9757,16 +9731,16 @@ Function UpdateMTF2Unit(n.NPCs)
 								If (Not n\Target\IsDead)
 									If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
 									If n\NPCtype = NPCtyp049_2
-										n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Player0492_2.ogg")
+										n\Sound = LoadSound_Strict(scpModding_ProcessFilePath$("SFX\"+"Character\MTF\049\Player0492_2.ogg"))
 										PlayMTFSound(n\Sound, n)
 									;ElseIf n\NPCtype = NPCtype049_3
-									    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF\049\Player049_3_2.ogg")
+									    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF\049\Player049_3_2.ogg")
 									    ;PlayMTFSound(n\Sound, n)
 									;ElseIf n\NPCtype = NPCtype008_2
-									    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\008\008_2.ogg")
+									    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\008\008_2.ogg")
 									    ;PlayMTFSound(n\Sound, n)
 									;Else;If n\NPCtype = NPCtype008_1
-									    ;n\Sound = LoadSound_Strict(SFXPath$+"Character\MTF2\008\008_1.ogg")
+									    ;n\Sound = LoadSound_Strict("SFX\"+"Character\MTF2\008\008_1.ogg")
 									    ;PlayMTFSound(n\Sound, n)
 									EndIf
 								EndIf
@@ -9929,10 +9903,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 						BlurTimer = 650
 						Stamina = 0
 						If I_1033RU\HP = 0
-							ShotMessageUpdate = "A bullet penetrated your vest, making you gasp."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot1")
 							Injuries = Injuries + Rnd(0.1,0.2)
 						Else
-							ShotMessageUpdate = "A bullet penetrated your vest, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot2")
 							Damage1033RU(5+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					    EndIf
 						;[End Block]
@@ -9941,10 +9915,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 						BlurTimer = 650
 						Stamina = 0
 						If I_1033RU\HP = 0
-						    ShotMessageUpdate = "A bullet hit your left leg."
+						    ShotMessageUpdate = scpLang_GetPhrase("events.shot3")
 							Injuries = Injuries + Rnd(0.7,0.9)
 						Else
-							ShotMessageUpdate = "A bullet hit your left leg, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot4")
 							Damage1033RU(15+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					    EndIf
 					    ;[End Block]
@@ -9953,10 +9927,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					    BlurTimer = 650
 					    Stamina = 0
 						If I_1033RU\HP = 0
-						    ShotMessageUpdate = "A bullet hit your right leg."
+						    ShotMessageUpdate = scpLang_GetPhrase("events.shot5")
 							Injuries = Injuries + Rnd(0.7,0.9)
 						Else
-							ShotMessageUpdate = "A bullet hit your right leg, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot6")
 							Damage1033RU(15+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 						EndIf
 						;[End Block]
@@ -9964,10 +9938,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 						;[Block]
 						BlurTimer = 650
 						If I_1033RU\HP = 0
-						    ShotMessageUpdate = "A bullet hit your left hand."
+						    ShotMessageUpdate = scpLang_GetPhrase("events.shot7")
 							Injuries = Injuries + Rnd(0.5,0.7)
 						Else
-							ShotMessageUpdate = "A bullet hit your left hand, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot8")
 							Damage1033RU(10+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					    EndIf
 					    ;[End Block]
@@ -9975,10 +9949,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 						;[Block]
 					    BlurTimer = 650
 						If I_1033RU\HP = 0
-						    ShotMessageUpdate = "A bullet hit your right hand."
+						    ShotMessageUpdate = scpLang_GetPhrase("events.shot9")
 							Injuries = Injuries + Rnd(0.5,0.7)
 						Else
-							ShotMessageUpdate = "A bullet hit your right hand, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot10")
 							Damage1033RU(10+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 						EndIf
 						;[End Block]
@@ -9987,16 +9961,16 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					    BlurTimer = 650
 						Stamina = 0
 						If I_1033RU\HP = 0
-							ShotMessageUpdate = "A bullet struck your neck, making you gasp."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot11")
 							Injuries = Injuries + Rnd(1.1,1.3)
 						Else
 							Damage1033RU(35+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
-							ShotMessageUpdate = "A bullet struck your neck, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot12")
 						EndIf
 						;[End Block]
 					Case 15 ;Head
 						;[Block]
-						ShotMessageUpdate = "A bullet hit your head."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot13")
 						Kill(True)
 						;[End Block]
 					Case 16 ;Face
@@ -10004,10 +9978,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					    For n.NPCs = Each NPCs
 					        If n\NPCtype = NPCtypeMTF Or n\NPCtype = NPCtypeMTF2
 		                        If EntityInView(n\obj, Camera) And EntityVisible(n\obj, Camera)
-					                ShotMessageUpdate = "A bullet hit your face."
+					                ShotMessageUpdate = scpLang_GetPhrase("events.shot14")
 					                Kill(True)
 					            Else
-					                ShotMessageUpdate = "A bullet hit your head."
+					                ShotMessageUpdate = scpLang_GetPhrase("events.shot13")
 					                Kill(True)
 					            EndIf
 					        EndIf
@@ -10020,10 +9994,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 				    BlurTimer = 650
 					Stamina = Stamina - 1
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your chest. The vest absorbed some of the damage."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot15")
 						Injuries = Injuries + Rnd(0.7,0.8)
 					Else
-					    ShotMessageUpdate = "A bullet hit your chest, but SCP-1033-RU protected you."
+					    ShotMessageUpdate = scpLang_GetPhrase("events.shot16")
 						Damage1033RU(30+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 				    ;[End Block]
@@ -10031,10 +10005,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your chest. The vest absorbed most of the damage."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot17")
 						Injuries = Injuries + Rnd(0.1,0.2)
 				    Else
-						ShotMessageUpdate = "A bullet hit your chest, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot16")
 						Damage1033RU(5+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 				    EndIf
 					;[End Block]
@@ -10048,10 +10022,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 						BlurTimer = 650
 						Stamina = 0
 						If I_1033RU\HP = 0
-							ShotMessageUpdate = "A bullet penetrated your vest, making you gasp."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot1")
 							Injuries = Injuries + Rnd(0.1,0.2)
 						Else
-							ShotMessageUpdate = "A bullet penetrated your vest, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot2")
 							Damage1033RU(5+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					    EndIf
 						;[End Block]
@@ -10060,10 +10034,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					    BlurTimer = 650
 					    Stamina = 0
 						If I_1033RU\HP = 0
-							ShotMessageUpdate = "A bullet hit your left leg."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot3")
 							Injuries = Injuries + Rnd(0.7,0.9)
 					    Else
-							ShotMessageUpdate = "A bullet hit your left leg, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot4")
 							Damage1033RU(15+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 						EndIf
 					    ;[End Block]
@@ -10072,10 +10046,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					    BlurTimer = 650
 						Stamina = 0
 						If I_1033RU\HP = 0
-							ShotMessageUpdate = "A bullet hit your right leg."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot5")
 							Injuries = Injuries + Rnd(0.7,0.9)
 					    Else
-							ShotMessageUpdate = "A bullet hit your right leg, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot6")
 							Damage1033RU(15+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					    EndIf
 						;[End Block]
@@ -10083,10 +10057,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 						;[Block]
 						BlurTimer = 650
 						If I_1033RU\HP = 0
-						    ShotMessageUpdate = "A bullet hit your left hand."
+						    ShotMessageUpdate = scpLang_GetPhrase("events.shot7")
 							Injuries = Injuries + Rnd(0.5,0.7)
 						Else
-							ShotMessageUpdate = "A bullet hit your left hand, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot8")
 							Damage1033RU(10+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					    EndIf
 					    ;[End Block]
@@ -10094,10 +10068,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 						;[Block]
 					    BlurTimer = 650
 						If I_1033RU\HP = 0
-						    ShotMessageUpdate = "A bullet hit your right hand."
+						    ShotMessageUpdate = scpLang_GetPhrase("events.shot9")
 							Injuries = Injuries + Rnd(0.5,0.7)
 						Else
-							ShotMessageUpdate = "A bullet hit your right hand, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot10")
 							Damage1033RU(10+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 						EndIf
 						;[End Block]
@@ -10106,31 +10080,31 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 						BlurTimer = 650
 						Stamina = 0
 					    If I_1033RU\HP = 0
-							ShotMessageUpdate = "A bullet struck your neck, making you gasp."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot11")
 							Injuries = Injuries + Rnd(1.1,1.3)
 						Else
 							Damage1033RU(35+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
-							ShotMessageUpdate = "A bullet struck your neck, but SCP-1033-RU protected you."
+							ShotMessageUpdate = scpLang_GetPhrase("events.shot12")
 						EndIf
 						;[End Block]
 					Case 15,16,17,18,19,20,21 ;Helmet
 						;[Block]
 						BlurTimer = 650
-						ShotMessageUpdate = "A bullet penetrated your helmet."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot18")
 						;[End Block]
 					Case 22 ;Face
 						;[Block]
 						For n.NPCs = Each NPCs
 					        If n\NPCtype = NPCtypeMTF Or n\NPCtype = NPCtypeMTF2
 		                        If EntityInView(n\obj, Camera) And EntityVisible(n\obj, Camera)
-					                ShotMessageUpdate = "A bullet hit your face."
+					                ShotMessageUpdate = scpLang_GetPhrase("events.shot14")
 					                Kill(True)
 					            Else
 					                If WearingHelmet > 0
 					                    BlurTimer = 500
-					                    ShotMessageUpdate = "A bullet penetrated your helmet."
+					                    ShotMessageUpdate = scpLang_GetPhrase("events.shot18")
                                     Else
-                                        ShotMessageUpdate = "A bullet hit your head."
+                                        ShotMessageUpdate = scpLang_GetPhrase("events.shot13")
 					                    Kill(True)
                                     EndIf
 					            EndIf
@@ -10144,20 +10118,20 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 				    BlurTimer = 650
 					Stamina = Stamina - 1
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your chest. The vest absorbed some of the damage."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot15")
 						Injuries = Injuries + Rnd(0.7,0.9)
 					Else
-						ShotMessageUpdate = "A bullet hit your chest, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot16")
 						Damage1033RU(30+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
 				Else ;Chest
 					;[Block]
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your chest. The vest absorbed most of the damage."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot17")
 						Injuries = Injuries + Rnd(0.1,0.2)
 				    Else
-						ShotMessageUpdate = "A bullet hit your chest, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot16")
 						Damage1033RU(5+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10168,17 +10142,17 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 				Case 1,2,3,4,5,6,7 ;Helmet
 					;[Block]
 					BlurTimer = 650
-					ShotMessageUpdate = "A bullet penetrated your helmet."
+					ShotMessageUpdate = scpLang_GetPhrase("events.shot18")
 					;[End Block]
 				Case 8 ;Left leg
 					;[Block]
 					BlurTimer = 650
 					Stamina = 0
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your left leg."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot3")
 						Injuries = Injuries + Rnd(0.7,0.9)
 					Else
-						ShotMessageUpdate = "A bullet hit your left leg, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot4")
 						Damage1033RU(15+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
                     EndIf
 					;[End Block]
@@ -10187,10 +10161,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					BlurTimer = 650
 					Stamina = 0
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your right leg."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot5")
 						Injuries = Injuries + Rnd(0.7,0.9)
 				    Else
-						ShotMessageUpdate = "A bullet hit your right leg, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot6")
 						Damage1033RU(15+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
                     EndIf
 					;[End Block]
@@ -10198,10 +10172,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your left hand."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot7")
 						Injuries = Injuries + Rnd(0.5,0.7)
 					Else
-					    ShotMessageUpdate = "A bullet hit your left hand, but SCP-1033-RU protected you."
+					    ShotMessageUpdate = scpLang_GetPhrase("events.shot8")
 						Damage1033RU(10+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10209,10 +10183,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your right hand."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot9")
 					    Injuries = Injuries + Rnd(0.5,0.7)
 					Else
-					    ShotMessageUpdate = "A bullet hit your right hand, but SCP-1033-RU protected you."
+					    ShotMessageUpdate = scpLang_GetPhrase("events.shot10")
 						Damage1033RU(10+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10220,10 +10194,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 				    BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your right shoulder."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot19")
 						Injuries = Injuries + Rnd(0.9,1.1)
 					Else
-						ShotMessageUpdate = "A bullet hit your right shoulder, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot20")
 						Damage1033RU(25+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 				    ;[End Block]	
@@ -10231,10 +10205,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your left shoulder."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot21")
 						Injuries = Injuries + Rnd(0.9,1.1)	
 					Else
-						ShotMessageUpdate = "A bullet hit your left shoulder, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot22")
 						Damage1033RU(25+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 				    EndIf
 					;[End Block]
@@ -10242,10 +10216,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your right shoulder."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot19")
 						Injuries = Injuries + Rnd(2.4,2.6)
 				    Else
-						ShotMessageUpdate = "A bullet hit your right shoulder, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot20")
 						Damage1033RU(25+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10253,10 +10227,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your left shoulder."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot21")
 						Injuries = Injuries + Rnd(2.4,2.6)
 				    Else
-						ShotMessageUpdate = "A bullet hit your left shoulder, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot22")
 						Damage1033RU(25+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10265,11 +10239,11 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					BlurTimer = 650
 					Stamina = 0
 					If I_1033RU\HP = 0
-					    ShotMessageUpdate = "A bullet struck your neck, making you gasp."
+					    ShotMessageUpdate = scpLang_GetPhrase("events.shot11")
 						Injuries = Injuries + Rnd(1.1,1.3)
 				    Else
 					    Damage1033RU(35+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
-						ShotMessageUpdate = "A bullet struck your neck, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot12")
 					EndIf
                     ;[End Block]
 			    Case 17 ;Face
@@ -10277,14 +10251,14 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					For n.NPCs = Each NPCs
 					    If n\NPCtype = NPCtypeMTF Or n\NPCtype = NPCtypeMTF2
 		                    If EntityInView(n\obj, Camera) And EntityVisible(n\obj, Camera)
-					            ShotMessageUpdate = "A bullet hit your face."
+					            ShotMessageUpdate = scpLang_GetPhrase("events.shot14")
 					            Kill(True)
 					        Else
 					            If WearingHelmet > 0
 					                BlurTimer = 500
-					                ShotMessageUpdate = "A bullet penetrated your helmet."
+					                ShotMessageUpdate = scpLang_GetPhrase("events.shot18")
                                 Else
-                                    ShotMessageUpdate = "A bullet hit your head."
+                                    ShotMessageUpdate = scpLang_GetPhrase("events.shot13")
 					                Kill(True)
                                 EndIf
 					        EndIf
@@ -10296,7 +10270,7 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 			Select Rand(11)
 				Case 1 ;Head
 				    ;[Block]
-					ShotMessageUpdate = "A bullet hit your head."
+					ShotMessageUpdate = scpLang_GetPhrase("events.shot13")
 				    Kill(True)
 					;[End Block]
 				Case 2 ;Left leg
@@ -10304,10 +10278,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					BlurTimer = 650
 					Stamina = 0
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your left leg."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot3")
 						Injuries = Injuries + Rnd(0.7,0.9)
 					Else
-						ShotMessageUpdate = "A bullet hit your left leg, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot4")
 						Damage1033RU(15+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
                     EndIf
 					;[End Block]
@@ -10316,10 +10290,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					BlurTimer = 650
 					Stamina = 0
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your right leg."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot5")
 						Injuries = Injuries + Rnd(0.7,0.9)
 				    Else
-						ShotMessageUpdate = "A bullet hit your right leg, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot6")
 						Damage1033RU(15+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
                     EndIf
 				    ;[End Block]
@@ -10327,10 +10301,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your right shoulder."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot19")
 						Injuries = Injuries + Rnd(0.9,1.1)
 					Else
-						ShotMessageUpdate = "A bullet hit your right shoulder, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot20")
 						Damage1033RU(25+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 				    ;[End Block]	
@@ -10338,10 +10312,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your left shoulder."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot21")
 						Injuries = Injuries + Rnd(0.9,1.1)	
 					Else
-						ShotMessageUpdate = "A bullet hit your left shoulder, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot22")
 						Damage1033RU(25+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10349,10 +10323,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your right shoulder."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot19")
 						Injuries = Injuries + Rnd(2.4,2.6)
 					Else
-						ShotMessageUpdate = "A bullet hit your right shoulder, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot20")
 						Damage1033RU(25+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10360,10 +10334,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your left shoulder."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot21")
 						Injuries = Injuries + Rnd(2.4,2.6)
 					Else
-						ShotMessageUpdate = "A bullet hit your left shoulder, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot22")
 						Damage1033RU(25+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10371,10 +10345,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					;[Block]
 					BlurTimer = 650
 					If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your left hand."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot7")
 						Injuries = Injuries + Rnd(0.5,0.7)
 					Else
-						ShotMessageUpdate = "A bullet hit your left hand, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot8")
 						Damage1033RU(10+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10382,10 +10356,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 				    ;[Block]
 					BlurTimer = 650
 				    If I_1033RU\HP = 0
-						ShotMessageUpdate = "A bullet hit your right hand."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot9")
 					    Injuries = Injuries + Rnd(0.5,0.7)
 					Else
-						ShotMessageUpdate = "A bullet hit your right hand, but SCP-1033-RU protected you."
+						ShotMessageUpdate = scpLang_GetPhrase("events.shot10")
 						Damage1033RU(10+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
 					EndIf
 					;[End Block]
@@ -10394,11 +10368,11 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					BlurTimer = 650
 				    Stamina = 0
 					If I_1033RU\HP = 0
-					    ShotMessageUpdate = "A bullet struck your neck, making you gasp."
+					    ShotMessageUpdate = scpLang_GetPhrase("events.shot11")
 						Injuries = Injuries + Rnd(1.1,1.3)
 				    Else
 						Damage1033RU(35+(Rand(5) * SelectedDifficulty\aggressiveNPCs))
-					    ShotMessageUpdate = "A bullet struck your neck, but SCP-1033-RU protected you."
+					    ShotMessageUpdate = scpLang_GetPhrase("events.shot12")
 					EndIf
                     ;[End Block]
                 Case 11 ;Face
@@ -10406,10 +10380,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					For n.NPCs = Each NPCs
 					    If n\NPCtype = NPCtypeMTF Or n\NPCtype = NPCtypeMTF2
 		                    If EntityInView(n\obj, Camera) And EntityVisible(n\obj, Camera)
-					            ShotMessageUpdate = "A bullet hit your face."
+					            ShotMessageUpdate = scpLang_GetPhrase("events.shot14")
 					            Kill(True)
 					        Else
-                                ShotMessageUpdate = "A bullet hit your head."
+                                ShotMessageUpdate = scpLang_GetPhrase("events.shot13")
 					            Kill(True)
 					        EndIf
 					    EndIf
@@ -10797,7 +10771,7 @@ Function GetNPCManipulationValue$(NPC$,bone$,section$,valuetype%=0)
 	;2 - Float
 	;3 - Boolean
 	
-	Local value$ = GetINIString("Data\NPCBones.ini",NPC$,bone$+"_"+section$)
+	Local value$ = GetINIString(scpModding_ProcessFilePath$("Data\NPCBones.ini"),NPC$,bone$+"_"+section$)
 	Select valuetype%
 		Case 0
 			Return value$
