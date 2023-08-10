@@ -1,5 +1,5 @@
 ﻿API.cpp(1,36): warning : #pragma execution_character_set expected 'push' or 'pop' [-Wunknown-pragmas]
-  In file included from API.cpp:34:
+  In file included from API.cpp:35:
 ./Modding/Libraries/console.h(8,83): warning : adding 'int' to a string does not append to the string [-Wstring-plus-int]
 ./Lua/lua.h(381,52): message : expanded from macro 'lua_pushliteral'
 ./Modding/Libraries/console.h(8,83): message : use array indexing to silence this warning
@@ -12,17 +12,17 @@
 ./Modding/Libraries/console.h(74,83): warning : adding 'int' to a string does not append to the string [-Wstring-plus-int]
 ./Lua/lua.h(381,52): message : expanded from macro 'lua_pushliteral'
 ./Modding/Libraries/console.h(74,83): message : use array indexing to silence this warning
-  In file included from API.cpp:38:
+  In file included from API.cpp:39:
 ./Console/Console.hpp(138,25): warning : format string is not a string literal (potentially insecure) [-Wformat-security]
 ./Console/Console.hpp(138,25): message : treat the string as an argument to avoid this
 ./Console/Console.hpp(140,18): warning : format string is not a string literal (potentially insecure) [-Wformat-security]
 ./Console/Console.hpp(140,18): message : treat the string as an argument to avoid this
-  In file included from API.cpp:22:
+  In file included from API.cpp:23:
   In file included from ./Lua/LuaCpp.hpp:31:
 ./Lua/LuaMetaObject.hpp(47,14): warning : unused function 'u_newindex' [-Wunused-function]
 ./Lua/LuaMetaObject.hpp(58,14): warning : unused function 'u_index' [-Wunused-function]
 ./Lua/LuaMetaObject.hpp(69,14): warning : unused function 'u_call' [-Wunused-function]
-  In file included from API.cpp:28:
+  In file included from API.cpp:29:
   In file included from ./Modding/Print.h:5:
 ./Modding/../Color.h(88,16): warning : unused function 'stoc' [-Wunused-function]
 ./Modding/../Color.h(93,24): warning : unused function 'ctos' [-Wunused-function]

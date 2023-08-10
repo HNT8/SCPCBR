@@ -1,7 +1,7 @@
 #pragma once
 
 #define SOURCETEST false
-#define VERSION "1.6"
+#define VERSION "1.6.1"
 #define VERSIONSTRING "v" VERSION
 
 #if SOURCETEST == true
