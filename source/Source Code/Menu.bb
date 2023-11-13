@@ -1445,7 +1445,7 @@ Function UpdateLauncher()
 		EndIf
 		
 		If (DrawButton(41, 400, 120, 30, scpLang_GetPhrase$("launcher.discord"), False, False, False)) Then
-			ExecFile("https://discord.gg/scpcbr")
+			ExecFile("https://discord.gg/Q7VKS6hwEV")
 		EndIf
 
 		If (DrawButton(165, 400, 120, 30, scpLang_GetPhrase$("launcher.mods"), False, False, False)) Then

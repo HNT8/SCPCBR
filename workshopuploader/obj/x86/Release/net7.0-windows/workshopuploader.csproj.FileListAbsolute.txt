@@ -1,0 +1,5 @@
+D:\SCPCBR\workshopuploader\obj\x86\Release\net7.0-windows\workshopuploader.csproj.AssemblyReference.cache
+D:\SCPCBR\workshopuploader\obj\x86\Release\net7.0-windows\MainWindow.g.cs
+D:\SCPCBR\workshopuploader\obj\x86\Release\net7.0-windows\App.g.cs
+D:\SCPCBR\workshopuploader\obj\x86\Release\net7.0-windows\workshopuploader_MarkupCompile.cache
+D:\SCPCBR\workshopuploader\obj\x86\Release\net7.0-windows\workshopuploader_MarkupCompile.lref

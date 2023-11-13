@@ -31,12 +31,12 @@
 
 #include "Toml/toml.hpp"
 
-#include "Modding/Libraries/game.h"
-#include "Modding/Libraries/console.h"
-
 #include "Localization/Language.h"
 
 #include "Console/Console.hpp"
+
+#include "Modding/Libraries/game.h"
+#include "Modding/Libraries/console.h"
 
 double OriginalWidth;
 double OriginalHeight;
@@ -50,35 +50,6 @@ void SteamLoop() {
 		SteamAPI_RunCallbacks();
 		Sleep(500);
 	}
-}
-
-bool isWindows10OrGreater()
-{
-	NTSTATUS(NTAPI * RtlGetVersion)(PRTL_OSVERSIONINFOW lpVersionInformation) = nullptr;
-	HMODULE ntdll = GetModuleHandle(L"ntdll.dll");
-	if (ntdll == NULL)
-		return false;
-	*reinterpret_cast<FARPROC*>(&RtlGetVersion) = GetProcAddress(ntdll, "RtlGetVersion");
-	if (RtlGetVersion == nullptr)
-		return false;
-
-	OSVERSIONINFOEX versionInfo{ sizeof(OSVERSIONINFOEX) };
-	if (RtlGetVersion(reinterpret_cast<LPOSVERSIONINFO>(&versionInfo)) < 0)
-		return false;
-
-	if (versionInfo.dwMajorVersion > HIBYTE(_WIN32_WINNT_WIN10))
-		return true;
-
-	if (versionInfo.dwMajorVersion == HIBYTE(_WIN32_WINNT_WIN10))
-	{
-		if (versionInfo.dwMinorVersion > LOBYTE(_WIN32_WINNT_WIN10))
-			return true;
-
-		if (versionInfo.dwMinorVersion == LOBYTE(_WIN32_WINNT_WIN10) && versionInfo.dwBuildNumber >= 22000)
-			return true;
-	}
-
-	return false;
 }
 
 int MessageBoxC(const char* Msg, const char* Title, UINT type = 0) {
@@ -259,6 +230,7 @@ void StartModLibraries() {
 	gameLib->AddCFunction("RedirectFile", redirectFile);
 	gameLib->AddCFunction("SetGameTitle", setGameTitle);
 	gameLib->AddCFunction("ImplementMap", implementMap);
+	gameLib->AddCFunction("ImplementLang", implementLang);
 	gameLib->AddCFunction("Wait", wait);
 
 	std::shared_ptr<LuaCpp::Registry::LuaLibrary> consoleLib = std::make_shared<LuaCpp::Registry::LuaLibrary>("Console");
@@ -319,6 +291,11 @@ B3DDLL(int) scpFont_GetSize(const char* name) {
 
 int selectedLang = 0;
 std::vector<Language> Languages;
+
+std::vector<Language>* GetLanguagesVector() {
+	return &Languages;
+}
+
 void InitializeLanguages() {
 	for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::current_path().string() + "\\Localization\\")) {
 		toml::parse_result langConfig = toml::parse_file(entry.path().string());
@@ -377,11 +354,9 @@ B3DDLL(const char*) scpLang_GetPhrase(const char* key) {
 }
 
 B3DDLL(void) scpSteam_Initialize() {
-	if (isWindows10OrGreater()) {
-		Trace("Set process DPI aware functionality to \"unaware\"");
-		SetProcessDPIAware();
-		SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED);
-	}
+	SetProcessDPIAware();
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED);
+	Trace("Set process DPI aware functionality to \"unaware\"");
 
 	if (!SteamAPI_IsSteamRunning()) {
 		MessageBoxA(0, "Please launch steam before attempting to launch the game!", "SCP: Containment Breach Remastered", 0);

@@ -1,0 +1,3 @@
+D:\SCPCBR\workshopuploader\obj\Debug\net7.0-windows\workshopuploader.csproj.AssemblyReference.cache
+D:\SCPCBR\workshopuploader\obj\Debug\net7.0-windows\App.g.cs
+D:\SCPCBR\workshopuploader\obj\Debug\net7.0-windows\workshopuploader_MarkupCompile.cache

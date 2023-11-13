@@ -1,0 +1,169 @@
+﻿<Window x:Class="workshopuploader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:workshopuploader"
+        xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="SCP:CBR Workshop Uploader" 
+        Height="auto" Width="auto"
+        MinHeight="500" MinWidth="500"
+        Icon="/workshopuploader;component/Icons/remastered.ico"
+        Closing="Window_Closing"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        ui:TitleBar.IsIconVisible="True">
+    <DockPanel>
+        <TextBlock TextAlignment="Center" Text="YOU DO NOT CURRENTLY HAVE A UPLOAD CONFIGURATION SELECTED" DockPanel.Dock="Top" IsEnabled="True" Visibility="Visible" Background="#FF3333" Foreground="White" FontWeight="Bold" Name="topWarning"/>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Uploader">
+                <MenuItem Header="_New" Click="newMod_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/workshopuploader;component/Icons/new.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Open" Click="openMod_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/workshopuploader;component/Icons/open.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save" Click="saveMod_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/workshopuploader;component/Icons/save.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="_Exit" Click="Exit_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/workshopuploader;component/Icons/exit.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Modding Documentation" Click="Documentation_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/workshopuploader;component/Icons/docs.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Application Information" Click="Application_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/workshopuploader;component/Icons/info.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="_Discord" Click="Discord_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/workshopuploader;component/Icons/discord.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Steam" Click="Steam_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/workshopuploader;component/Icons/steam.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <ScrollViewer Height="Auto" VerticalScrollBarVisibility="Visible" IsEnabled="False" Name="tabs">
+            <StackPanel Margin="5,5,5,5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Name="uploaderTab_modFolder_Upload" Content="Choose File" Click="uploaderTab_modFolder_Upload_Click" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <TextBox Name="uploaderTab_modFolder" IsEnabled="False" Margin="4,0,0,0" Grid.Column="1"/>
+                </Grid>
+                <TextBlock Text="Name"/>
+                <TextBox Name="uploaderTab_modName" TextChanged="uploaderTab_modName_TextChanged"/>
+                <Separator Visibility="Hidden"/>
+                <TextBlock Text="Delimiter / ID"/>
+                <TextBox Name="uploaderTab_modDelimiter" TextChanged="uploaderTab_modDelimiter_TextChanged"/>
+                <Separator Visibility="Hidden"/>
+                <TextBlock Text="Version"/>
+                <TextBox Name="uploaderTab_modVersion" TextChanged="uploaderTab_modVersion_TextChanged"/>
+                <Separator Visibility="Hidden"/>
+                <TextBlock Text="Description"/>
+                <TabControl Name="descriptionTabs" Height="300">
+                    <TabItem Header="Editor">
+                        <TextBox Name="uploaderTab_modDescription" TextChanged="uploaderTab_modDescription_TextChanged" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextAlignment="Left" TextWrapping="Wrap"/>
+                    </TabItem>
+                    <TabItem Header="Preview">
+                        <ScrollViewer>
+                            <mui:BBCodeBlock Name="bbPreview" IsEnabled="False"/>
+                        </ScrollViewer>
+                    </TabItem>
+                </TabControl>
+                <Separator Visibility="Hidden"/>
+                <TextBlock Text="Tags"/>
+                <StackPanel Orientation="Horizontal" Margin="1,1,1,1">
+                    <CheckBox Content="Model  " Name="uploaderTab_modTagModel" Checked="uploaderTab_modTagModel_Checked"  Unchecked="uploaderTab_modTagModel_Checked"/>
+                    <CheckBox Content="Texture  " Name="uploaderTab_modTagTexture" Checked="uploaderTab_modTagTexture_Checked" Unchecked="uploaderTab_modTagTexture_Checked"/>
+                    <CheckBox Content="Audio  " Name="uploaderTab_modTagAudio" Checked="uploaderTab_modTagAudio_Checked" Unchecked="uploaderTab_modTagAudio_Checked"/>
+                    <CheckBox Content="Map  " Name="uploaderTab_modTagMap" Checked="uploaderTab_modTagMap_Checked" Unchecked="uploaderTab_modTagMap_Checked"/>
+                    <CheckBox Content="Language  " Name="uploaderTab_modTagLanguage" Checked="uploaderTab_modTagLanguage_Checked" Unchecked="uploaderTab_modTagLanguage_Checked"/>
+                    <CheckBox Content="Data  " Name="uploaderTab_modTagData" Checked="uploaderTab_modTagData_Checked" Unchecked="uploaderTab_modTagData_Checked"/>
+                </StackPanel>
+                <Separator Visibility="Hidden"/>
+                <TextBlock Text="Visibility"/>
+                <ComboBox IsReadOnly="True" IsEditable="False" Name="uploaderTab_modVisibility" SelectionChanged="uploaderTab_modVisibility_SelectionChanged" HorizontalAlignment="Stretch">
+                    <ComboBoxItem>Public</ComboBoxItem>
+                    <ComboBoxItem>Friends Only</ComboBoxItem>
+                    <ComboBoxItem>Private</ComboBoxItem>
+                </ComboBox>
+                <TextBlock Text="Workshop Icon"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Name="uploaderTab_workshopIcon_Upload" Content="Choose File" Click="uploaderTab_workshopIcon_Upload_Click" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <TextBox Name="uploaderTab_workshopIcon" IsEnabled="False" Margin="4,0,0,0" Grid.Column="1"/>
+                </Grid>
+                <Separator Visibility="Hidden"/>
+                <TextBlock Text="Changelog"/>
+                <TextBox Name="uploaderTab_modChangelog" TextChanged="uploaderTab_modChangelog_TextChanged" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextAlignment="Left" Height="300"/>
+                <Separator Visibility="Hidden"/>
+                <Separator/>
+                <Separator Visibility="Hidden"/>
+                <ProgressBar Value="0" Name="uploadProgress"/>
+                <Separator Visibility="Hidden"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="uploadSubmit" Content="Upload Workshop Item" Width="Auto" Click="uploadSubmit_Click" HorizontalAlignment="Stretch" Grid.Column="0" Margin="3">
+                        <ui:FlyoutService.Flyout>
+                            <ui:Flyout x:Name="uploadConfirmFlyout">
+                                <StackPanel>
+                                    <TextBlock Text="Are you sure you want to upload this item?"/>
+                                    <TextBlock TextWrapping="WrapWithOverflow" Width="400" HorizontalAlignment="Left" Text="If you set a workshop description manually on the workshop page, it will be reset to the one you provided above." FontSize="12"/>
+                                    <Button Name="uploadConfirm" Content="Confirm Upload" Margin="0,5,0,0" HorizontalAlignment="Stretch" Click="uploadConfirm_Click"/>
+                                </StackPanel>
+                            </ui:Flyout>
+                        </ui:FlyoutService.Flyout>
+                    </Button>
+                    <Button Name="uploadReset" Content="Reset Workshop Item" Width="Auto" Click="uploadReset_Click" HorizontalAlignment="Stretch" Grid.Column="1" Margin="3">
+                        <ui:FlyoutService.Flyout>
+                            <ui:Flyout x:Name="resetConfirmFlyout">
+                                <StackPanel>
+                                    <TextBlock Text="Are you sure you want to reset this item?"/>
+                                    <TextBlock TextWrapping="WrapWithOverflow" Width="400" HorizontalAlignment="Left" Text="Resetting this item will prevent you from uploading this mod to your previous workshop page indefinitely. You should only do this if you deleted the workshop page of the mod or are not going to update the old workshop page any further." FontSize="12"/>
+                                    <Button Name="resetConfirm" Content="Confirm Reset" Margin="0,5,0,0" HorizontalAlignment="Stretch" Click="resetConfirm_Click"/>
+                                </StackPanel>
+                            </ui:Flyout>
+                        </ui:FlyoutService.Flyout>
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
